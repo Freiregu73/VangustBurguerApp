@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MenuPrincipalActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/idToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#8F572F"
+        app:menu="@menu/menu_superior" >
+
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:src="@drawable/logo_vangust_burguer"/>
+
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+
+</RelativeLayout>
