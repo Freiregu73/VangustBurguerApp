@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/perfil" android:title="Meu Perfil" />
-    <item android:id="@+id/enderecos" android:title="Meus Endereços" />
-    <item android:id="@+id/sair" android:title="Sair" />
+    <group android:id="@+id/gmPreferencias">
+        <item
+            android:id="@+id/mInbox"
+            android:icon="@drawable/baseline_person"
+            android:title="Inbox" />
+
+        <item
+            android:id="@+id/mOutbox"
+            android:icon="@drawable/baseline_person"
+            android:title="Outbox" />
+
+        <item
+            android:id="@+id/mFavoritos"
+            android:icon="@drawable/baseline_person"
+            android:title="Favoritos" />
+
+        <item
+            android:id="@+id/mTrash"
+            android:icon="@drawable/baseline_person"
+            android:title="Trash" />
+    </group>
+
+    <group android:id="@+id/gmArquivos">
+        <item
+            android:id="@+id/mFriends"
+            android:icon="@drawable/baseline_person"
+            android:title="Friends" />
+
+        <item
+            android:id="@+id/mVolunteering"
+            android:icon="@drawable/baseline_person"
+            android:title="Volunteering" />
+
+
+        <item
+            android:id="@+id/mWork"
+            android:icon="@drawable/baseline_person"
+            android:title="Work" />
+    </group>
 </menu>

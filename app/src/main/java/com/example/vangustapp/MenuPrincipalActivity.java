@@ -74,7 +74,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
 
         btnMenu.setOnClickListener(v -> {
             // Abre o menu lateral
-            drawerLayout.openDrawer(GravityCompat.START);
+            drawerLayout.openDrawer(GravityCompat.END);
         });
 
     }
