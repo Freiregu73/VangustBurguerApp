@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/modeloCardFavoritos"
+    android:layout_width="420dp"
+    android:layout_height="200dp"
+    app:cardCornerRadius="30dp"
+    android:layout_marginBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FCD299"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="30dp"
+            android:layout_width="190dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/modeloImagemFavoritos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="#2c2c2c"
+                android:scaleType="centerCrop"/>
+
+        </androidx.cardview.widget.CardView>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            
+            <TextView
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/modeloTituloFavoritos"
+                android:text="Titulo Burguer"
+                android:fontFamily="@font/oswald_regular"
+                android:layout_gravity="center_horizontal"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"/>
+
+            <TextView
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:id="@+id/modeloDescFavoritos"
+                android:text="Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime."
+                android:fontFamily="@font/roboto_condensed_light"
+                android:layout_gravity="center_horizontal"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/modeloPrecoFavoritos"
+                    android:text="34,99"
+                    android:fontFamily="@font/roboto_condensed_black"
+                    android:textSize="22sp"
+                    android:textColor="@color/black"
+                    android:textStyle="normal"
+                    android:layout_marginLeft="10dp"/>
+
+                <Button
+                    android:id="@+id/modeloBtnFavoritos"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pedir"
+                    android:layout_marginLeft="60dp"
+                    android:backgroundTint="#A61C1C"/>
+
+
+
+            </LinearLayout>
+            
+        </LinearLayout>
+        
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

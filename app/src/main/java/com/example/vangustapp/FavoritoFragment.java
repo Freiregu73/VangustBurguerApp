@@ -3,17 +3,18 @@ package com.example.vangustapp;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FavoritoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class FavoritoFragment extends Fragment {
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,10 +56,32 @@ public class FavoritoFragment extends Fragment {
         }
     }
 
+    RecyclerView idRecFavoritos;
+    List<FavoritosCard> lstFavoritos;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorito, container, false);
+        View view = inflater.inflate(R.layout.fragment_favorito, container, false);
+
+        idRecFavoritos = view.findViewById(R.id.idRecFavoritos);
+        idRecFavoritos.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        lstFavoritos = new ArrayList<>();
+
+        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        AdapterFavoritos adapter = new AdapterFavoritos(lstFavoritos, getContext());
+        idRecFavoritos.setAdapter(adapter);
+        return view;
     }
+
 }

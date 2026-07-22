@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,7 +23,6 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         DrawerLayout drawerLayout;
         View headerView;
         ImageView btnMenu;
-
 
 
     @Override
