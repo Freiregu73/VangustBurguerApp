@@ -8,12 +8,12 @@
 
         <item
             android:id="@+id/mHistorico"
-            android:icon="@drawable/baseline_person"
+            android:icon="@drawable/baseline_receipt_long"
             android:title="Historico de pedidos" />
 
         <item
             android:id="@+id/mLocalizacao"
-            android:icon="@drawable/baseline_person"
+            android:icon="@drawable/baseline_location"
             android:title="Localizção" />
 
         <item
