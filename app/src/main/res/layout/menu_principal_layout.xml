@@ -37,6 +37,7 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:background="#F7EDDA"
+        app:headerLayout="@layout/header_drawer"
         android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
