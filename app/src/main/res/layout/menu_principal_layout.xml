@@ -37,8 +37,13 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:background="#F7EDDA"
+        app:itemBackground="@drawable/fundo_laranja"
         app:headerLayout="@layout/header_drawer"
+        app:itemTextColor="#F7EDDA"
+        app:itemIconTint="#F7EDDA"
         android:padding="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="25dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"

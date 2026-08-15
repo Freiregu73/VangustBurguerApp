@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <group android:id="@+id/gmPreferencias">
         <item
             android:id="@+id/mPerfil"
             android:icon="@drawable/baseline_person"
-            android:title="Perfil" />
+            android:title="Perfil"
+            android:iconTint="#Ffff"/>
 
         <item
             android:id="@+id/mHistorico"
