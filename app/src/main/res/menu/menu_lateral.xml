@@ -18,12 +18,12 @@
 
         <item
             android:id="@+id/mFavoritos"
-            android:icon="@drawable/baseline_person"
+            android:icon="@drawable/baseline_favorite"
             android:title="Favoritos" />
 
         <item
             android:id="@+id/mCupom"
-            android:icon="@drawable/baseline_person"
+            android:icon="@drawable/baseline_discount"
             android:title="Cupom" />
     </group>
 
