@@ -34,6 +34,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.viewpager2)
     implementation(libs.activity.ktx)
     implementation(libs.appcompat)
     implementation(libs.constraintlayout)

@@ -13,51 +13,79 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_marginTop="10dp"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPagerCarrossel"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:background="@color/black" >
-
-        </LinearLayout>
+            android:layout_marginTop="10dp" />
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="330dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="#2c2"
-            android:layout_width="match_parent"
-            android:layout_height="300dp">
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:fontFamily="@font/oswald_regular"
+                android:text="Ofertas!"
+                android:textColor="#8F572F"
+                android:textSize="20sp" />
+
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/id"
+                android:id="@+id/idOfertas"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp" />
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="330dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="#2c2"
-            android:layout_width="match_parent"
-            android:layout_height="300dp">
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:fontFamily="@font/oswald_regular"
+                android:text="Os mais pedidos!"
+                android:textColor="#8F572F"
+                android:textSize="20sp" />
+
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/id"
+                android:id="@+id/idMaisPedidos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="50dp"
-            android:background="#2c2"
             android:layout_width="match_parent"
-            android:layout_height="300dp">
+            android:layout_height="330dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:fontFamily="@font/oswald_regular"
+                android:text="Lançamentos!"
+                android:textColor="#8F572F"
+                android:textSize="20sp" />
+
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/id"
+                android:id="@+id/idLançamento"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp" />
         </LinearLayout>
 
     </LinearLayout>
