@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_cadastro"
+    android:background="#F7EDDA"
+    android:layout_width="match_parent"
+    android:paddingTop="30dp"
+    android:layout_height="match_parent"
+    tools:context=".CadastroActivity">
+
+    <!-- Logo Vangust Burguer -->
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/logo_vangust_burguer" />
+    </LinearLayout>
+
+    <!-- Campo Nome -->
+    <LinearLayout
+        android:padding="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nome Completo"
+            app:endIconMode="clear_text"
+            app:startIconDrawable="@drawable/baseline_person"
+            app:boxStrokeColor="#8F572F"
+            app:hintTextColor="#8F572F"
+            app:cursorColor="#8F572F">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txNomeCadastro"
+                android:inputType="textPersonName"
+                android:maxLength="50"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <!-- Campo E-mail -->
+    <LinearLayout
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="E-mail"
+            app:endIconMode="clear_text"
+            app:startIconDrawable="@drawable/baseline_person"
+            app:boxStrokeColor="#8F572F"
+            app:hintTextColor="#8F572F"
+            app:cursorColor="#8F572F">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txEmailCadastro"
+                android:inputType="textEmailAddress"
+                android:maxLength="50"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <!-- Campo Senha -->
+    <LinearLayout
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Senha"
+            app:endIconMode="password_toggle"
+            app:startIconDrawable="@drawable/baseline_lock"
+            app:boxStrokeColor="#8F572F"
+            app:hintTextColor="#8F572F"
+            app:cursorColor="#8F572F">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txSenhaCadastro"
+                android:inputType="textPassword"
+                android:maxLength="15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <!-- Botão Cadastrar -->
+    <LinearLayout
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/btnFinalizarCadastro"
+            android:text="Finalizar Cadastro"
+            android:backgroundTint="#8F572F"
+            app:cornerRadius="10dp"/>
+    </LinearLayout>
+</LinearLayout>
