@@ -40,7 +40,10 @@
             android:layout_height="wrap_content"
             android:hint="E-mail"
             app:endIconMode="clear_text"
-            app:startIconDrawable="@drawable/baseline_person">
+            app:startIconDrawable="@drawable/baseline_person"
+            app:boxStrokeColor="#8F572F"
+            app:hintTextColor="#8F572F"
+            app:cursorColor="#8F572F">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txEmail"
@@ -65,7 +68,10 @@
             android:layout_height="wrap_content"
             android:hint="Senha"
             app:endIconMode="password_toggle"
-            app:startIconDrawable="@drawable/baseline_lock">
+            app:startIconDrawable="@drawable/baseline_lock"
+            app:boxStrokeColor="#8F572F"
+            app:hintTextColor="#8F572F"
+            app:cursorColor="#8F572F">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txSenha"
