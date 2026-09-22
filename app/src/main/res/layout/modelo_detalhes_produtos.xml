@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/modeloCardProdutos"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_height="match_parent"
+    android:background="#F7EDDA"
     app:cardCornerRadius="15dp"
     app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#FCD299"
         android:orientation="vertical">
 
         <!-- Imagem do Produto -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="450dp"
             app:cardCornerRadius="15dp">
 
             <ImageView
@@ -31,35 +31,43 @@
         <!-- Informações do Produto -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="15dp">
 
-            <TextView
-                android:id="@+id/modeloTituloProdutos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/oswald_regular"
-                android:text="Titulo Burguer"
-                android:textColor="@color/black"
-                android:textSize="26sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/modeloDescricaoProdutos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="15dp"
-                android:fontFamily="@font/roboto_condensed_light"
-                android:gravity="center_horizontal"
-                android:text="Lorem ipsum hambúrguer artesanal smashed burger bacon crocante maionese da casa cheddar derretido. Blend de angus pão de brioche tostado na manteiga alface americana tomate fresco cebola roxa caramelizada."
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <!-- Área de Preço e Botão com espaçamento dinâmico -->
+            <!-- Título e Descrição (usando weight="1" para empurrar o preço para baixo) -->
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/modeloTituloProdutos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/oswald_regular"
+                    android:text="Titulo Burguer"
+                    android:textColor="@color/black"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/modeloDescricaoProdutos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/roboto_condensed_light"
+                    android:gravity="center_horizontal"
+                    android:text="Lorem ipsum hambúrguer artesanal smashed burger bacon crocante maionese da casa cheddar derretido. Blend de angus pão de brioche tostado na manteiga alface americana tomate fresco cebola roxa caramelizada."
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <!-- Área de Preço e Botão fixada na parte inferior -->
+            <LinearLayout
+                android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -83,7 +91,6 @@
                     android:textColor="@color/black"
                     android:textSize="26sp" />
 
-                <!-- Esta View invisível empurra o botão automaticamente para a direita em qualquer ecrã -->
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
