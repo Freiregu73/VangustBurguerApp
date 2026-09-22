@@ -14,9 +14,9 @@
             android:title="Historico de pedidos" />
 
         <item
-            android:id="@+id/mLocalizacao"
+            android:id="@+id/mEndereco"
             android:icon="@drawable/baseline_location"
-            android:title="Localizção" />
+            android:title="Endereço" />
 
         <item
             android:id="@+id/mFavoritos"

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/modeloCardProdutos"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FCD299"
+        android:orientation="vertical">
+
+        <!-- Imagem do Produto -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:cardCornerRadius="15dp">
+
+            <ImageView
+                android:id="@+id/modeloImagemProdutos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="#2c2c2c" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Informações do Produto -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/modeloTituloProdutos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/oswald_regular"
+                android:text="Titulo Burguer"
+                android:textColor="@color/black"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/modeloDescricaoProdutos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/roboto_condensed_light"
+                android:gravity="center_horizontal"
+                android:text="Lorem ipsum hambúrguer artesanal smashed burger bacon crocante maionese da casa cheddar derretido. Blend de angus pão de brioche tostado na manteiga alface americana tomate fresco cebola roxa caramelizada."
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <!-- Área de Preço e Botão com espaçamento dinâmico -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald_regular"
+                    android:text="R$"
+                    android:textColor="@color/black"
+                    android:textSize="26sp" />
+
+                <TextView
+                    android:id="@+id/modeloPrecoProdutos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/oswald_regular"
+                    android:text="23,99"
+                    android:textColor="@color/black"
+                    android:textSize="26sp" />
+
+                <!-- Esta View invisível empurra o botão automaticamente para a direita em qualquer ecrã -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPedirProduto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#A61C1C"
+                    android:text="Pedir"
+                    android:textColor="#F7EDDA"
+                    app:cornerRadius="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

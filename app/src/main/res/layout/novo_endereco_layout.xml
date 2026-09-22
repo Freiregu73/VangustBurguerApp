@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7EDDA"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Cabeçalho (Título) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/oswald_regular"
+                android:text="Novo Endereço"
+                android:textColor="@color/black"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Formulário -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Título do Endereço -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:hint="Nome do local (ex: Casa, Trabalho)"
+                app:boxStrokeColor="#8F572F"
+                app:hintTextColor="#8F572F"
+                app:cursorColor="#8F572F"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txNomeLocal"
+                    android:inputType="textCapWords"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- CEP -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:hint="CEP"
+                app:boxStrokeColor="#8F572F"
+                app:hintTextColor="#8F572F"
+                app:cursorColor="#8F572F">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txCep"
+                    android:inputType="number"
+                    android:maxLength="8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Rua/Avenida -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:hint="Endereço (Rua, Avenida...)"
+                app:boxStrokeColor="#8F572F"
+                app:hintTextColor="#8F572F"
+                app:cursorColor="#8F572F">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txRua"
+                    android:inputType="textPostalAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Número e Complemento lado a lado -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:hint="Número"
+                    app:boxStrokeColor="#8F572F"
+                    app:hintTextColor="#8F572F"
+                    app:cursorColor="#8F572F">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txNumero"
+                        android:inputType="text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:hint="Complemento (Apto, Bloco)"
+                    app:boxStrokeColor="#8F572F"
+                    app:hintTextColor="#8F572F"
+                    app:cursorColor="#8F572F">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txComplemento"
+                        android:inputType="text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <!-- Bairro -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:hint="Bairro"
+                app:boxStrokeColor="#8F572F"
+                app:hintTextColor="#8F572F"
+                app:cursorColor="#8F572F">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txBairro"
+                    android:inputType="textPostalAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Espaçador flexível para empurrar o botão para o fundo se o ecrã for grande -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Botão Salvar -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSalvarEndereco"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:backgroundTint="#8F572F"
+                android:text="Salvar Endereço"
+                app:cornerRadius="10dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

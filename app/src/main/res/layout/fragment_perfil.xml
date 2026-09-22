@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7EDDA"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context=".PerfilFragment">
+
+    <!-- Área da Foto de Perfil e Informações do Utilizador -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- CardView para deixar a imagem de perfil redonda -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="15dp"
+            app:cardCornerRadius="60dp"
+            app:cardElevation="4dp">
+
+            <ImageView
+                android:id="@+id/imgPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FCD299"
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_person_outline" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvNomePerfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/oswald_regular"
+            android:text="Nome do Cliente"
+            android:textColor="#8F572F"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvEmailPerfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_condensed_light"
+            android:text="cliente@vangustburguer.com"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Menu de Ações do Perfil -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditarPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="15dp"
+            android:backgroundTint="#8F572F"
+            android:text="Editar Perfil"
+            app:cornerRadius="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMeusPedidos"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="15dp"
+            android:backgroundTint="#8F572F"
+            android:text="Meus Pedidos"
+            app:cornerRadius="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEnderecos"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="35dp"
+            android:backgroundTint="#8F572F"
+            android:text="Meus Endereços"
+            app:cornerRadius="10dp" />
+
+        <!-- Botão de Sair com a cor vermelha -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSairConta"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="#A61C1C"
+            android:text="Sair da Conta"
+            app:cornerRadius="10dp" />
+    </LinearLayout>
+
+</LinearLayout>

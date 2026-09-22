@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7EDDA"
+    android:fillViewport="true"
+    tools:context=".EditarPerfilFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Cabeçalho (Título) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/oswald_regular"
+                android:text="Editar Perfil"
+                android:textColor="@color/black"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Alterar Foto de Perfil -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="50dp"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:id="@+id/imgEditarPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#FCD299"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_person_outline" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tvAlterarFoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_condensed_light"
+                android:text="Toque para alterar a foto"
+                android:textColor="#8F572F"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Formulário de Edição -->
+        <!-- Campo Nome -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:hint="Nome Completo"
+            app:boxStrokeColor="#8F572F"
+            app:cursorColor="#8F572F"
+            app:endIconMode="clear_text"
+            app:hintTextColor="#8F572F"
+            app:startIconDrawable="@drawable/baseline_person_outline">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txEditarNome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:maxLength="50" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo E-mail -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:hint="E-mail"
+            app:startIconDrawable="@drawable/baseline_email"
+            app:boxStrokeColor="#8F572F"
+            app:cursorColor="#8F572F"
+            app:endIconMode="clear_text"
+            app:hintTextColor="#8F572F">
+
+            <!-- Geralmente usa-se um ícone de email, se tiver, adicione app:startIconDrawable="@drawable/baseline_email" -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txEditarEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:maxLength="50" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo Telefone / WhatsApp -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:hint="Telefone / WhatsApp"
+            app:startIconDrawable="@drawable/baseline_phone"
+            app:boxStrokeColor="#8F572F"
+            app:cursorColor="#8F572F"
+            app:endIconMode="clear_text"
+            app:hintTextColor="#8F572F">
+
+            <!-- Se tiver um ícone de telefone, adicione app:startIconDrawable="@drawable/baseline_phone" -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txEditarTelefone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:maxLength="15" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Espaçador flexível -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Botão Salvar Alterações -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSalvarPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#8F572F"
+            android:text="Salvar Alterações"
+            app:cornerRadius="10dp" />
+
+    </LinearLayout>
+</ScrollView>
