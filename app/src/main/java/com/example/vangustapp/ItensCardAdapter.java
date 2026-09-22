@@ -12,8 +12,17 @@ import java.util.List;
 public class ItensCardAdapter extends RecyclerView.Adapter<ItensCardAdapter.ViewHolder> {
 
     private List<ItensCard> listaItens;
+    private OnItemClickListener listener;
 
-    // Construtor que recebe a lista de hambúrgueres
+    // Interface para o clique
+    public interface OnItemClickListener {
+        void onItemClick(ItensCard item);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public ItensCardAdapter(List<ItensCard> listaItens) {
         this.listaItens = listaItens;
     }
@@ -21,7 +30,6 @@ public class ItensCardAdapter extends RecyclerView.Adapter<ItensCardAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Lembre-se de trocar "nome_do_seu_arquivo_xml_aqui" pelo nome real do seu layout de card
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.modelo_itens_burguer, parent, false);
         return new ViewHolder(view);
@@ -33,6 +41,13 @@ public class ItensCardAdapter extends RecyclerView.Adapter<ItensCardAdapter.View
 
         holder.textTitulo.setText(item.getTitulo());
         holder.imageItem.setImageResource(item.getImgitens());
+
+        // Ação ao clicar no cartão do hambúrguer
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(item);
+            }
+        });
     }
 
     @Override
@@ -46,7 +61,6 @@ public class ItensCardAdapter extends RecyclerView.Adapter<ItensCardAdapter.View
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Estes são os IDs que você configurou no seu XML
             textTitulo = itemView.findViewById(R.id.modeloTituloItens);
             imageItem = itemView.findViewById(R.id.modeloImagemItens);
         }

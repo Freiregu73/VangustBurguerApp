@@ -1,5 +1,6 @@
 package com.example.vangustapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -48,7 +49,7 @@ public class CardapioFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment (aqui já aponta certinho para o fragment_cardapio.xml)
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cardapio, container, false);
     }
 
@@ -62,45 +63,62 @@ public class CardapioFragment extends Fragment {
         RecyclerView recVeganos = view.findViewById(R.id.idRecVeganos);
         RecyclerView recCombos = view.findViewById(R.id.idRecCombos);
 
-        // 2. Configurar o LayoutManager para horizontal em cada um
+        // 2. Configurar Carnes
         if (recCarnes != null) {
             recCarnes.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             List<ItensCard> listaCarnes = new ArrayList<>();
-            listaCarnes.add(new ItensCard("Brutão na chapa", R.drawable.brutao));
-            listaCarnes.add(new ItensCard("Brutão na chapa", R.drawable.brutao));
-            listaCarnes.add(new ItensCard("Brutão na chapa", R.drawable.brutao));
-            listaCarnes.add(new ItensCard("Brutão na chapa", R.drawable.brutao));
-            recCarnes.setAdapter(new ItensCardAdapter(listaCarnes));
+            listaCarnes.add(new ItensCard("Brutão na chapa", "Hambúrguer parrudo de 180g, cheddar derretido e bacon crocante.", R.drawable.brutao, 34.99));
+            listaCarnes.add(new ItensCard("Brutão na chapa", "Hambúrguer parrudo de 180g, cheddar derretido e bacon crocante.", R.drawable.brutao, 34.99));
+
+            ItensCardAdapter adapter = new ItensCardAdapter(listaCarnes);
+            adapter.setOnItemClickListener(item -> abrirDetalhes(item));
+            recCarnes.setAdapter(adapter);
         }
 
+        // 3. Configurar Frangos
         if (recFrangos != null) {
             recFrangos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             List<ItensCard> listaFrangos = new ArrayList<>();
-            listaFrangos.add(new ItensCard("Chicken Crispy", R.drawable.frango));
-            listaFrangos.add(new ItensCard("Chicken Crispy", R.drawable.frango));
-            listaFrangos.add(new ItensCard("Chicken Crispy", R.drawable.frango));
-            listaFrangos.add(new ItensCard("Chicken Crispy", R.drawable.frango));
-            recFrangos.setAdapter(new ItensCardAdapter(listaFrangos));
+            listaFrangos.add(new ItensCard("Chicken Crispy", "Frango empanado super crocante com molho especial da casa.", R.drawable.frango, 28.50));
+            listaFrangos.add(new ItensCard("Chicken Crispy", "Frango empanado super crocante com molho especial da casa.", R.drawable.frango, 28.50));
+
+            ItensCardAdapter adapter = new ItensCardAdapter(listaFrangos);
+            adapter.setOnItemClickListener(item -> abrirDetalhes(item));
+            recFrangos.setAdapter(adapter);
         }
 
+        // 4. Configurar Veganos
         if (recVeganos != null) {
             recVeganos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             List<ItensCard> listaVeganos = new ArrayList<>();
-            listaVeganos.add(new ItensCard("Burger Vegano", R.drawable.veggie));
-            listaVeganos.add(new ItensCard("Burger Vegano", R.drawable.veggie));
-            listaVeganos.add(new ItensCard("Burger Vegano", R.drawable.veggie));
-            listaVeganos.add(new ItensCard("Burger Vegano", R.drawable.veggie));
-            recVeganos.setAdapter(new ItensCardAdapter(listaVeganos));
+            listaVeganos.add(new ItensCard("Burger Vegano", "Blend exclusivo de grão-de-bico com especiarias e maionese verde.", R.drawable.veggie, 29.00));
+            listaVeganos.add(new ItensCard("Burger Vegano", "Blend exclusivo de grão-de-bico com especiarias e maionese verde.", R.drawable.veggie, 29.00));
+
+            ItensCardAdapter adapter = new ItensCardAdapter(listaVeganos);
+            adapter.setOnItemClickListener(item -> abrirDetalhes(item));
+            recVeganos.setAdapter(adapter);
         }
 
+        // 5. Configurar Combos
         if (recCombos != null) {
             recCombos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             List<ItensCard> listaCombos = new ArrayList<>();
-            listaCombos.add(new ItensCard("Combo Família", R.drawable.combo_fogo));
-            listaCombos.add(new ItensCard("Combo Família", R.drawable.combo_fogo));
-            listaCombos.add(new ItensCard("Combo Família", R.drawable.combo_fogo));
-            listaCombos.add(new ItensCard("Combo Família", R.drawable.combo_fogo));
-            recCombos.setAdapter(new ItensCardAdapter(listaCombos));
+            listaCombos.add(new ItensCard("Combo Família", "Inclui hambúrgueres grandes, batata frita generosa e bebida.", R.drawable.combo_fogo, 59.90));
+            listaCombos.add(new ItensCard("Combo Família", "Inclui hambúrgueres grandes, batata frita generosa e bebida.", R.drawable.combo_fogo, 59.90));
+
+            ItensCardAdapter adapter = new ItensCardAdapter(listaCombos);
+            adapter.setOnItemClickListener(item -> abrirDetalhes(item));
+            recCombos.setAdapter(adapter);
         }
+    }
+
+    // Método auxiliar para abrir os detalhes de qualquer item selecionado
+    private void abrirDetalhes(ItensCard item) {
+        Intent intent = new Intent(getContext(), DetalhesProdutoActivity.class);
+        intent.putExtra("titulo", item.getTitulo());
+        intent.putExtra("descricao", item.getDescricao());
+        intent.putExtra("preco", item.getPreco());
+        intent.putExtra("imagem", item.getImgitens());
+        startActivity(intent);
     }
 }

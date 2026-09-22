@@ -1,5 +1,6 @@
 package com.example.vangustapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -67,7 +68,7 @@ public class InicioFragment extends Fragment {
         ViewPager2 viewPagerCarrossel = view.findViewById(R.id.viewPagerCarrossel);
         if (viewPagerCarrossel != null) {
             List<Integer> listaBanners = new ArrayList<>();
-            listaBanners.add(R.drawable.brutao); // Adicione as imagens dos banners aqui
+            listaBanners.add(R.drawable.brutao);
             listaBanners.add(R.drawable.veggie);
 
             CarrosselAdapter carrosselAdapter = new CarrosselAdapter(listaBanners);
@@ -79,57 +80,74 @@ public class InicioFragment extends Fragment {
                 public void run() {
                     int proximaPosicao = viewPagerCarrossel.getCurrentItem() + 1;
                     if (proximaPosicao >= listaBanners.size()) {
-                        proximaPosicao = 0; // Volta para o primeiro item ao chegar no fim
+                        proximaPosicao = 0;
                     }
                     viewPagerCarrossel.setCurrentItem(proximaPosicao, true);
-
-                    // Repete a cada 3 segundos (3000ms)
                     sliderHandler.postDelayed(this, 3000);
                 }
             };
 
-            // Inicia o carrossel automático após 3 segundos
             sliderHandler.postDelayed(sliderRunnable, 3000);
         }
 
-        // 1. Encontrar os RecyclerViews pelo ID correspondente no fragment_inicio.xml
+        // 1. Encontrar os RecyclerViews pelo ID correspondente
         RecyclerView recOfertas = view.findViewById(R.id.idOfertas);
         RecyclerView recMaisPedidos = view.findViewById(R.id.idMaisPedidos);
         RecyclerView recLancamento = view.findViewById(R.id.idLançamento);
 
-        // 2. Configurar o LayoutManager para horizontal em cada um
+        // 2. Configurar Ofertas
         if (recOfertas != null) {
             recOfertas.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             List<ItensCard> listaOfertas = new ArrayList<>();
-            listaOfertas.add(new ItensCard("Combo Bacon Cheese", R.drawable.brutao));
-            listaOfertas.add(new ItensCard("Combo Bacon Cheese", R.drawable.frango));
-            listaOfertas.add(new ItensCard("Combo Bacon Cheese", R.drawable.brutao));
-            recOfertas.setAdapter(new ItensCardAdapter(listaOfertas));
+            listaOfertas.add(new ItensCard("Combo Bacon Cheese", "Hambúrguer de 180g, muito cheddar derretido e bacon crocante.", R.drawable.brutao, 32.90));
+            listaOfertas.add(new ItensCard("Chicken Crispy", "Frango empanado super crocante com molho especial da casa.", R.drawable.frango, 28.50));
+            listaOfertas.add(new ItensCard("Combo Bacon Cheese", "Hambúrguer de 180g, muito cheddar derretido e bacon crocante.", R.drawable.brutao, 32.90));
+
+            ItensCardAdapter adapterOfertas = new ItensCardAdapter(listaOfertas);
+            adapterOfertas.setOnItemClickListener(item -> abrirDetalhes(item));
+            recOfertas.setAdapter(adapterOfertas);
         }
 
+        // 3. Configurar Mais Pedidos
         if (recMaisPedidos != null) {
             recMaisPedidos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             List<ItensCard> listaMaisPedidos = new ArrayList<>();
-            listaMaisPedidos.add(new ItensCard("Brutão na chapa", R.drawable.frango));
-            listaMaisPedidos.add(new ItensCard("Brutão na chapa", R.drawable.brutao));
-            listaMaisPedidos.add(new ItensCard("Brutão na chapa", R.drawable.veggie));
-            recMaisPedidos.setAdapter(new ItensCardAdapter(listaMaisPedidos));
+            listaMaisPedidos.add(new ItensCard("Brutão na chapa", "Parrudo de 180g, cheddar, bacon e cebola na manteiga.", R.drawable.brutao, 34.99));
+            listaMaisPedidos.add(new ItensCard("Chicken Crispy", "Frango empanado super crocante com molho especial.", R.drawable.frango, 28.50));
+            listaMaisPedidos.add(new ItensCard("Burger Vegano", "Blend de grão-de-bico com especiarias e maionese verde.", R.drawable.veggie, 29.00));
+
+            ItensCardAdapter adapterMaisPedidos = new ItensCardAdapter(listaMaisPedidos);
+            adapterMaisPedidos.setOnItemClickListener(item -> abrirDetalhes(item));
+            recMaisPedidos.setAdapter(adapterMaisPedidos);
         }
 
+        // 4. Configurar Lançamentos
         if (recLancamento != null) {
             recLancamento.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             List<ItensCard> listaLancamento = new ArrayList<>();
-            listaLancamento.add(new ItensCard("Novo Burger", R.drawable.combo_fogo));
-            listaLancamento.add(new ItensCard("Novo Burger", R.drawable.frango));
-            listaLancamento.add(new ItensCard("Novo Burger", R.drawable.veggie));
-            recLancamento.setAdapter(new ItensCardAdapter(listaLancamento));
+            listaLancamento.add(new ItensCard("Combo Fogo", "O novo combo picante com molho especial de pimenta jalapeño.", R.drawable.combo_fogo, 39.90));
+            listaLancamento.add(new ItensCard("Chicken Crispy", "Frango empanado super crocante.", R.drawable.frango, 28.50));
+            listaLancamento.add(new ItensCard("Burger Vegano", "Blend de grão-de-bico e salada fresca.", R.drawable.veggie, 29.00));
+
+            ItensCardAdapter adapterLancamento = new ItensCardAdapter(listaLancamento);
+            adapterLancamento.setOnItemClickListener(item -> abrirDetalhes(item));
+            recLancamento.setAdapter(adapterLancamento);
         }
+    }
+
+    // Método auxiliar para abrir o ecrã de detalhes de forma limpa
+    private void abrirDetalhes(ItensCard item) {
+        Intent intent = new Intent(getContext(), DetalhesProdutoActivity.class);
+        intent.putExtra("titulo", item.getTitulo());
+        intent.putExtra("descricao", item.getDescricao());
+        intent.putExtra("preco", item.getPreco());
+        intent.putExtra("imagem", item.getImgitens());
+        startActivity(intent);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Para a rotação automática ao sair da tela para evitar vazamento de memória
         if (sliderHandler != null && sliderRunnable != null) {
             sliderHandler.removeCallbacks(sliderRunnable);
         }
