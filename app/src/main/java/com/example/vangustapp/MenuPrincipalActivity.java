@@ -68,6 +68,38 @@ public class MenuPrincipalActivity extends AppCompatActivity {
             return true;
         });
 
+        // 4. Configurar os cliques no Menu Lateral (NavigationView)
+        com.google.android.material.navigation.NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.mPerfil) {
+                // Como o PerfilFragment é um Fragment, carregamos no container principal
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new PerfilFragment())
+                        .commit();
+            } else if (id == R.id.mHistorico) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new PedidosFragment())
+                        .commit();
+            } else if (id == R.id.mEndereco) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new EnderecoFragment())
+                        .commit();
+            } else if (id == R.id.mFavoritos) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new FavoritoFragment())
+                        .commit();
+            } else if (id == R.id.mCupom) {
+                // Como o CupomFragment foi configurado como Activity no teu código, abrimos com Intent:
+                startActivity(new android.content.Intent(MenuPrincipalActivity.this, CupomFragment.class));
+            }
+
+            // Fecha o menu lateral após o clique
+            drawerLayout.closeDrawer(GravityCompat.END);
+            return true;
+        });
+
         drawerLayout = findViewById(R.id.drawer_layout);
         headerView = findViewById(R.id.header_principal);
         btnMenu = headerView.findViewById(R.id.btnMenu);
