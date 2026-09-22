@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,13 +58,24 @@ public class InicioFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment (aponta para o fragment_inicio.xml)
+        // Inflate apenas o layout para este fragmento
         return inflater.inflate(R.layout.fragment_inicio, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // --- BOTÃO FLUTUANTE DO CARRINHO ---
+        FloatingActionButton fabCarrinho = view.findViewById(R.id.fabCarrinho);
+        if (fabCarrinho != null) {
+            fabCarrinho.setOnClickListener(v -> {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new CarrinhoFragment())
+                        .addToBackStack(null)
+                        .commit();
+            });
+        }
 
         // --- 0. CONFIGURAÇÃO DO CARROSSEL SUPERIOR ---
         ViewPager2 viewPagerCarrossel = view.findViewById(R.id.viewPagerCarrossel);
