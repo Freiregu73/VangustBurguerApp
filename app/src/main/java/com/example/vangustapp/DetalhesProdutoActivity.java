@@ -51,6 +51,10 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
 
         // Ação do botão "Pedir"
         btnPedir.setOnClickListener(v -> {
+            // Cria o item com os dados atuais do produto e adiciona ao gestor global
+            ItemCarrinho itemCarrinho = new ItemCarrinho(titulo, preco, 1, imagem);
+            CarrinhoManager.adicionarItem(itemCarrinho);
+
             Toast.makeText(this, titulo + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
             finish(); // Fecha a tela de detalhes após pedir
         });

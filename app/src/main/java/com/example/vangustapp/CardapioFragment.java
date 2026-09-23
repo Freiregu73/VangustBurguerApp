@@ -110,6 +110,17 @@ public class CardapioFragment extends Fragment {
             adapter.setOnItemClickListener(item -> abrirDetalhes(item));
             recCombos.setAdapter(adapter);
         }
+
+        com.google.android.material.floatingactionbutton.FloatingActionButton fabCarrinho = view.findViewById(R.id.fabCarrinhoCardapio);
+        if (fabCarrinho != null) {
+            fabCarrinho.setOnClickListener(v -> {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new CarrinhoFragment())
+                        .addToBackStack(null)
+                        .commit();
+            });
+        }
+
     }
 
     // Método auxiliar para abrir os detalhes de qualquer item selecionado
