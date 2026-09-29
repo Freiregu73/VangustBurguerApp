@@ -53,10 +53,11 @@ public class CarrinhoFragment extends Fragment {
             if (CarrinhoManager.getListaCarrinho().isEmpty()) {
                 Toast.makeText(getContext(), "O seu carrinho está vazio!", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Pedido finalizado com sucesso!", Toast.LENGTH_LONG).show();
-                CarrinhoManager.limparCarrinho();
-                carrinhoAdapter.notifyDataSetChanged();
-                atualizarTotais();
+                // Abre o ecrã de checkout passando para o CheckoutFragment
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new CheckoutFragment())
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }

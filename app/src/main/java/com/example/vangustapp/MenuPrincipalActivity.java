@@ -109,5 +109,12 @@ public class MenuPrincipalActivity extends AppCompatActivity {
             drawerLayout.openDrawer(GravityCompat.END);
         });
 
+        // No onCreate da MainActivity.java:
+        if (getIntent().getBooleanExtra("abrir_carrinho", false)) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new CarrinhoFragment())
+                    .commit();
+        }
+
     }
 }

@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     android:background="#F7EDDA"
     android:fillViewport="true"
-    tools:context=".DetalhesPedidoActivity">
+    tools:context=".DetalhesPedidosActivity">
 
     <LinearLayout
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -23,12 +24,14 @@
             android:layout_marginBottom="20dp">
 
             <ImageView
+                android:id="@+id/btnVoltarDetalhes"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/baseline_arrow_back"
-                app:tint="#8F572F" /> <!-- Pode trocar por uma seta de voltar (baseline_arrow_back) -->
+                app:tint="#8F572F" />
 
             <TextView
+                android:id="@+id/tvTituloPedidoDetalhes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -63,6 +66,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/tvStatusDetalhes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/oswald_regular"
@@ -85,6 +89,7 @@
             android:layout_marginBottom="10dp"/>
 
         <TextView
+            android:id="@+id/tvEnderecoDetalhes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_condensed_light"
@@ -104,54 +109,16 @@
             android:textStyle="bold"
             android:layout_marginBottom="10dp"/>
 
-        <!-- Lista estática de exemplo (no código Java você pode usar RecyclerView aqui se preferir) -->
-        <LinearLayout
+        <!-- Substituído por um ID para injetar os itens dinamicamente mantendo a estrutura -->
+        <TextView
+            android:id="@+id/tvItensDetalhes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="5dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/roboto_condensed_light"
-                android:text="1x Vangust Clássico"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_light"
-                android:text="R$ 34,90"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="20dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/roboto_condensed_light"
-                android:text="1x Batata Frita Média"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_light"
-                android:text="R$ 11,00"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </LinearLayout>
+            android:fontFamily="@font/roboto_condensed_light"
+            android:text="1x Vangust Clássico - R$ 34,90\n1x Batata Frita Média - R$ 11,00"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
 
         <!-- Totais -->
         <View
@@ -159,30 +126,6 @@
             android:layout_height="1dp"
             android:background="#8F572F"
             android:layout_marginBottom="15dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="5dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/roboto_condensed_light"
-                android:text="Subtotal"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_condensed_light"
-                android:text="R$ 45,90"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -226,6 +169,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvTotalDetalhes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/oswald_regular"

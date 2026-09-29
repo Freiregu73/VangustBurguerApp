@@ -1,6 +1,8 @@
 package com.example.vangustapp;
 
-public class ItemCarrinho {
+import java.io.Serializable;
+
+public class ItemCarrinho implements Serializable {
     private String titulo;
     private double preco;
     private int quantidade;
