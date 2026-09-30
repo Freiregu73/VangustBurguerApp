@@ -58,5 +58,10 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
             Toast.makeText(this, titulo + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
             finish(); // Fecha a tela de detalhes após pedir
         });
+
+        ImageView btnVoltar = findViewById(R.id.btnVoltarDetalhesProduto);
+        if (btnVoltar != null) {
+            btnVoltar.setOnClickListener(v -> finish()); // Fecha a activity atual
+        }
     }
 }
