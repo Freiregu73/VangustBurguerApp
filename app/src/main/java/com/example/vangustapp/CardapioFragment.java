@@ -49,7 +49,6 @@ public class CardapioFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cardapio, container, false);
     }
 
@@ -57,7 +56,7 @@ public class CardapioFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Encontrar os RecyclerViews pelo ID correspondente no fragment_cardapio.xml
+        // 1. Encontrar os RecyclerViews pelo ID correspondente
         RecyclerView recCarnes = view.findViewById(R.id.idRecCarnes);
         RecyclerView recFrangos = view.findViewById(R.id.idRecFrangos);
         RecyclerView recVeganos = view.findViewById(R.id.idRecVeganos);
@@ -121,9 +120,25 @@ public class CardapioFragment extends Fragment {
             });
         }
 
+        atualizarBolinha(view);
     }
 
-    // Método auxiliar para abrir os detalhes de qualquer item selecionado
+    private void atualizarBolinha(View view) {
+        View dot = view.findViewById(R.id.dotCarrinhoCardapio);
+        if (dot != null) {
+            boolean temItens = !CarrinhoManager.getListaCarrinho().isEmpty();
+            dot.setVisibility(temItens ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getView() != null) {
+            atualizarBolinha(getView());
+        }
+    }
+
     private void abrirDetalhes(ItensCard item) {
         Intent intent = new Intent(getContext(), DetalhesProdutoActivity.class);
         intent.putExtra("titulo", item.getTitulo());

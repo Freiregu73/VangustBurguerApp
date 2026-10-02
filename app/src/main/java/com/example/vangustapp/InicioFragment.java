@@ -77,6 +77,9 @@ public class InicioFragment extends Fragment {
             });
         }
 
+        // Atualiza a bolinha logo ao abrir o fragmento
+        atualizarBolinhaCarrinho(view);
+
         // --- 0. CONFIGURAÇÃO DO CARROSSEL SUPERIOR ---
         ViewPager2 viewPagerCarrossel = view.findViewById(R.id.viewPagerCarrossel);
         if (viewPagerCarrossel != null) {
@@ -145,6 +148,24 @@ public class InicioFragment extends Fragment {
             ItensCardAdapter adapterLancamento = new ItensCardAdapter(listaLancamento);
             adapterLancamento.setOnItemClickListener(item -> abrirDetalhes(item));
             recLancamento.setAdapter(adapterLancamento);
+        }
+    }
+
+    // --- Método auxiliar para gerir a visibilidade da bolinha vermelha ---
+    private void atualizarBolinhaCarrinho(View view) {
+        View dotCarrinho = view.findViewById(R.id.dotCarrinho);
+        if (dotCarrinho != null) {
+            boolean temItens = !CarrinhoManager.getListaCarrinho().isEmpty();
+            dotCarrinho.setVisibility(temItens ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Garante que a bolinha atualiza sempre que regressas a este ecrã
+        if (getView() != null) {
+            atualizarBolinhaCarrinho(getView());
         }
     }
 

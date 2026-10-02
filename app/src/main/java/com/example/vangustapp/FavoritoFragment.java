@@ -2,6 +2,8 @@ package com.example.vangustapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,6 +83,24 @@ public class FavoritoFragment extends Fragment {
         AdapterFavoritos adapter = new AdapterFavoritos(lstFavoritos, getContext());
         idRecFavoritos.setAdapter(adapter);
 
+        atualizarBolinha(view);
+
         return view;
+    }
+
+    private void atualizarBolinha(View view) {
+        View dot = view.findViewById(R.id.dotCarrinhoFavoritos);
+        if (dot != null) {
+            boolean temItens = !CarrinhoManager.getListaCarrinho().isEmpty();
+            dot.setVisibility(temItens ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getView() != null) {
+            atualizarBolinha(getView());
+        }
     }
 }
