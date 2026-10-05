@@ -46,20 +46,28 @@ public class CadastroActivity extends AppCompatActivity {
             } else if (senha.length() < 6) {
                 Toast.makeText(CadastroActivity.this, "A palavra-passe deve ter pelo menos 6 caracteres", Toast.LENGTH_SHORT).show();
             } else {
-                // GUARDAR OS DADOS LOCALMENTE
+                // VERIFICAR SE O E-MAIL JÁ EXISTE NO SharedPreferences
                 SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("nome_usuario", nome);
-                editor.putString("email_usuario", email);
-                editor.putString("senha_usuario", senha);
-                editor.apply(); // Salva de forma assíncrona
+                String emailSalvo = preferences.getString("email_usuario", "");
 
-                Toast.makeText(CadastroActivity.this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
+                if (!emailSalvo.isEmpty() && emailSalvo.equalsIgnoreCase(email)) {
+                    // Se o e-mail digitado for igual ao que já está guardado, avisa o utilizador
+                    Toast.makeText(CadastroActivity.this, "Este e-mail já está associado a uma conta!", Toast.LENGTH_LONG).show();
+                } else {
+                    // SE NÃO EXISTIR, GUARDA OS DADOS NORMALMENTE
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("nome_usuario", nome);
+                    editor.putString("email_usuario", email);
+                    editor.putString("senha_usuario", senha);
+                    editor.apply();
 
-                // Redireciona para o login ou menu principal
-                Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+                    Toast.makeText(CadastroActivity.this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
+
+                    // Redireciona para o login
+                    Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
     }
