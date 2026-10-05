@@ -11,44 +11,51 @@
         android:roundIcon="@drawable/logo_com_fundo"
         android:supportsRtl="true"
         android:theme="@style/Theme.VangustApp">
+
+        <!-- Tela de Abertura / Splash -->
         <activity
             android:name=".SplashActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".MenuPrincipalActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Autenticação -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".CadastroActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- Ecrã Principal (Navegação / Drawer) -->
+        <activity
+            android:name=".MenuPrincipalActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Telas Secundárias (Activities) -->
         <activity
             android:name=".CupomFragment"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".NovoEndereco"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".PerfilFragment"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".EditarPerfil"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".DetalhesPedidosActivity"
             android:exported="false"
@@ -57,10 +64,7 @@
         <activity
             android:name=".DetalhesProdutoActivity"
             android:exported="false" />
-        <activity
-            android:name=".CheckoutFragment"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>
