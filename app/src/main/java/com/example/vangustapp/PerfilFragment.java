@@ -60,14 +60,11 @@ public class PerfilFragment extends Fragment {
         btnSairConta.setOnClickListener(v -> {
             SharedPreferences preferences = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            // Se quiser limpar dados de sessão (mantendo ou não o registo, aqui limpamos a sessão ativa)
-            editor.remove("usuario_logado");
+            editor.putBoolean("is_logged", false); // Desativa a sessão
             editor.apply();
 
-            // Limpa o carrinho também por segurança
             CarrinhoManager.limparCarrinho();
 
-            // Volta para a tela de Login
             Intent intent = new Intent(getContext(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

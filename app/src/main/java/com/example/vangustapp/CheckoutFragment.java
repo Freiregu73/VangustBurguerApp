@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,20 +42,21 @@ public class CheckoutFragment extends Fragment {
         radioGroupPagamento = view.findViewById(R.id.radioGroupPagamento);
         btnConfirmarPedidoFinal = view.findViewById(R.id.btnConfirmarPedidoFinal);
 
-        // 1. Carregar o endereço guardado no SharedPreferences (ajusta a chave "usuario_logado" ou "endereco" conforme usaste no teu projeto)
         carregarEnderecoUsuario();
 
-        // 2. Calcular e mostrar o total (Subtotal dos itens + Taxa)
-        double totalGeral = CarrinhoManager.calcularTotal() + TAXA_ENTREGA;
+        // Calcular total considerando o subtotal, o desconto do cupom e a taxa de entrega
+        double subtotal = CarrinhoManager.calcularTotal();
+        double desconto = calcularDescontoCupom(subtotal);
+        double totalGeral = (subtotal - desconto) + TAXA_ENTREGA;
+        if (totalGeral < 0) totalGeral = TAXA_ENTREGA;
+
         tvTotalCheckout.setText(String.format("R$ %.2f", totalGeral));
 
-        // 3. Ação do botão de confirmação definitiva
         btnConfirmarPedidoFinal.setOnClickListener(v -> {
             int selectedId = radioGroupPagamento.getCheckedRadioButtonId();
             if (selectedId == -1) {
                 Toast.makeText(getContext(), "Por favor, selecione um método de pagamento!", Toast.LENGTH_SHORT).show();
             } else {
-                // Identificar o texto do pagamento selecionado
                 String pagamentoEscolhido = "PIX";
                 if (selectedId == R.id.rbCartao) {
                     pagamentoEscolhido = "Cartão";
@@ -63,32 +65,54 @@ public class CheckoutFragment extends Fragment {
                 }
 
                 String enderecoAtual = tvEnderecoCheckout.getText().toString();
-                double totalAtual = CarrinhoManager.calcularTotal() + TAXA_ENTREGA;
+                double totalFinalPedido = (CarrinhoManager.calcularTotal() - desconto) + TAXA_ENTREGA;
 
-                // Criar e salvar o pedido na lista global (copiando os itens do carrinho atual)
                 List<ItemCarrinho> itensDoPedido = new ArrayList<>(CarrinhoManager.getListaCarrinho());
-                PedidoModel novoPedido = new PedidoModel(enderecoAtual, pagamentoEscolhido, totalAtual, itensDoPedido);
+                PedidoModel novoPedido = new PedidoModel(enderecoAtual, pagamentoEscolhido, totalFinalPedido, itensDoPedido);
                 PedidoManager.adicionarPedido(novoPedido);
 
                 Toast.makeText(getContext(), "Pedido realizado com sucesso! Bom apetite!", Toast.LENGTH_LONG).show();
 
-                // Limpa o carrinho
+                // Limpa o carrinho e o cupom utilizado após finalizar
                 CarrinhoManager.limparCarrinho();
+                limparCupomAtivo();
 
-                // Vai para o ecrã de Pedidos
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new PedidosFragment())
                         .commit();
             }
         });
+
+        ImageView btnVoltarCheckout = view.findViewById(R.id.btnVoltarCheckout);
+        if (btnVoltarCheckout != null) {
+            btnVoltarCheckout.setOnClickListener(v -> {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            });
+        }
+
     }
 
     private void carregarEnderecoUsuario() {
-        // Exemplo a ler do SharedPreferences (podes adaptar caso tenhas guardado com outra chave)
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
-        // Se guardaste o endereço no registo/perfil, busca-o aqui. Colocamos um texto predefinido caso venha vazio:
         String enderecoSalvo = sharedPreferences.getString("endereco_usuario", "Rua Exemplo, 123 - Centro (Edite no seu perfil)");
-
         tvEnderecoCheckout.setText(enderecoSalvo);
+    }
+
+    private double calcularDescontoCupom(double subtotal) {
+        if (subtotal <= 0) return 0.0;
+        SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+        String cupomAtivo = prefs.getString("cupom_ativo", "");
+
+        if (cupomAtivo.equals("VANGUST10")) {
+            return subtotal * 0.10;
+        } else if (cupomAtivo.equals("PRIMEIRA")) {
+            return Math.min(subtotal, 10.00);
+        }
+        return 0.0;
+    }
+
+    private void limparCupomAtivo() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+        prefs.edit().remove("cupom_ativo").remove("desconto_ativo").apply();
     }
 }

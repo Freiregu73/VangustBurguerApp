@@ -52,12 +52,16 @@ public class LoginActivity extends AppCompatActivity {
 
             // VALIDAR SE CORRESPONDEM
             if (emailDigitado.equals(emailSalvo) && senhaDigitada.equals(senhaSalva)) {
+
+                // GUARDAR QUE O UTILIZADOR ESTÁ LOGADO
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("is_logged", true);
+                editor.apply();
+
                 Toast.makeText(LoginActivity.this, "Login efetuado com sucesso!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, MenuPrincipalActivity.class);
                 startActivity(intent);
                 finish();
-            } else {
-                Toast.makeText(LoginActivity.this, "E-mail ou palavra-passe incorretos!", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -65,5 +69,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
             startActivity(intent);
         });
+
+
     }
 }

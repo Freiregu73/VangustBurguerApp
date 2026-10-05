@@ -6,6 +6,16 @@
     android:background="#F7EDDA"
     android:orientation="vertical">
 
+    <!-- Botão Voltar -->
+    <ImageView
+        android:id="@+id/btnVoltarCarrinho"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/baseline_arrow_back"
+        app:tint="#8F572F" />
+
     <!-- Cabeçalho (Título) -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,6 +40,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_margin="10dp" />
+
 
     <!-- Área de Resumo e Finalização (Rodapé) -->
     <LinearLayout
@@ -63,6 +74,45 @@
                 android:text="R$ 5,00"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Atalho para Escolher/Ver Cupons -->
+
+        <LinearLayout
+            android:id="@+id/layoutAtalhoCupom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FCD299"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/baseline_local_offer"
+                app:tint="#8F572F" />
+
+            <TextView
+                android:id="@+id/tvStatusCupomCarrinho"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/roboto_condensed_light"
+                android:text="Toque aqui para adicionar um cupom"
+                android:textColor="#8F572F"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/baseline_arrow_forward"
+                app:tint="#8F572F" />
         </LinearLayout>
 
         <LinearLayout

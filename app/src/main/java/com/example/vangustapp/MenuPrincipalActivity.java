@@ -92,7 +92,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                         .commit();
             } else if (id == R.id.mCupom) {
                 // Como o CupomFragment foi configurado como Activity no teu código, abrimos com Intent:
-                startActivity(new android.content.Intent(MenuPrincipalActivity.this, CupomFragment.class));
+                startActivity(new android.content.Intent(MenuPrincipalActivity.this, CupomActivity.class));
             }
 
             // Fecha o menu lateral após o clique

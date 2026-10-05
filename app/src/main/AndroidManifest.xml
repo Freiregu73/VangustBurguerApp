@@ -42,7 +42,7 @@
 
         <!-- Telas Secundárias (Activities) -->
         <activity
-            android:name=".CupomFragment"
+            android:name=".CupomActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
