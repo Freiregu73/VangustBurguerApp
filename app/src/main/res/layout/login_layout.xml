@@ -87,14 +87,24 @@
 
     <LinearLayout
         android:paddingEnd="15dp"
+        android:gravity="right"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Esqueceu a senha? Clique aqui."
+            android:text="Esqueceu a senha? "
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_gravity="end"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/LinkCadastrar"
+            android:text="Clique aqui."
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_gravity="end"/>

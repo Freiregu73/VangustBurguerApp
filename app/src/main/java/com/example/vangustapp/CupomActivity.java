@@ -25,12 +25,14 @@ public class CupomActivity extends AppCompatActivity {
     private RecyclerView idRecCupons;
     private TextInputEditText txInserirCupom;
     private MaterialButton btnAplicarCupom;
+    private AdapterCupom adapter;
+    private List<CupomModel> listaCupons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.fragment_cupom); // Mantém o layout XML que já tens
+        setContentView(R.layout.fragment_cupom);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -44,22 +46,27 @@ public class CupomActivity extends AppCompatActivity {
 
         idRecCupons.setLayoutManager(new LinearLayoutManager(this));
 
-        // Criar lista de cupons disponíveis
-        List<CupomModel> listaCupons = new ArrayList<>();
-        listaCupons.add(new CupomModel("VANGUST10", "10% de desconto em todo o cardápio", 0.10));
-        listaCupons.add(new CupomModel("PRIMEIRA", "R$ 10,00 de desconto na primeira compra", 10.00));
+        // Carregar apenas os cupons que ainda não foram usados
+        carregarCuponsDisponiveis();
 
-        AdapterCupom adapter = new AdapterCupom(listaCupons, this);
-        idRecCupons.setAdapter(adapter);
+        // Botão voltar
+        ImageView btnVoltarCupom = findViewById(R.id.btnVoltarCupom);
+        if (btnVoltarCupom != null) {
+            btnVoltarCupom.setOnClickListener(v -> finish());
+        }
 
         // Ação do botão "Aplicar" cupom digitado manualmente
         btnAplicarCupom.setOnClickListener(v -> {
             String codigoDigitado = txInserirCupom.getText().toString().trim().toUpperCase();
 
+            SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+            boolean jaFoiUsado = prefs.getBoolean("usado_" + codigoDigitado, false);
+
             if (codigoDigitado.isEmpty()) {
                 Toast.makeText(this, "Digite um código de cupom!", Toast.LENGTH_SHORT).show();
+            } else if (jaFoiUsado) {
+                Toast.makeText(this, "Este cupom já foi utilizado por si!", Toast.LENGTH_LONG).show();
             } else if (codigoDigitado.equals("VANGUST10") || codigoDigitado.equals("PRIMEIRA")) {
-                SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
                 prefs.edit().putString("cupom_ativo", codigoDigitado).apply();
                 Toast.makeText(this, "Cupom " + codigoDigitado + " aplicado!", Toast.LENGTH_SHORT).show();
                 finish();
@@ -67,10 +74,32 @@ public class CupomActivity extends AppCompatActivity {
                 Toast.makeText(this, "Cupom inválido ou expirado!", Toast.LENGTH_LONG).show();
             }
         });
+    }
 
-        ImageView btnVoltarCupom = findViewById(R.id.btnVoltarCupom);
-        if (btnVoltarCupom != null) {
-            btnVoltarCupom.setOnClickListener(v -> finish());
+    private void carregarCuponsDisponiveis() {
+        SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+        listaCupons = new ArrayList<>();
+
+        // Verificar o cupom VANGUST10
+        if (!prefs.getBoolean("usado_VANGUST10", false)) {
+            listaCupons.add(new CupomModel("VANGUST10", "10% de desconto em todo o cardápio", 0.10));
+        }
+
+        // Verificar o cupom PRIMEIRA
+        if (!prefs.getBoolean("usado_PRIMEIRA", false)) {
+            listaCupons.add(new CupomModel("PRIMEIRA", "R$ 10,00 de desconto na primeira compra", 10.00));
+        }
+
+        adapter = new AdapterCupom(listaCupons, this);
+        idRecCupons.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Atualiza a lista sempre que a activity ganha foco
+        if (adapter != null) {
+            carregarCuponsDisponiveis();
         }
     }
 }

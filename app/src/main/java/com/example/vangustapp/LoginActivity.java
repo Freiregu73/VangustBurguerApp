@@ -3,6 +3,7 @@ package com.example.vangustapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -18,6 +19,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText editEmail, editSenha;
     private Button btnEntrar, btnCadastrar;
+
+    private View linkcadastrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         editSenha = findViewById(R.id.txSenha);
         btnEntrar = findViewById(R.id.btnEntrar);
         btnCadastrar = findViewById(R.id.btnCadastrar);
+        linkcadastrar = findViewById(R.id.LinkCadastrar);
 
         btnEntrar.setOnClickListener(v -> {
             String emailDigitado = editEmail.getText().toString().trim();
@@ -66,6 +70,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         btnCadastrar.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
+            startActivity(intent);
+        });
+
+        linkcadastrar.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
             startActivity(intent);
         });

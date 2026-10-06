@@ -1,72 +1,114 @@
 package com.example.vangustapp;
 
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.cardview.widget.CardView;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class EditarPerfil extends AppCompatActivity {
 
-    private TextInputEditText txEditarNome, txEditarEmail, txEditarTelefone;
-    private MaterialButton btnSalvarPerfil;
-    private ImageView btnVoltar;
+    private ImageView imgEditarPerfil;
+    private CardView cardFotoPerfil;
+    private TextView tvAlterarFoto;
+    private TextInputEditText txNomePerfil, txEmailPerfil;
+    private Button btnSalvarAlteracoes;
+
+    // Launcher para abrir a galeria e selecionar a imagem
+    private ActivityResultLauncher<String> selecionarImagemLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.editar_perfil_layout);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        // Ligar componentes
-        txEditarNome = findViewById(R.id.txEditarNome);
-        txEditarEmail = findViewById(R.id.txEditarEmail);
-        txEditarTelefone = findViewById(R.id.txEditarTelefone);
-        btnSalvarPerfil = findViewById(R.id.btnSalvarPerfil);
 
-        // Carregar dados atuais do SharedPreferences nos campos
-        SharedPreferences preferences = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
-        String nomeAtual = preferences.getString("nome_usuario", "");
-        String emailAtual = preferences.getString("email_usuario", "");
-        String telefoneAtual = preferences.getString("telefone_usuario", "");
+        // Ligar aos IDs exatos do seu layout XML
+        imgEditarPerfil = findViewById(R.id.imgEditarPerfil);
+        cardFotoPerfil = findViewById(R.id.FotoPerfil);
+        tvAlterarFoto = findViewById(R.id.tvAlterarFoto);
 
-        if (txEditarNome != null) txEditarNome.setText(nomeAtual);
-        if (txEditarEmail != null) txEditarEmail.setText(emailAtual);
-        if (txEditarTelefone != null) txEditarTelefone.setText(telefoneAtual);
+        txNomePerfil = findViewById(R.id.txEditarNome);
+        txEmailPerfil = findViewById(R.id.txEditarEmail);
+        btnSalvarAlteracoes = findViewById(R.id.btnSalvarPerfil);
 
-        // Botão para salvar alterações
-        btnSalvarPerfil.setOnClickListener(v -> {
-            String novoNome = txEditarNome.getText().toString().trim();
-            String novoEmail = txEditarEmail.getText().toString().trim();
-            String novoTelefone = txEditarTelefone.getText().toString().trim();
+        // 1. Carregar dados atuais (Nome, Email e Foto guardados)
+        carregarDadosAtuais();
 
-            if (novoNome.isEmpty() || novoEmail.isEmpty()) {
-                Toast.makeText(this, "O nome e o e-mail não podem estar vazios!", Toast.LENGTH_SHORT).show();
-            } else {
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("nome_usuario", novoNome);
-                editor.putString("email_usuario", novoEmail);
-                editor.putString("telefone_usuario", novoTelefone);
-                editor.apply();
+        // 2. Configurar o seletor de imagens da galeria
+        selecionarImagemLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        // Exibe a imagem selecionada no ImageView
+                        imgEditarPerfil.setImageURI(uri);
+
+                        // Guarda o caminho (URI) da imagem no SharedPreferences
+                        SharedPreferences prefs = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
+                        prefs.edit().putString("foto_perfil", uri.toString()).apply();
+
+                        Toast.makeText(this, "Foto de perfil atualizada!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // 3. Ação para abrir a galeria ao tocar no Cartão da foto ou no texto
+        View.OnClickListener abrirGaleriaListener = v -> selecionarImagemLauncher.launch("image/*");
+
+        if (cardFotoPerfil != null) {
+            cardFotoPerfil.setOnClickListener(abrirGaleriaListener);
+        }
+        if (tvAlterarFoto != null) {
+            tvAlterarFoto.setOnClickListener(abrirGaleriaListener);
+        }
+
+        // 4. Ação do botão de salvar alterações de texto (nome)
+        btnSalvarAlteracoes.setOnClickListener(v -> {
+            String novoNome = txNomePerfil.getText().toString().trim();
+
+            if (!novoNome.isEmpty()) {
+                SharedPreferences prefs = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
+                prefs.edit().putString("nome_usuario", novoNome).apply();
 
                 Toast.makeText(this, "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show();
-                finish(); // Fecha a tela de edição e regressa ao perfil
+                finish();
+            } else {
+                Toast.makeText(this, "O nome não pode estar vazio", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Ligar o botão de voltar
+        ImageView btnVoltarEditarPerfil = findViewById(R.id.btnVoltarEditarPerfil);
+        if (btnVoltarEditarPerfil != null) {
+            btnVoltarEditarPerfil.setOnClickListener(v -> finish());
+        }
+    }
+
+    private void carregarDadosAtuais() {
+        SharedPreferences prefs = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
+
+        // Carregar Nome e Email
+        String nomeSalvo = prefs.getString("nome_usuario", "");
+        String emailSalvo = prefs.getString("email_usuario", "");
+
+        if(txNomePerfil != null) txNomePerfil.setText(nomeSalvo);
+        if(txEmailPerfil != null) txEmailPerfil.setText(emailSalvo);
+
+        // Carregar a foto guardada anteriormente no SharedPreferences (se existir)
+        String fotoUriStr = prefs.getString("foto_perfil", "");
+        if (!fotoUriStr.isEmpty()) {
+            imgEditarPerfil.setImageURI(Uri.parse(fotoUriStr));
+        }
     }
 }
