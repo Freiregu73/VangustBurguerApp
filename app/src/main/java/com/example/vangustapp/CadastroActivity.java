@@ -54,12 +54,25 @@ public class CadastroActivity extends AppCompatActivity {
                     // Se o e-mail digitado for igual ao que já está guardado, avisa o utilizador
                     Toast.makeText(CadastroActivity.this, "Este e-mail já está associado a uma conta!", Toast.LENGTH_LONG).show();
                 } else {
-                    // SE NÃO EXISTIR, GUARDA OS DADOS NORMALMENTE
+                    // SE NÃO EXISTIR, LIMPA DADOS ANTIGOS E GUARDA OS DO NOVO UTILIZADOR
                     SharedPreferences.Editor editor = preferences.edit();
+
+                    // Limpar dados transacionais anteriores (cupons, moradas, foto)
+                    editor.remove("endereco_usuario");
+                    editor.remove("cupom_ativo");
+                    editor.remove("desconto_ativo");
+                    editor.remove("usado_VANGUST10");
+                    editor.remove("usado_PRIMEIRA");
+                    editor.remove("foto_perfil");
+
+                    // Guardar novos dados
                     editor.putString("nome_usuario", nome);
                     editor.putString("email_usuario", email);
                     editor.putString("senha_usuario", senha);
                     editor.apply();
+
+                    // Limpar carrinho em memória
+                    CarrinhoManager.limparCarrinho();
 
                     Toast.makeText(CadastroActivity.this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
 

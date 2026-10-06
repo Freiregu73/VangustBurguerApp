@@ -60,9 +60,18 @@ public class PerfilFragment extends Fragment {
         btnSairConta.setOnClickListener(v -> {
             SharedPreferences preferences = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean("is_logged", false); // Desativa a sessão
+
+            // Desativar a sessão e limpar dados temporários
+            editor.putBoolean("is_logged", false);
+            editor.remove("endereco_usuario");
+            editor.remove("cupom_ativo");
+            editor.remove("desconto_ativo");
+            editor.remove("usado_VANGUST10");
+            editor.remove("usado_PRIMEIRA");
+            editor.remove("foto_perfil");
             editor.apply();
 
+            // Limpar o carrinho e pedidos em memória
             CarrinhoManager.limparCarrinho();
 
             Intent intent = new Intent(getContext(), LoginActivity.class);
