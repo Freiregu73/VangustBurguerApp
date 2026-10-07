@@ -83,6 +83,9 @@ public class PedidosFragment extends Fragment {
                                 String status = obj.optString("status_pedido", "Pendente");
                                 String pagamento = obj.optString("metodo_pagamento", "");
 
+                                // Capturar o endereço real vindo da consulta SQL do PHP
+                                String enderecoCompleto = obj.optString("endereco_completo", "Endereço não especificado");
+
                                 // Ler os itens do pedido vindos do PHP
                                 List<ItemCarrinho> itensPedido = new ArrayList<>();
                                 if (obj.has("itens")) {
@@ -98,7 +101,8 @@ public class PedidosFragment extends Fragment {
                                     }
                                 }
 
-                                PedidoModel pedido = new PedidoModel(idPedido, dataCriacao, "", pagamento, valorTotal, status, itensPedido);
+                                // Instanciando o modelo passando o endereço recuperado da base de dados
+                                PedidoModel pedido = new PedidoModel(idPedido, dataCriacao, enderecoCompleto, pagamento, valorTotal, status, itensPedido);
                                 listaPedidos.add(pedido);
                             }
                             adapterPedidos.notifyDataSetChanged();
