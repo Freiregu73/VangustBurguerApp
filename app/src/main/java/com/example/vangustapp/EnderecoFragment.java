@@ -7,13 +7,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +30,8 @@ import java.util.List;
 public class EnderecoFragment extends Fragment {
 
     private RecyclerView idRecEndereco;
+    private List<EnderecoModel> listaEnderecos;
+    private AdapterEndereco adapterEndereco;
 
     @Nullable
     @Override
@@ -35,8 +46,12 @@ public class EnderecoFragment extends Fragment {
         idRecEndereco = view.findViewById(R.id.idRecEndereco);
         idRecEndereco.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Carregar endereços salvos
-        carregarEnderecos();
+        listaEnderecos = new ArrayList<>();
+        adapterEndereco = new AdapterEndereco(listaEnderecos, getContext());
+        idRecEndereco.setAdapter(adapterEndereco);
+
+        // Carregar endereços da API MySQL
+        carregarEnderecosDaApi();
 
         // Botão flutuante para adicionar novo endereço
         FloatingActionButton fab = view.findViewById(R.id.fabAdicionarEndereco);
@@ -48,26 +63,52 @@ public class EnderecoFragment extends Fragment {
         }
     }
 
-    private void carregarEnderecos() {
-        List<EnderecoModel> lista = new ArrayList<>();
+    private void carregarEnderecosDaApi() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+        String emailUsuario = prefs.getString("email_usuario", "");
 
-        // Buscar do SharedPreferences o endereço que foi guardado no checkout/novo endereço
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
-        String enderecoSalvo = sharedPreferences.getString("endereco_usuario", "");
-
-        if (!enderecoSalvo.isEmpty()) {
-            // Se houver um endereço guardado, adicionamos à lista para exibir no cartão
-            lista.add(new EnderecoModel("Endereço Principal", enderecoSalvo));
+        if (emailUsuario.isEmpty()) {
+            Toast.makeText(getContext(), "Utilizador não identificado.", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        AdapterEndereco adapter = new AdapterEndereco(lista, getContext());
-        idRecEndereco.setAdapter(adapter);
+        String url = "http://10.0.2.2/api_hamburgueria/listar_enderecos.php?email=" + emailUsuario;
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        boolean sucesso = response.getBoolean("sucesso");
+                        if (sucesso) {
+                            JSONArray jsonArray = response.getJSONArray("enderecos");
+                            listaEnderecos.clear();
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject endObj = jsonArray.getJSONObject(i);
+                                String ruaNum = endObj.getString("rua") + ", " + endObj.getString("numero");
+                                String bairroCep = "Bairro: " + endObj.getString("bairro") + " | CEP: " + endObj.getString("cep");
+
+                                listaEnderecos.add(new EnderecoModel(ruaNum, bairroCep));
+                            }
+                            adapterEndereco.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(getContext(), "Erro ao carregar endereços", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Erro ao processar dados de endereços", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
+        );
+
+        Volley.newRequestQueue(requireContext()).add(request);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         // Atualiza a lista sempre que voltar para este fragmento (ex: após cadastrar um novo)
-        carregarEnderecos();
+        carregarEnderecosDaApi();
     }
 }
