@@ -7,6 +7,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class ItensCardAdapter extends RecyclerView.Adapter<ItensCardAdapter.ViewHolder> {
@@ -40,7 +43,17 @@ public class ItensCardAdapter extends RecyclerView.Adapter<ItensCardAdapter.View
         ItensCard item = listaItens.get(position);
 
         holder.textTitulo.setText(item.getTitulo());
-        holder.imageItem.setImageResource(item.getImgitens());
+
+        // Carregar a imagem via Glide se houver URL da API, senão usa o recurso local
+        if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(item.getImageUrl())
+                    .placeholder(R.drawable.brutao) // Imagem mostrada enquanto carrega
+                    .error(R.drawable.brutao)       // Imagem caso ocorra algum erro
+                    .into(holder.imageItem);
+        } else {
+            holder.imageItem.setImageResource(item.getImgitens());
+        }
 
         // Ação ao clicar no cartão do hambúrguer
         holder.itemView.setOnClickListener(v -> {
