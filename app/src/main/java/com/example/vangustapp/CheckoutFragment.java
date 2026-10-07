@@ -52,34 +52,92 @@ public class CheckoutFragment extends Fragment {
 
         tvTotalCheckout.setText(String.format("R$ %.2f", totalGeral));
 
+        // Declaramos a variável totalFinalPedido como final aqui para poder ser usada na classe anónima do Volley sem erros
+        final double totalFinalPedido = totalGeral;
+
         btnConfirmarPedidoFinal.setOnClickListener(v -> {
             int selectedId = radioGroupPagamento.getCheckedRadioButtonId();
             if (selectedId == -1) {
                 Toast.makeText(getContext(), "Por favor, selecione um método de pagamento!", Toast.LENGTH_SHORT).show();
+            } else if (CarrinhoManager.getListaCarrinho().isEmpty()) {
+                Toast.makeText(getContext(), "O seu carrinho está vazio!", Toast.LENGTH_SHORT).show();
             } else {
-                String pagamentoEscolhido = "PIX";
+                // Atribuição única para ser considerada efetivamente final pelo Java
+                final String pagamentoEscolhido;
                 if (selectedId == R.id.rbCartao) {
                     pagamentoEscolhido = "Cartão";
                 } else if (selectedId == R.id.rbDinheiro) {
                     pagamentoEscolhido = "Dinheiro";
+                } else {
+                    pagamentoEscolhido = "PIX";
                 }
 
                 String enderecoAtual = tvEnderecoCheckout.getText().toString();
-                double totalFinalPedido = (CarrinhoManager.calcularTotal() - desconto) + TAXA_ENTREGA;
 
-                List<ItemCarrinho> itensDoPedido = new ArrayList<>(CarrinhoManager.getListaCarrinho());
-                PedidoModel novoPedido = new PedidoModel(enderecoAtual, pagamentoEscolhido, totalFinalPedido, itensDoPedido);
-                PedidoManager.adicionarPedido(novoPedido);
+                // Recuperar o e-mail do utilizador logado no SharedPreferences
+                android.content.SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+                String emailUsuario = prefs.getString("email_usuario", "cliente@vangustburguer.com");
 
-                Toast.makeText(getContext(), "Pedido realizado com sucesso! Bom apetite!", Toast.LENGTH_LONG).show();
+                // Converter a lista de itens do carrinho num array JSON para enviar ao PHP
+                org.json.JSONArray jsonArrayItens = new org.json.JSONArray();
+                try {
+                    for (ItemCarrinho item : CarrinhoManager.getListaCarrinho()) {
+                        org.json.JSONObject objItem = new org.json.JSONObject();
+                        objItem.put("titulo", item.getTitulo());
+                        objItem.put("preco", item.getPreco());
+                        objItem.put("quantidade", item.getQuantidade());
+                        jsonArrayItens.put(objItem);
+                    }
+                } catch (org.json.JSONException e) {
+                    e.printStackTrace();
+                }
 
-                // Limpa o carrinho e o cupom utilizado após finalizar
-                CarrinhoManager.limparCarrinho();
-                limparCupomAtivo();
+                // URL da API para salvar o pedido
+                String url = "http://10.0.2.2/api_hamburgueria/salvar_pedido.php";
 
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new PedidosFragment())
-                        .commit();
+                com.android.volley.toolbox.StringRequest stringRequest = new com.android.volley.toolbox.StringRequest(
+                        com.android.volley.Request.Method.POST, url,
+                        response -> {
+                            try {
+                                org.json.JSONObject jsonObject = new org.json.JSONObject(response);
+                                boolean sucesso = jsonObject.getBoolean("sucesso");
+
+                                if (sucesso) {
+                                    Toast.makeText(getContext(), "Pedido realizado e enviado para o painel!", Toast.LENGTH_LONG).show();
+
+                                    // Limpa o carrinho e o cupom ativo
+                                    CarrinhoManager.limparCarrinho();
+                                    limparCupomAtivo();
+
+                                    // Redireciona para a tela de histórico de pedidos
+                                    requireActivity().getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.fragment_container, new PedidosFragment())
+                                            .commit();
+                                } else {
+                                    Toast.makeText(getContext(), "Erro: " + jsonObject.getString("mensagem"), Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (org.json.JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getContext(), "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        error -> {
+                            Toast.makeText(getContext(), "Erro de conexão ao finalizar pedido", Toast.LENGTH_SHORT).show();
+                        }
+                ) {
+                    @Override
+                    protected java.util.Map<String, String> getParams() {
+                        java.util.Map<String, String> params = new java.util.HashMap<>();
+                        params.put("email", emailUsuario);
+                        params.put("endereco", enderecoAtual);
+                        params.put("pagamento", pagamentoEscolhido);
+                        params.put("total", String.valueOf(totalFinalPedido));
+                        params.put("itens", jsonArrayItens.toString());
+                        return params;
+                    }
+                };
+
+                com.android.volley.toolbox.Volley.newRequestQueue(requireContext()).add(stringRequest);
             }
         });
 

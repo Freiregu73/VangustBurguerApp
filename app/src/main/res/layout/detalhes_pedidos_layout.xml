@@ -143,10 +143,11 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/tvTaxaEntregaDetalhes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_condensed_light"
-                android:text="Grátis"
+                android:text="R$ 5,00"
                 android:textColor="#A61C1C"
                 android:textStyle="bold"
                 android:textSize="16sp" />

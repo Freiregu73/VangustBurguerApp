@@ -36,9 +36,14 @@ public class AdapterPedidos extends RecyclerView.Adapter<AdapterPedidos.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PedidoModel pedido = listaPedidos.get(position);
 
-        // Número do pedido dinâmico
-        holder.tvNumeroPedido.setText("Pedido #" + (1000 + position + 1));
-        holder.tvDataPedido.setText("Recente");
+        // Número do pedido real vindo do banco de dados
+        holder.tvNumeroPedido.setText("Pedido #" + pedido.getIdPedido());
+
+        // Exibindo o Status junto com a data ou substituindo para ver o andamento do painel
+        String statusOuData = (pedido.getStatusPedido() != null && !pedido.getStatusPedido().isEmpty())
+                ? pedido.getStatusPedido()
+                : (pedido.getDataCriacao() != null ? pedido.getDataCriacao() : "Recente");
+        holder.tvDataPedido.setText(statusOuData);
 
         // Montar o texto com o resumo dos itens comprados
         StringBuilder resumoItens = new StringBuilder();
@@ -53,7 +58,7 @@ public class AdapterPedidos extends RecyclerView.Adapter<AdapterPedidos.ViewHold
         }
         holder.tvResumoItens.setText(resumoItens.toString());
 
-        // Preço total formatado
+        // Preço total formatado exatamente como no layout
         holder.tvTotalPedido.setText(String.format("%.2f", pedido.getTotal()));
 
         // --- CLIQUE NO CARD: Abre os detalhes passando o objeto completo ---
@@ -65,17 +70,18 @@ public class AdapterPedidos extends RecyclerView.Adapter<AdapterPedidos.ViewHold
 
         // --- AÇÃO DO BOTÃO "REPETIR" NA LISTA ---
         holder.btnRepetirPedido.setOnClickListener(v -> {
-            if (pedido.getItens() != null) {
+            if (pedido.getItens() != null && !pedido.getItens().isEmpty()) {
                 for (ItemCarrinho item : pedido.getItens()) {
                     CarrinhoManager.adicionarItem(item);
                 }
                 Toast.makeText(context, "Itens adicionados ao carrinho!", Toast.LENGTH_SHORT).show();
 
-                // Abre a MainActivity diretamente no Carrinho
-                android.content.Intent intent = new android.content.Intent(context, MenuPrincipalActivity.class);
+                Intent intent = new Intent(context, MenuPrincipalActivity.class);
                 intent.putExtra("abrir_carrinho", true);
-                intent.addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP | android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
+            } else {
+                Toast.makeText(context, "Não foi possível carregar os itens deste pedido.", Toast.LENGTH_SHORT).show();
             }
         });
     }
