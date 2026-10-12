@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class CheckoutFragment extends Fragment {
     private TextView tvEnderecoCheckout, tvTotalCheckout;
     private RadioGroup radioGroupPagamento;
     private Button btnConfirmarPedidoFinal;
+    private EditText etObservacaoCheckout;
 
     private static final double TAXA_ENTREGA = 5.00;
 
@@ -54,15 +56,14 @@ public class CheckoutFragment extends Fragment {
         tvTotalCheckout = view.findViewById(R.id.tvTotalCheckout);
         radioGroupPagamento = view.findViewById(R.id.radioGroupPagamento);
         btnConfirmarPedidoFinal = view.findViewById(R.id.btnConfirmarPedidoFinal);
+        etObservacaoCheckout = view.findViewById(R.id.etObservacaoCheckout);
 
         carregarEnderecoUsuario();
 
-        // Permitir que o utilizador clique no endereço para escolher outro cadastrado
         if (tvEnderecoCheckout != null) {
             tvEnderecoCheckout.setOnClickListener(v -> mostrarDialogoSelecaoEnderecos());
         }
 
-        // Calcular total considerando o subtotal, o desconto do cupom e a taxa de entrega
         double subtotal = CarrinhoManager.calcularTotal();
         double desconto = calcularDescontoCupom(subtotal);
         double totalGeral = (subtotal - desconto) + TAXA_ENTREGA;
@@ -89,6 +90,8 @@ public class CheckoutFragment extends Fragment {
                 }
 
                 String enderecoAtual = tvEnderecoCheckout.getText().toString();
+                String observacaoTexto = (etObservacaoCheckout != null && etObservacaoCheckout.getText() != null)
+                        ? etObservacaoCheckout.getText().toString().trim() : "";
 
                 SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
                 String emailUsuario = prefs.getString("email_usuario", "cliente@vangustburguer.com");
@@ -145,7 +148,8 @@ public class CheckoutFragment extends Fragment {
                         params.put("pagamento", pagamentoEscolhido);
                         params.put("total", String.valueOf(totalFinalPedido));
                         params.put("itens", jsonArrayItens.toString());
-                        params.put("cupom", cupomAtivo); // <--- Envia o cupom ativo para o PHP registrar como usado
+                        params.put("cupom", cupomAtivo);
+                        params.put("observacao", observacaoTexto);
                         return params;
                     }
                 };
@@ -179,16 +183,15 @@ public class CheckoutFragment extends Fragment {
                             JSONArray jsonArray = response.getJSONArray("enderecos");
 
                             if (jsonArray.length() == 0) {
-                                Toast.makeText(getContext(), "Nenhum endereço cadastrado. Adicione um no seu perfil!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "Nenhum endereço cadastrado.", Toast.LENGTH_LONG).show();
                                 return;
                             }
 
-                            // Inflar o layout customizado do diálogo
                             View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_selecionar_endereco, null);
-                            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                             builder.setView(dialogView);
 
-                            androidx.appcompat.app.AlertDialog dialog = builder.create();
+                            AlertDialog dialog = builder.create();
                             if (dialog.getWindow() != null) {
                                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                             }
@@ -205,12 +208,11 @@ public class CheckoutFragment extends Fragment {
                                 listaEnderecos.add(new EnderecoModel(ruaNum, bairroCep));
                             }
 
-                            // Usar um adapter adaptado para clique no item do diálogo
                             AdapterEnderecoDialog adapterDialog = new AdapterEnderecoDialog(listaEnderecos, requireContext(), (enderecoEscolhido) -> {
                                 String formatado = enderecoEscolhido.getTitulo() + " - " + enderecoEscolhido.getRua();
                                 tvEnderecoCheckout.setText(formatado);
                                 prefs.edit().putString("endereco_usuario", formatado).apply();
-                                Toast.makeText(getContext(), "Endereço de entrega atualizado!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Endereço atualizado!", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             });
 
@@ -228,7 +230,7 @@ public class CheckoutFragment extends Fragment {
                         e.printStackTrace();
                     }
                 },
-                error -> Toast.makeText(getContext(), "Erro de conexão ao buscar endereços", Toast.LENGTH_SHORT).show()
+                error -> Toast.makeText(getContext(), "Erro de conexão", Toast.LENGTH_SHORT).show()
         );
 
         Volley.newRequestQueue(requireContext()).add(request);
@@ -254,11 +256,9 @@ public class CheckoutFragment extends Fragment {
 
         if (cupomAtivo.isEmpty()) return 0.0;
 
-        // Se o valor do desconto for menor que 1 (ex: 0.10), tratamos como percentual (10%)
         if (valorDesconto > 0 && valorDesconto < 1.0) {
             return subtotal * valorDesconto;
         } else {
-            // Caso contrário, tratamos como valor fixo em dinheiro (ex: R$ 10,00 limitados ao subtotal)
             return Math.min(subtotal, valorDesconto);
         }
     }

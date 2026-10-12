@@ -118,6 +118,44 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- Bloco de Observações do Pedido -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            android:layout_marginBottom="15dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FCD299"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Observações do Pedido"
+                    android:textStyle="bold"
+                    android:textColor="#8F572F"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="8dp"/>
+
+                <EditText
+                    android:id="@+id/etObservacaoCheckout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:hint="Ex: Retirar a cebola, ponto da carne bem passado..."
+                    android:inputType="textLongMessage|textMultiLine"
+                    android:minLines="2"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <!-- Bloco de Resumo de Valores -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

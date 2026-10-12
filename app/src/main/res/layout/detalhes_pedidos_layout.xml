@@ -70,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/oswald_regular"
-                    android:text="Entregue em 22 Set 2026 às 20:45"
+                    android:text="Pendente"
                     android:textColor="#A61C1C"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_condensed_light"
-            android:text="Casa\nRua das Flores, 123 - Apto 4\nBairro Centro"
+            android:text="Endereço..."
             android:textColor="@color/black"
             android:textSize="16sp"
             android:layout_marginBottom="25dp" />
@@ -109,13 +109,12 @@
             android:textStyle="bold"
             android:layout_marginBottom="10dp"/>
 
-        <!-- Substituído por um ID para injetar os itens dinamicamente mantendo a estrutura -->
         <TextView
             android:id="@+id/tvItensDetalhes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_condensed_light"
-            android:text="1x Vangust Clássico - R$ 34,90\n1x Batata Frita Média - R$ 11,00"
+            android:text="Itens..."
             android:textColor="@color/black"
             android:textSize="16sp"
             android:layout_marginBottom="20dp" />
@@ -174,13 +173,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/oswald_regular"
-                android:text="R$ 45,90"
+                android:text="R$ 0,00"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Espaçador -->
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -190,10 +188,20 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPedirNovamente"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#555"
+            android:text="Adicionar ao Carrinho"
+            app:cornerRadius="10dp" />
+
+        <!-- Botão Cancelar Pedido -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelarPedidoDetalhes"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
             android:layout_marginTop="10dp"
             android:backgroundTint="#A61C1C"
-            android:text="Adicionar ao Carrinho"
+            android:text="Cancelar Pedido"
             app:cornerRadius="10dp" />
 
     </LinearLayout>

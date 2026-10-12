@@ -77,13 +77,13 @@ public class PedidosFragment extends Fragment {
                             for (int i = 0; i < jsonArrayPedidos.length(); i++) {
                                 JSONObject obj = jsonArrayPedidos.getJSONObject(i);
 
-                                int idPedido = obj.getInt("numero_exibicao");
+                                // CORRIGIDO: Lê diretamente o id_pedido real da base de dados
+                                int idPedido = obj.optInt("id_pedido", obj.optInt("numero_exibicao", 0));
                                 String dataCriacao = obj.optString("criado_em", "");
                                 double valorTotal = obj.getDouble("valor_total_pedido");
                                 String status = obj.optString("status_pedido", "Pendente");
                                 String pagamento = obj.optString("metodo_pagamento", "");
 
-                                // Lê prioritariamente a chave enviada pelo LEFT JOIN do PHP
                                 String enderecoCompleto = obj.optString("endereco_completo",
                                         obj.optString("endereco", "Endereço não especificado"));
 
