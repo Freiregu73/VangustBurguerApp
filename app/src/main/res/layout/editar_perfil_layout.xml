@@ -145,6 +145,17 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+        <!-- Botão para Ir para Tela de Alterar Senha -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnIrParaAlterarSenha"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16px"
+            android:text="Alterar Senha"
+            android:backgroundTint="#8F572F"
+            app:strokeColor="#332011"
+            app:cornerRadius="8dp" />
+
         <!-- Botão Salvar Alterações -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSalvarPerfil"

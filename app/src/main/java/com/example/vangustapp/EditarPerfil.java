@@ -1,5 +1,6 @@
 package com.example.vangustapp;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -97,6 +98,15 @@ public class EditarPerfil extends AppCompatActivity {
         ImageView btnVoltarEditarPerfil = findViewById(R.id.btnVoltarEditarPerfil);
         if (btnVoltarEditarPerfil != null) {
             btnVoltarEditarPerfil.setOnClickListener(v -> finish());
+        }
+
+        // Dentro do onCreate de EditarPerfil.java:
+        Button btnIrParaAlterarSenha = findViewById(R.id.btnIrParaAlterarSenha);
+        if (btnIrParaAlterarSenha != null) {
+            btnIrParaAlterarSenha.setOnClickListener(v -> {
+                Intent intent = new Intent(EditarPerfil.this, AlterarSenhaActivity.class);
+                startActivity(intent);
+            });
         }
     }
 

@@ -46,15 +46,13 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
         holder.tvPreco.setText(String.format("R$ %.2f", item.getPreco() * item.getQuantidade()));
         holder.tvQuantidade.setText(String.valueOf(item.getQuantidade()));
 
-        // Carregar a imagem com o Glide se houver URL da API
+        // Carregar a imagem via Glide se houver URL da API
         if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
             Glide.with(holder.itemView.getContext())
                     .load(item.getImageUrl())
-                    .placeholder(R.drawable.brutao)
-                    .error(R.drawable.brutao)
                     .into(holder.imgItem);
         } else {
-            holder.imgItem.setImageResource(item.getImagemLocal());
+            holder.imgItem.setImageDrawable(null);
         }
 
         // Botão para aumentar quantidade

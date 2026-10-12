@@ -17,7 +17,6 @@ public class ItensCardAdapter extends RecyclerView.Adapter<ItensCardAdapter.View
     private List<ItensCard> listaItens;
     private OnItemClickListener listener;
 
-    // Interface para o clique
     public interface OnItemClickListener {
         void onItemClick(ItensCard item);
     }
@@ -44,18 +43,15 @@ public class ItensCardAdapter extends RecyclerView.Adapter<ItensCardAdapter.View
 
         holder.textTitulo.setText(item.getTitulo());
 
-        // Carregar a imagem via Glide se houver URL da API, senão usa o recurso local
+        // Carregar a imagem exclusivamente via Glide se houver URL da API
         if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
             Glide.with(holder.itemView.getContext())
                     .load(item.getImageUrl())
-                    .placeholder(R.drawable.brutao) // Imagem mostrada enquanto carrega
-                    .error(R.drawable.brutao)       // Imagem caso ocorra algum erro
                     .into(holder.imageItem);
         } else {
-            holder.imageItem.setImageResource(item.getImgitens());
+            holder.imageItem.setImageDrawable(null);
         }
 
-        // Ação ao clicar no cartão do hambúrguer
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(item);

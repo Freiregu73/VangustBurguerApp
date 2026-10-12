@@ -31,7 +31,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
     private TextView txtTitulo, txtDescricao, txtPreco;
     private Button btnPedir;
     private int idProduto;
-    private boolean isFavorito = false; // Controla o estado atual do favorito
+    private boolean isFavorito = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,6 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Inicializar componentes visuais
         imgProduto = findViewById(R.id.modeloImagemProdutos);
         txtTitulo = findViewById(R.id.modeloTituloProdutos);
         txtDescricao = findViewById(R.id.modeloDescricaoProdutos);
@@ -53,37 +52,31 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         btnPedir = findViewById(R.id.btnPedirProduto);
         btnFavoritar = findViewById(R.id.btnFavoritarDetalhes);
 
-        // Receber os dados enviados pelo Intent
         idProduto = getIntent().getIntExtra("id_produto", -1);
         String titulo = getIntent().getStringExtra("titulo");
         String descricao = getIntent().getStringExtra("descricao");
         double preco = getIntent().getDoubleExtra("preco", 0.0);
         String urlImagem = getIntent().getStringExtra("imagem");
 
-        // Preencher os dados no ecrã
         txtTitulo.setText(titulo);
         txtDescricao.setText(descricao);
         txtPreco.setText(String.format("R$ %.2f", preco));
 
+        // Carregamento exclusivo via Glide da imagem da API
         if (urlImagem != null && !urlImagem.isEmpty()) {
             Glide.with(this)
                     .load(urlImagem)
-                    .placeholder(R.drawable.brutao)
-                    .error(R.drawable.brutao)
                     .into(imgProduto);
         } else {
-            imgProduto.setImageResource(R.drawable.brutao);
+            imgProduto.setImageDrawable(null);
         }
 
-        // Verificar se este produto já é favorito ao abrir a tela
         verificarStatusFavorito();
 
-        // Ação do Botão Favoritar
         if (btnFavoritar != null) {
             btnFavoritar.setOnClickListener(v -> alternarFavorito());
         }
 
-        // Ação do botão "Pedir"
         btnPedir.setOnClickListener(v -> {
             ItemCarrinho itemCarrinho = new ItemCarrinho(titulo, preco, 1, urlImagem != null ? urlImagem : "");
             CarrinhoManager.adicionarItem(itemCarrinho);
@@ -98,14 +91,12 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         }
     }
 
-    // Método para consultar se o produto já consta nos favoritos do cliente
     private void verificarStatusFavorito() {
         SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         int idCliente = prefs.getInt("id_cliente", -1);
 
         if (idCliente == -1 || idProduto == -1) return;
 
-        // Endpoint PHP que verifica ou lista os favoritos do cliente (ou ajuste conforme o seu script existente)
         String url = "http://10.0.2.2/api_hamburgueria/verificar_favorito.php?id_cliente=" + idCliente + "&id_produto=" + idProduto;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -118,9 +109,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 },
-                error -> {
-                    // Silencia erro de rede na verificação inicial para não incomodar o utilizador
-                }
+                error -> {}
         );
 
         Volley.newRequestQueue(this).add(stringRequest);
@@ -130,15 +119,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         int idCliente = prefs.getInt("id_cliente", -1);
 
-        if (idCliente == -1) {
-            Toast.makeText(this, "Erro de sessão: ID do cliente não encontrado.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (idProduto == -1) {
-            Toast.makeText(this, "Erro: ID do produto não identificado.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (idCliente == -1 || idProduto == -1) return;
 
         String url = "http://10.0.2.2/api_hamburgueria/favoritar.php";
 
@@ -150,16 +131,12 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
                         String mensagem = jsonObject.optString("mensagem", "Ação realizada");
 
                         if (sucesso) {
-                            // Inverte o estado local e atualiza o ícone do coração
                             isFavorito = !isFavorito;
                             atualizarVisualFavorito();
                             Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, "Erro: " + mensagem, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(this, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
                     }
                 },
                 error -> Toast.makeText(this, "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
@@ -176,15 +153,12 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         Volley.newRequestQueue(this).add(stringRequest);
     }
 
-    // Altera o ícone do coração com base na variável 'isFavorito'
     private void atualizarVisualFavorito() {
         if (btnFavoritar != null) {
             if (isFavorito) {
-                // Ícone do coração preenchido / ativo (vermelho ou cor de destaque)
-                btnFavoritar.setImageResource(R.drawable.baseline_favorite); // Certifique-se de ter este drawable ou substitua pelo seu
+                btnFavoritar.setImageResource(R.drawable.baseline_favorite);
             } else {
-                // Ícone do coração vazio / inativo
-                btnFavoritar.setImageResource(R.drawable.baseline_favorite_border); // Ou o nome do seu ícone vazio padrão
+                btnFavoritar.setImageResource(R.drawable.baseline_favorite_border);
             }
         }
     }

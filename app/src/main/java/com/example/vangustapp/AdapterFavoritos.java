@@ -46,11 +46,9 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
         if (favorito.getImageUrl() != null && !favorito.getImageUrl().isEmpty()) {
             Glide.with(context)
                     .load(favorito.getImageUrl())
-                    .placeholder(R.drawable.brutao)
-                    .error(R.drawable.brutao)
                     .into(holder.modeloImagemFavoritos);
         } else {
-            holder.modeloImagemFavoritos.setImageResource(favorito.getImgfavoritos());
+            holder.modeloImagemFavoritos.setImageDrawable(null);
         }
 
         holder.modeloBtnFavoritos.setOnClickListener(v -> {
@@ -65,7 +63,6 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
             Toast.makeText(context, favorito.getTitulo() + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
         });
 
-        // Clique no card passando o ID do produto para os detalhes
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetalhesProdutoActivity.class);
             intent.putExtra("id_produto", favorito.getIdProduto());

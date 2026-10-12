@@ -66,8 +66,8 @@ public class InicioFragment extends Fragment {
         ViewPager2 viewPagerCarrossel = view.findViewById(R.id.viewPagerCarrossel);
         if (viewPagerCarrossel != null) {
             List<Integer> listaBanners = new ArrayList<>();
-            listaBanners.add(R.drawable.brutao);
-            listaBanners.add(R.drawable.veggie);
+            listaBanners.add(R.drawable.logo_vangust_burguer);
+            listaBanners.add(R.drawable.logo_vangust_burguer);
 
             CarrosselAdapter carrosselAdapter = new CarrosselAdapter(listaBanners);
             viewPagerCarrossel.setAdapter(carrosselAdapter);
