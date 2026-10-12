@@ -1,7 +1,10 @@
 package com.example.vangustapp;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +20,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-
 
 public class MenuPrincipalActivity extends AppCompatActivity {
 
@@ -44,8 +46,8 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         btnMenu = headerView.findViewById(R.id.btnMenu);
         bottomNavigationView = findViewById(R.id.bottomNavegation);
 
-        // 2. Atualizar o nome do usuário nos cabeçalhos ao abrir a activity
-        atualizarNomeUsuario();
+        // 2. Atualizar o nome e a foto do usuário nos cabeçalhos ao abrir a activity
+        atualizarPerfilHeader();
 
         // 3. Carregar fragmento inicial ao abrir o app
         if (savedInstanceState == null) {
@@ -121,19 +123,20 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         }
     }
 
-    // Método para buscar o nome salvo no SharedPreferences e atualizar os cabeçalhos
-    private void atualizarNomeUsuario() {
+    // Método para atualizar nome e foto de perfil nos cabeçalhos
+    private void atualizarPerfilHeader() {
         SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
         String nomeCompleto = preferences.getString("nome_usuario", "Usuário");
         String primeiroNome = nomeCompleto.split(" ")[0];
+        String fotoBase64 = preferences.getString("foto_perfil", "");
 
-        // Atualizar no cabeçalho principal da barra superior (header_principal.xml)
+        // 1. Atualizar no cabeçalho principal da barra superior (header_principal.xml)
         TextView tvNomePrincipal = headerView.findViewById(R.id.tvNomePrincipal);
         if (tvNomePrincipal != null) {
             tvNomePrincipal.setText(primeiroNome);
         }
 
-        // Atualizar no menu lateral (header_drawer.xml)
+        // 2. Atualizar no menu lateral (header_drawer.xml)
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerDrawer = navigationView.getHeaderView(0);
         if (headerDrawer != null) {
@@ -141,13 +144,25 @@ public class MenuPrincipalActivity extends AppCompatActivity {
             if (tvNomeDrawer != null) {
                 tvNomeDrawer.setText(primeiroNome.toUpperCase());
             }
+
+            // Decodifica e aplica a foto de perfil no ImageView do menu lateral (header_drawer.xml)
+            ImageView imgHeaderPerfil = headerDrawer.findViewById(R.id.imgHeaderPerfil);
+            if (imgHeaderPerfil != null && !fotoBase64.isEmpty()) {
+                try {
+                    byte[] decodedString = Base64.decode(fotoBase64, Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    imgHeaderPerfil.setImageBitmap(decodedByte);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Atualiza o nome caso o utilizador mude algo na tela de Editar Perfil e volte
-        atualizarNomeUsuario();
+        // Atualiza o nome e a foto caso o utilizador mude algo na tela de Editar Perfil e volte
+        atualizarPerfilHeader();
     }
 }

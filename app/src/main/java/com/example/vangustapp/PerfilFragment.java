@@ -3,10 +3,14 @@ package com.example.vangustapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +20,7 @@ import com.google.android.material.button.MaterialButton;
 public class PerfilFragment extends Fragment {
 
     private TextView tvNomePerfil, tvEmailPerfil;
+    private ImageView imgPerfil; // Referência para a imagem de perfil
     private MaterialButton btnEditarPerfil, btnMeusPedidos, btnEnderecos, btnSairConta;
 
     @Nullable
@@ -23,9 +28,10 @@ public class PerfilFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
 
-        // 1. Ligar aos IDs do fragment_perfil.xml
+        // 1. Ligar aos IDs do fragment_perfil.xml (Certifique-se de que o ImageView no XML tem o id imgPerfil)
         tvNomePerfil = view.findViewById(R.id.tvNomePerfil);
         tvEmailPerfil = view.findViewById(R.id.tvEmailPerfil);
+        imgPerfil = view.findViewById(R.id.imgPerfil); // ID do círculo/quadrado da foto no perfil
         btnEditarPerfil = view.findViewById(R.id.btnEditarPerfil);
         btnMeusPedidos = view.findViewById(R.id.btnMeusPedidos);
         btnEnderecos = view.findViewById(R.id.btnEnderecos);
@@ -86,9 +92,21 @@ public class PerfilFragment extends Fragment {
         SharedPreferences preferences = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         String nome = preferences.getString("nome_usuario", "Nome do Cliente");
         String email = preferences.getString("email_usuario", "cliente@vangustburguer.com");
+        String fotoBase64 = preferences.getString("foto_perfil", "");
 
         if (tvNomePerfil != null) tvNomePerfil.setText(nome);
         if (tvEmailPerfil != null) tvEmailPerfil.setText(email);
+
+        // Decodifica a string Base64 do LONGBLOB e exibe no ImageView do perfil
+        if (imgPerfil != null && !fotoBase64.isEmpty()) {
+            try {
+                byte[] decodedString = Base64.decode(fotoBase64, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imgPerfil.setImageBitmap(decodedByte);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
