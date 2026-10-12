@@ -35,7 +35,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/baseline_favorite"
+                android:src="@drawable/baseline_favorite_border"
                 app:tint="#A61C1C" />
         </RelativeLayout>
 

@@ -31,6 +31,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
     private TextView txtTitulo, txtDescricao, txtPreco;
     private Button btnPedir;
     private int idProduto;
+    private boolean isFavorito = false; // Controla o estado atual do favorito
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,9 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
             imgProduto.setImageResource(R.drawable.brutao);
         }
 
+        // Verificar se este produto já é favorito ao abrir a tela
+        verificarStatusFavorito();
+
         // Ação do Botão Favoritar
         if (btnFavoritar != null) {
             btnFavoritar.setOnClickListener(v -> alternarFavorito());
@@ -94,15 +98,40 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         }
     }
 
+    // Método para consultar se o produto já consta nos favoritos do cliente
+    private void verificarStatusFavorito() {
+        SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+        int idCliente = prefs.getInt("id_cliente", -1);
+
+        if (idCliente == -1 || idProduto == -1) return;
+
+        // Endpoint PHP que verifica ou lista os favoritos do cliente (ou ajuste conforme o seu script existente)
+        String url = "http://10.0.2.2/api_hamburgueria/verificar_favorito.php?id_cliente=" + idCliente + "&id_produto=" + idProduto;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        isFavorito = jsonObject.optBoolean("favorito", false);
+                        atualizarVisualFavorito();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    // Silencia erro de rede na verificação inicial para não incomodar o utilizador
+                }
+        );
+
+        Volley.newRequestQueue(this).add(stringRequest);
+    }
+
     private void alternarFavorito() {
         SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         int idCliente = prefs.getInt("id_cliente", -1);
 
-        // Fallback: se por acaso o id_cliente estiver como -1, mas houver um e-mail salvo,
-        // podemos avisar ou tentar tratar para não bloquear o utilizador
         if (idCliente == -1) {
-            String emailSalvo = prefs.getString("email_usuario", "");
-            Toast.makeText(this, "Erro de sessão: ID do cliente não encontrado. Por favor, faça login novamente.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Erro de sessão: ID do cliente não encontrado.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -121,6 +150,9 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
                         String mensagem = jsonObject.optString("mensagem", "Ação realizada");
 
                         if (sucesso) {
+                            // Inverte o estado local e atualiza o ícone do coração
+                            isFavorito = !isFavorito;
+                            atualizarVisualFavorito();
                             Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(this, "Erro: " + mensagem, Toast.LENGTH_SHORT).show();
@@ -142,5 +174,18 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         };
 
         Volley.newRequestQueue(this).add(stringRequest);
+    }
+
+    // Altera o ícone do coração com base na variável 'isFavorito'
+    private void atualizarVisualFavorito() {
+        if (btnFavoritar != null) {
+            if (isFavorito) {
+                // Ícone do coração preenchido / ativo (vermelho ou cor de destaque)
+                btnFavoritar.setImageResource(R.drawable.baseline_favorite); // Certifique-se de ter este drawable ou substitua pelo seu
+            } else {
+                // Ícone do coração vazio / inativo
+                btnFavoritar.setImageResource(R.drawable.baseline_favorite_border); // Ou o nome do seu ícone vazio padrão
+            }
+        }
     }
 }
