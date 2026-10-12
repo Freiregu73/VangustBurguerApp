@@ -20,7 +20,7 @@ import com.google.android.material.button.MaterialButton;
 public class PerfilFragment extends Fragment {
 
     private TextView tvNomePerfil, tvEmailPerfil;
-    private ImageView imgPerfil; // Referência para a imagem de perfil
+    private ImageView imgPerfil;
     private MaterialButton btnEditarPerfil, btnMeusPedidos, btnEnderecos, btnSairConta;
 
     @Nullable
@@ -28,25 +28,21 @@ public class PerfilFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
 
-        // 1. Ligar aos IDs do fragment_perfil.xml (Certifique-se de que o ImageView no XML tem o id imgPerfil)
         tvNomePerfil = view.findViewById(R.id.tvNomePerfil);
         tvEmailPerfil = view.findViewById(R.id.tvEmailPerfil);
-        imgPerfil = view.findViewById(R.id.imgPerfil); // ID do círculo/quadrado da foto no perfil
+        imgPerfil = view.findViewById(R.id.imgPerfil);
         btnEditarPerfil = view.findViewById(R.id.btnEditarPerfil);
         btnMeusPedidos = view.findViewById(R.id.btnMeusPedidos);
         btnEnderecos = view.findViewById(R.id.btnEnderecos);
         btnSairConta = view.findViewById(R.id.btnSairConta);
 
-        // 2. Carregar os dados salvos no SharedPreferences
         carregarDadosPerfil();
 
-        // 3. Ação para ir para a tela de Edição de Perfil
         btnEditarPerfil.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), EditarPerfil.class);
             startActivity(intent);
         });
 
-        // 4. Ação para ir para os Pedidos
         btnMeusPedidos.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new PedidosFragment())
@@ -54,7 +50,6 @@ public class PerfilFragment extends Fragment {
                     .commit();
         });
 
-        // 5. Ação para ir para os Endereços
         btnEnderecos.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new EnderecoFragment())
@@ -62,22 +57,14 @@ public class PerfilFragment extends Fragment {
                     .commit();
         });
 
-        // 6. Ação de Sair da Conta (Logout)
         btnSairConta.setOnClickListener(v -> {
             SharedPreferences preferences = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
 
-            // Desativar a sessão e limpar dados temporários
             editor.putBoolean("is_logged", false);
-            editor.remove("endereco_usuario");
-            editor.remove("cupom_ativo");
-            editor.remove("desconto_ativo");
-            editor.remove("usado_VANGUST10");
-            editor.remove("usado_PRIMEIRA");
             editor.remove("foto_perfil");
             editor.apply();
 
-            // Limpar o carrinho e pedidos em memória
             CarrinhoManager.limparCarrinho();
 
             Intent intent = new Intent(getContext(), LoginActivity.class);
@@ -97,7 +84,6 @@ public class PerfilFragment extends Fragment {
         if (tvNomePerfil != null) tvNomePerfil.setText(nome);
         if (tvEmailPerfil != null) tvEmailPerfil.setText(email);
 
-        // Decodifica a string Base64 do LONGBLOB e exibe no ImageView do perfil
         if (imgPerfil != null && !fotoBase64.isEmpty()) {
             try {
                 byte[] decodedString = Base64.decode(fotoBase64, Base64.DEFAULT);
@@ -112,7 +98,6 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Atualiza caso o utilizador volte da tela de edição com dados novos
         carregarDadosPerfil();
     }
 }

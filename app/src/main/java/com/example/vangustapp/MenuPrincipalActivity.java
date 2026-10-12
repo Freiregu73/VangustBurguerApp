@@ -40,23 +40,19 @@ public class MenuPrincipalActivity extends AppCompatActivity {
             return insets;
         });
 
-        // 1. Inicializar os componentes principais logo no início
         drawerLayout = findViewById(R.id.drawer_layout);
         headerView = findViewById(R.id.header_principal);
         btnMenu = headerView.findViewById(R.id.btnMenu);
         bottomNavigationView = findViewById(R.id.bottomNavegation);
 
-        // 2. Atualizar o nome e a foto do usuário nos cabeçalhos ao abrir a activity
         atualizarPerfilHeader();
 
-        // 3. Carregar fragmento inicial ao abrir o app
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new InicioFragment())
                     .commit();
         }
 
-        // 4. Configurar o clique no menu inferior
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
@@ -71,7 +67,6 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                 selectedFragment = new PedidosFragment();
             }
 
-            // Efetivar a troca
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, selectedFragment)
@@ -80,7 +75,6 @@ public class MenuPrincipalActivity extends AppCompatActivity {
             return true;
         });
 
-        // 5. Configurar os cliques no Menu Lateral (NavigationView)
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -105,17 +99,12 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                 startActivity(new android.content.Intent(MenuPrincipalActivity.this, CupomActivity.class));
             }
 
-            // Fecha o menu lateral após o clique
             drawerLayout.closeDrawer(GravityCompat.END);
             return true;
         });
 
-        btnMenu.setOnClickListener(v -> {
-            // Abre o menu lateral
-            drawerLayout.openDrawer(GravityCompat.END);
-        });
+        btnMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.END));
 
-        // Verificar se deve abrir o carrinho diretamente
         if (getIntent().getBooleanExtra("abrir_carrinho", false)) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new CarrinhoFragment())
@@ -123,20 +112,17 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         }
     }
 
-    // Método para atualizar nome e foto de perfil nos cabeçalhos
     private void atualizarPerfilHeader() {
         SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
         String nomeCompleto = preferences.getString("nome_usuario", "Usuário");
         String primeiroNome = nomeCompleto.split(" ")[0];
         String fotoBase64 = preferences.getString("foto_perfil", "");
 
-        // 1. Atualizar no cabeçalho principal da barra superior (header_principal.xml)
         TextView tvNomePrincipal = headerView.findViewById(R.id.tvNomePrincipal);
         if (tvNomePrincipal != null) {
             tvNomePrincipal.setText(primeiroNome);
         }
 
-        // 2. Atualizar no menu lateral (header_drawer.xml)
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerDrawer = navigationView.getHeaderView(0);
         if (headerDrawer != null) {
@@ -145,7 +131,6 @@ public class MenuPrincipalActivity extends AppCompatActivity {
                 tvNomeDrawer.setText(primeiroNome.toUpperCase());
             }
 
-            // Decodifica e aplica a foto de perfil no ImageView do menu lateral (header_drawer.xml)
             ImageView imgHeaderPerfil = headerDrawer.findViewById(R.id.imgHeaderPerfil);
             if (imgHeaderPerfil != null && !fotoBase64.isEmpty()) {
                 try {
@@ -162,7 +147,6 @@ public class MenuPrincipalActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Atualiza o nome e a foto caso o utilizador mude algo na tela de Editar Perfil e volte
         atualizarPerfilHeader();
     }
 }

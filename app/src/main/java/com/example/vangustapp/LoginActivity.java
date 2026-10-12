@@ -3,6 +3,7 @@ package com.example.vangustapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -48,14 +49,12 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // URL da sua API PHP rodando no XAMPP (use 10.0.2.2 para o Emulador Android)
             String url = "http://10.0.2.2/api_hamburgueria/login.php";
 
             com.android.volley.toolbox.StringRequest stringRequest = new com.android.volley.toolbox.StringRequest(
                     com.android.volley.Request.Method.POST, url,
                     response -> {
-                        // DIAGNÓSTICO: Mostra exatamente o que o PHP respondeu
-                        Toast.makeText(LoginActivity.this, "Resp: " + response, Toast.LENGTH_LONG).show();
+                        Log.d("LOGIN_RESPOSTA", response);
 
                         try {
                             org.json.JSONObject jsonObject = new org.json.JSONObject(response);
@@ -64,19 +63,19 @@ public class LoginActivity extends AppCompatActivity {
                             if (sucesso) {
                                 org.json.JSONObject usuarioObj = jsonObject.getJSONObject("usuario");
 
-                                // Garante a leitura segura da chave "id" ou "id_usuario"
                                 int idCliente = usuarioObj.has("id") ? usuarioObj.getInt("id") : usuarioObj.optInt("id_usuario", -1);
                                 String nomeUsuario = usuarioObj.getString("nome");
 
-                                Toast.makeText(LoginActivity.this, "ID Capturado: " + idCliente, Toast.LENGTH_SHORT).show();
+                                // Captura rigorosa da foto enviada pela API PHP
+                                String fotoBase64 = jsonObject.optString("foto", "");
 
-                                // Salva no SharedPreferences o estado, nome, email e o ID do cliente
                                 SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
                                 editor.putBoolean("is_logged", true);
-                                editor.putInt("id_cliente", idCliente); // <--- ID salvo com sucesso para os favoritos e pedidos
+                                editor.putInt("id_cliente", idCliente);
                                 editor.putString("nome_usuario", nomeUsuario);
                                 editor.putString("email_usuario", emailDigitado);
+                                editor.putString("foto_perfil", fotoBase64); // Salva a foto de perfil
                                 editor.apply();
 
                                 Toast.makeText(LoginActivity.this, "Login efetuado com sucesso!", Toast.LENGTH_SHORT).show();
@@ -89,9 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Erro JSON: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     },
-                    error -> {
-                        Toast.makeText(LoginActivity.this, "E-mail ou senha incorretos / Erro de conexão", Toast.LENGTH_SHORT).show();
-                    }
+                    error -> Toast.makeText(LoginActivity.this, "E-mail ou senha incorretos / Erro de conexão", Toast.LENGTH_SHORT).show()
             ) {
                 @Override
                 protected java.util.Map<String, String> getParams() {
@@ -102,7 +99,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             };
 
-            // Adiciona a requisição à fila do Volley
             com.android.volley.toolbox.Volley.newRequestQueue(this).add(stringRequest);
         });
 
