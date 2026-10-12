@@ -1,33 +1,27 @@
 package com.example.vangustapp;
 
 public class ItensCard {
+    private int idProduto; // ID vindo da base de dados MySQL
     private String titulo;
     private String descricao;
-    private int imgitens; // Mantido para compatibilidade se usar estático
-    private String imageUrl; // Nova variável para a URL da API
+    private String imageUrl;
     private double preco;
+    private int imgitens;
 
-    // Construtor para dados vindos da API
-    public ItensCard(String titulo, String descricao, String imageUrl, double preco) {
+    // Construtor completo com ID
+    public ItensCard(int idProduto, String titulo, String descricao, String imageUrl, double preco) {
+        this.idProduto = idProduto;
         this.titulo = titulo;
         this.descricao = descricao;
         this.imageUrl = imageUrl;
         this.preco = preco;
-        this.imgitens = R.drawable.brutao; // Fallback
+        this.imgitens = R.drawable.brutao; // Fallback local
     }
 
-    // Construtor antigo (caso use estático em algum lugar)
-    public ItensCard(String titulo, String descricao, int imgitens, double preco) {
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.imgitens = imgitens;
-        this.imageUrl = null;
-        this.preco = preco;
-    }
-
+    public int getIdProduto() { return idProduto; }
     public String getTitulo() { return titulo; }
     public String getDescricao() { return descricao; }
-    public int getImgitens() { return imgitens; }
     public String getImageUrl() { return imageUrl; }
     public double getPreco() { return preco; }
+    public int getImgitens() { return imgitens; }
 }

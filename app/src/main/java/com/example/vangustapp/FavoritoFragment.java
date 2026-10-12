@@ -1,5 +1,7 @@
 package com.example.vangustapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -58,40 +60,55 @@ public class FavoritoFragment extends Fragment {
         adapterFavoritos = new AdapterFavoritos(lstFavoritos, getContext());
         idRecFavoritos.setAdapter(adapterFavoritos);
 
+        // Carregar os favoritos diretamente da API PHP passando o ID do cliente
         carregarFavoritosDaApi();
+
         atualizarBolinha(view);
 
         return view;
     }
 
     private void carregarFavoritosDaApi() {
-        String url = "http://10.0.2.2/api_hamburgueria/produtos.php";
+        SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+        int idCliente = prefs.getInt("id_cliente", -1);
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+        String url = "http://10.0.2.2/api_hamburgueria/listar_favoritos.php?id_cliente=" + idCliente;
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, url, null,
                 response -> {
                     try {
-                        lstFavoritos.clear();
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject obj = response.getJSONObject(i);
-                            String nome = obj.optString("nome_produto", "Produto");
-                            String descricao = obj.optString("descricao", "");
-                            double preco = obj.optDouble("preco", 0.0);
-                            String urlImagem = obj.optString("imagem", null);
+                        boolean sucesso = response.optBoolean("sucesso", false);
+                        if (sucesso) {
+                            JSONArray jsonArray = response.getJSONArray("favoritos");
+                            lstFavoritos.clear();
 
-                            // Por enquanto, carrega os produtos gerais ou filtra os favoritos
-                            lstFavoritos.add(new FavoritosCard(nome, descricao, urlImagem, preco));
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject obj = jsonArray.getJSONObject(i);
+
+                                // Captura o id_produto retornado pelo PHP
+                                int idProduto = obj.optInt("id_produto", 0);
+                                String nome = obj.optString("nome_produto", "Produto");
+                                String descricao = obj.optString("descricao", "");
+                                double preco = obj.optDouble("preco", 0.0);
+                                String urlImagem = obj.optString("imagem", null);
+
+                                // Passa o idProduto como primeiro argumento
+                                lstFavoritos.add(new FavoritosCard(idProduto, nome, descricao, urlImagem, preco));
+                            }
+                            adapterFavoritos.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(getContext(), "Nenhum favorito encontrado", Toast.LENGTH_SHORT).show();
                         }
-                        adapterFavoritos.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), "Erro ao processar favoritos", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Erro ao processar dados dos favoritos", Toast.LENGTH_SHORT).show();
                     }
                 },
                 error -> Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
         );
 
-        Volley.newRequestQueue(requireContext()).add(jsonArrayRequest);
+        Volley.newRequestQueue(requireContext()).add(jsonObjectRequest);
     }
 
     private void atualizarBolinha(View view) {

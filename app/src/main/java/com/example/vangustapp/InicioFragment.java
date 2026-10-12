@@ -22,7 +22,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,7 +51,6 @@ public class InicioFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // --- BOTÃO FLUTUANTE DO CARRINHO ---
         FloatingActionButton fabCarrinho = view.findViewById(R.id.fabCarrinho);
         if (fabCarrinho != null) {
             fabCarrinho.setOnClickListener(v -> {
@@ -65,7 +63,6 @@ public class InicioFragment extends Fragment {
 
         atualizarBolinhaCarrinho(view);
 
-        // --- CARROSSEL SUPERIOR ---
         ViewPager2 viewPagerCarrossel = view.findViewById(R.id.viewPagerCarrossel);
         if (viewPagerCarrossel != null) {
             List<Integer> listaBanners = new ArrayList<>();
@@ -89,7 +86,6 @@ public class InicioFragment extends Fragment {
             sliderHandler.postDelayed(sliderRunnable, 3000);
         }
 
-        // --- CONFIGURAÇÃO DOS RECYCLERVIEWS ---
         recOfertas = view.findViewById(R.id.idOfertas);
         recMaisPedidos = view.findViewById(R.id.idMaisPedidos);
         recLancamento = view.findViewById(R.id.idLançamento);
@@ -119,7 +115,6 @@ public class InicioFragment extends Fragment {
             recLancamento.setAdapter(adapterLancamento);
         }
 
-        // Buscar produtos da API do XAMPP
         carregarProdutosDaApi();
     }
 
@@ -137,23 +132,22 @@ public class InicioFragment extends Fragment {
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
 
+                            int idProduto = obj.optInt("id_produto", 0);
                             String nome = obj.optString("nome_produto", "Produto");
                             String descricao = obj.optString("descricao", "Delicioso hambúrguer da casa.");
                             double preco = obj.optDouble("preco", 0.0);
                             String urlImagem = obj.optString("imagem", null);
                             String categoria = obj.optString("categoria", "").trim().toLowerCase();
 
-                            ItensCard item = new ItensCard(nome, descricao, urlImagem, preco);
+                            ItensCard item = new ItensCard(idProduto, nome, descricao, urlImagem, preco);
 
-                            // Filtrar com base na categoria cadastrada no painel
                             if (categoria.contains("oferta") || categoria.contains("ofertas")) {
                                 listaOfertas.add(item);
-                            } else if (categoria.contains("pedido") || categoria.contains("mais pedidos") || categoria.contains("mais_pedidos")) {
+                            } else if (categoria.contains("pedido") || categoria.contains("mais pedidos")) {
                                 listaMaisPedidos.add(item);
-                            } else if (categoria.contains("lancamento") || categoria.contains("lançamento") || categoria.contains("lancamentos")) {
+                            } else if (categoria.contains("lancamento") || categoria.contains("lançamento")) {
                                 listaLancamento.add(item);
                             } else {
-                                // Se não tiver categoria específica ou for geral, podes decidir onde encaixar (ex: ofertas ou mais pedidos)
                                 listaMaisPedidos.add(item);
                             }
                         }
@@ -191,11 +185,10 @@ public class InicioFragment extends Fragment {
 
     private void abrirDetalhes(ItensCard item) {
         Intent intent = new Intent(getContext(), DetalhesProdutoActivity.class);
+        intent.putExtra("id_produto", item.getIdProduto()); // Envia o ID para a tela de detalhes
         intent.putExtra("titulo", item.getTitulo());
         intent.putExtra("descricao", item.getDescricao());
         intent.putExtra("preco", item.getPreco());
-
-        // Passar a URL da imagem se existir, caso contrário passa string vazia
         intent.putExtra("imagem", item.getImageUrl() != null ? item.getImageUrl() : "");
         startActivity(intent);
     }

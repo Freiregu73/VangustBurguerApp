@@ -43,7 +43,6 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
         holder.modeloDescFavoritos.setText(favorito.getDescricao());
         holder.modeloPrecoFavoritos.setText(String.format("R$ %.2f", favorito.getPreco()));
 
-        // Carregar a imagem via Glide se houver URL da API
         if (favorito.getImageUrl() != null && !favorito.getImageUrl().isEmpty()) {
             Glide.with(context)
                     .load(favorito.getImageUrl())
@@ -54,7 +53,6 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
             holder.modeloImagemFavoritos.setImageResource(favorito.getImgfavoritos());
         }
 
-        // --- AÇÃO DO BOTÃO "PEDIR" NO CARD DE FAVORITOS ---
         holder.modeloBtnFavoritos.setOnClickListener(v -> {
             ItemCarrinho itemCarrinho = new ItemCarrinho(
                     favorito.getTitulo(),
@@ -67,9 +65,10 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
             Toast.makeText(context, favorito.getTitulo() + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
         });
 
-        // --- CLIQUE NO CARD PARA ABRIR OS DETALHES ---
+        // Clique no card passando o ID do produto para os detalhes
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetalhesProdutoActivity.class);
+            intent.putExtra("id_produto", favorito.getIdProduto());
             intent.putExtra("titulo", favorito.getTitulo());
             intent.putExtra("descricao", favorito.getDescricao());
             intent.putExtra("preco", favorito.getPreco());

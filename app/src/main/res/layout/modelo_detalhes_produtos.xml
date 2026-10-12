@@ -14,15 +14,30 @@
         android:background="#FCD299"
         android:orientation="vertical">
 
-        <!-- Botão de Voltar no Topo -->
-        <ImageView
-            android:id="@+id/btnVoltarDetalhesProduto"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+        <!-- Topo com Botão de Voltar e Ícone de Favorito -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/baseline_arrow_back"
-            app:tint="#8F572F" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="50dp">
+
+            <ImageView
+                android:id="@+id/btnVoltarDetalhesProduto"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/baseline_arrow_back"
+                app:tint="#8F572F" />
+
+            <ImageView
+                android:id="@+id/btnFavoritarDetalhes"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/baseline_favorite"
+                app:tint="#A61C1C" />
+        </RelativeLayout>
 
         <!-- Imagem do Produto (margem ajustada para dar espaço ao botão) -->
         <androidx.cardview.widget.CardView

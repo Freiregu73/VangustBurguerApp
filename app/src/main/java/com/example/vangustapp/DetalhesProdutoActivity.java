@@ -1,5 +1,7 @@
 package com.example.vangustapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,13 +14,23 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DetalhesProdutoActivity extends AppCompatActivity {
 
-    private ImageView imgProduto;
+    private ImageView imgProduto, btnFavoritar;
     private TextView txtTitulo, txtDescricao, txtPreco;
     private Button btnPedir;
+    private int idProduto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +50,13 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         txtDescricao = findViewById(R.id.modeloDescricaoProdutos);
         txtPreco = findViewById(R.id.modeloPrecoProdutos);
         btnPedir = findViewById(R.id.btnPedirProduto);
+        btnFavoritar = findViewById(R.id.btnFavoritarDetalhes);
 
         // Receber os dados enviados pelo Intent
+        idProduto = getIntent().getIntExtra("id_produto", -1);
         String titulo = getIntent().getStringExtra("titulo");
         String descricao = getIntent().getStringExtra("descricao");
         double preco = getIntent().getDoubleExtra("preco", 0.0);
-
-        // A imagem agora é recebida como String (URL da API)
         String urlImagem = getIntent().getStringExtra("imagem");
 
         // Preencher os dados no ecrã
@@ -52,7 +64,6 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         txtDescricao.setText(descricao);
         txtPreco.setText(String.format("R$ %.2f", preco));
 
-        // Carregar a imagem com o Glide se houver URL, senão usa o fallback local
         if (urlImagem != null && !urlImagem.isEmpty()) {
             Glide.with(this)
                     .load(urlImagem)
@@ -63,10 +74,14 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
             imgProduto.setImageResource(R.drawable.brutao);
         }
 
-        // No botão btnPedir em DetalhesProdutoActivity.java:
+        // Ação do Botão Favoritar
+        if (btnFavoritar != null) {
+            btnFavoritar.setOnClickListener(v -> alternarFavorito());
+        }
+
+        // Ação do botão "Pedir"
         btnPedir.setOnClickListener(v -> {
-            // Passar a variável urlImagem que recebeu do Intent
-            ItemCarrinho itemCarrinho = new ItemCarrinho(titulo, preco, 1, urlImagem);
+            ItemCarrinho itemCarrinho = new ItemCarrinho(titulo, preco, 1, urlImagem != null ? urlImagem : "");
             CarrinhoManager.adicionarItem(itemCarrinho);
 
             Toast.makeText(this, titulo + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
@@ -75,7 +90,54 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
 
         ImageView btnVoltar = findViewById(R.id.btnVoltarDetalhesProduto);
         if (btnVoltar != null) {
-            btnVoltar.setOnClickListener(v -> finish()); // Fecha a activity atual
+            btnVoltar.setOnClickListener(v -> finish());
         }
+    }
+
+    private void alternarFavorito() {
+        SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+        int idCliente = prefs.getInt("id_cliente", -1);
+
+        if (idCliente == -1) {
+            Toast.makeText(this, "Precisa estar logado para favoritar!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (idProduto == -1) {
+            Toast.makeText(this, "Erro: ID do produto não identificado.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = "http://10.0.2.2/api_hamburgueria/favoritar.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        boolean sucesso = jsonObject.optBoolean("sucesso", false);
+                        String mensagem = jsonObject.optString("mensagem", "Ação realizada");
+
+                        if (sucesso) {
+                            Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Erro: " + mensagem, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(this, "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("id_cliente", String.valueOf(idCliente));
+                params.put("id_produto", String.valueOf(idProduto));
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 }
