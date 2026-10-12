@@ -15,21 +15,26 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InicioFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recOfertas, recMaisPedidos, recLancamento;
+    private ItensCardAdapter adapterOfertas, adapterMaisPedidos, adapterLancamento;
+    private List<ItensCard> listaOfertas, listaMaisPedidos, listaLancamento;
 
-    private String mParam1;
-    private String mParam2;
-
-    // Variáveis para controlar o movimento automático do carrossel
     private final Handler sliderHandler = new Handler(Looper.getMainLooper());
     private Runnable sliderRunnable;
 
@@ -37,28 +42,9 @@ public class InicioFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static InicioFragment newInstance(String param1, String param2) {
-        InicioFragment fragment = new InicioFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate apenas o layout para este fragmento
         return inflater.inflate(R.layout.fragment_inicio, container, false);
     }
 
@@ -77,10 +63,9 @@ public class InicioFragment extends Fragment {
             });
         }
 
-        // Atualiza a bolinha logo ao abrir o fragmento
         atualizarBolinhaCarrinho(view);
 
-        // --- 0. CONFIGURAÇÃO DO CARROSSEL SUPERIOR ---
+        // --- CARROSSEL SUPERIOR ---
         ViewPager2 viewPagerCarrossel = view.findViewById(R.id.viewPagerCarrossel);
         if (viewPagerCarrossel != null) {
             List<Integer> listaBanners = new ArrayList<>();
@@ -90,7 +75,6 @@ public class InicioFragment extends Fragment {
             CarrosselAdapter carrosselAdapter = new CarrosselAdapter(listaBanners);
             viewPagerCarrossel.setAdapter(carrosselAdapter);
 
-            // --- ROTAÇÃO AUTOMÁTICA DO CARROSSEL ---
             sliderRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -102,56 +86,93 @@ public class InicioFragment extends Fragment {
                     sliderHandler.postDelayed(this, 3000);
                 }
             };
-
             sliderHandler.postDelayed(sliderRunnable, 3000);
         }
 
-        // 1. Encontrar os RecyclerViews pelo ID correspondente
-        RecyclerView recOfertas = view.findViewById(R.id.idOfertas);
-        RecyclerView recMaisPedidos = view.findViewById(R.id.idMaisPedidos);
-        RecyclerView recLancamento = view.findViewById(R.id.idLançamento);
+        // --- CONFIGURAÇÃO DOS RECYCLERVIEWS ---
+        recOfertas = view.findViewById(R.id.idOfertas);
+        recMaisPedidos = view.findViewById(R.id.idMaisPedidos);
+        recLancamento = view.findViewById(R.id.idLançamento);
 
-        // 2. Configurar Ofertas
+        listaOfertas = new ArrayList<>();
+        listaMaisPedidos = new ArrayList<>();
+        listaLancamento = new ArrayList<>();
+
+        adapterOfertas = new ItensCardAdapter(listaOfertas);
+        adapterOfertas.setOnItemClickListener(this::abrirDetalhes);
         if (recOfertas != null) {
             recOfertas.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-            List<ItensCard> listaOfertas = new ArrayList<>();
-            listaOfertas.add(new ItensCard("Combo Bacon Cheese", "Hambúrguer de 180g, muito cheddar derretido e bacon crocante.", R.drawable.brutao, 32.90));
-            listaOfertas.add(new ItensCard("Chicken Crispy", "Frango empanado super crocante com molho especial da casa.", R.drawable.frango, 28.50));
-            listaOfertas.add(new ItensCard("Combo Bacon Cheese", "Hambúrguer de 180g, muito cheddar derretido e bacon crocante.", R.drawable.brutao, 32.90));
-
-            ItensCardAdapter adapterOfertas = new ItensCardAdapter(listaOfertas);
-            adapterOfertas.setOnItemClickListener(item -> abrirDetalhes(item));
             recOfertas.setAdapter(adapterOfertas);
         }
 
-        // 3. Configurar Mais Pedidos
+        adapterMaisPedidos = new ItensCardAdapter(listaMaisPedidos);
+        adapterMaisPedidos.setOnItemClickListener(this::abrirDetalhes);
         if (recMaisPedidos != null) {
             recMaisPedidos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-            List<ItensCard> listaMaisPedidos = new ArrayList<>();
-            listaMaisPedidos.add(new ItensCard("Brutão na chapa", "Parrudo de 180g, cheddar, bacon e cebola na manteiga.", R.drawable.brutao, 34.99));
-            listaMaisPedidos.add(new ItensCard("Chicken Crispy", "Frango empanado super crocante com molho especial.", R.drawable.frango, 28.50));
-            listaMaisPedidos.add(new ItensCard("Burger Vegano", "Blend de grão-de-bico com especiarias e maionese verde.", R.drawable.veggie, 29.00));
-
-            ItensCardAdapter adapterMaisPedidos = new ItensCardAdapter(listaMaisPedidos);
-            adapterMaisPedidos.setOnItemClickListener(item -> abrirDetalhes(item));
             recMaisPedidos.setAdapter(adapterMaisPedidos);
         }
 
-        // 4. Configurar Lançamentos
+        adapterLancamento = new ItensCardAdapter(listaLancamento);
+        adapterLancamento.setOnItemClickListener(this::abrirDetalhes);
         if (recLancamento != null) {
             recLancamento.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-            List<ItensCard> listaLancamento = new ArrayList<>();
-            listaLancamento.add(new ItensCard("Combo Fogo", "O novo combo picante com molho especial de pimenta jalapeño.", R.drawable.combo_fogo, 39.90));
-            listaLancamento.add(new ItensCard("Chicken Crispy", "Frango empanado super crocante.", R.drawable.frango, 28.50));
-            listaLancamento.add(new ItensCard("Burger Vegano", "Blend de grão-de-bico e salada fresca.", R.drawable.veggie, 29.00));
-
-            ItensCardAdapter adapterLancamento = new ItensCardAdapter(listaLancamento);
-            adapterLancamento.setOnItemClickListener(item -> abrirDetalhes(item));
             recLancamento.setAdapter(adapterLancamento);
         }
+
+        // Buscar produtos da API do XAMPP
+        carregarProdutosDaApi();
     }
 
-    // --- Método auxiliar para gerir a visibilidade da bolinha vermelha ---
+    private void carregarProdutosDaApi() {
+        String url = "http://10.0.2.2/api_hamburgueria/produtos.php";
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        listaOfertas.clear();
+                        listaMaisPedidos.clear();
+                        listaLancamento.clear();
+
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject obj = response.getJSONObject(i);
+
+                            String nome = obj.optString("nome_produto", "Produto");
+                            String descricao = obj.optString("descricao", "Delicioso hambúrguer da casa.");
+                            double preco = obj.optDouble("preco", 0.0);
+                            String urlImagem = obj.optString("imagem", null);
+                            String categoria = obj.optString("categoria", "").trim().toLowerCase();
+
+                            ItensCard item = new ItensCard(nome, descricao, urlImagem, preco);
+
+                            // Filtrar com base na categoria cadastrada no painel
+                            if (categoria.contains("oferta") || categoria.contains("ofertas")) {
+                                listaOfertas.add(item);
+                            } else if (categoria.contains("pedido") || categoria.contains("mais pedidos") || categoria.contains("mais_pedidos")) {
+                                listaMaisPedidos.add(item);
+                            } else if (categoria.contains("lancamento") || categoria.contains("lançamento") || categoria.contains("lancamentos")) {
+                                listaLancamento.add(item);
+                            } else {
+                                // Se não tiver categoria específica ou for geral, podes decidir onde encaixar (ex: ofertas ou mais pedidos)
+                                listaMaisPedidos.add(item);
+                            }
+                        }
+
+                        adapterOfertas.notifyDataSetChanged();
+                        adapterMaisPedidos.notifyDataSetChanged();
+                        adapterLancamento.notifyDataSetChanged();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Erro ao processar produtos do servidor", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(getContext(), "Erro de conexão ao carregar produtos", Toast.LENGTH_SHORT).show()
+        );
+
+        Volley.newRequestQueue(requireContext()).add(jsonArrayRequest);
+    }
+
     private void atualizarBolinhaCarrinho(View view) {
         View dotCarrinho = view.findViewById(R.id.dotCarrinho);
         if (dotCarrinho != null) {
@@ -163,19 +184,19 @@ public class InicioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Garante que a bolinha atualiza sempre que regressas a este ecrã
         if (getView() != null) {
             atualizarBolinhaCarrinho(getView());
         }
     }
 
-    // Método auxiliar para abrir o ecrã de detalhes de forma limpa
     private void abrirDetalhes(ItensCard item) {
         Intent intent = new Intent(getContext(), DetalhesProdutoActivity.class);
         intent.putExtra("titulo", item.getTitulo());
         intent.putExtra("descricao", item.getDescricao());
         intent.putExtra("preco", item.getPreco());
-        intent.putExtra("imagem", item.getImgitens());
+
+        // Passar a URL da imagem se existir, caso contrário passa string vazia
+        intent.putExtra("imagem", item.getImageUrl() != null ? item.getImageUrl() : "");
         startActivity(intent);
     }
 

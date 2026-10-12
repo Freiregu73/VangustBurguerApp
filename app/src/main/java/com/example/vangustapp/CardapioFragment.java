@@ -166,9 +166,8 @@ public class CardapioFragment extends Fragment {
         intent.putExtra("descricao", item.getDescricao());
         intent.putExtra("preco", item.getPreco());
 
-        // Passa a URL da imagem ou o identificador local para a tela de detalhes
-        intent.putExtra("imagem_url", item.getImageUrl());
-        intent.putExtra("imagem", item.getImgitens());
+        // Passar exatamente com a chave "imagem" contendo a URL da API para o DetalhesProdutoActivity
+        intent.putExtra("imagem", item.getImageUrl() != null ? item.getImageUrl() : "");
 
         startActivity(intent);
     }

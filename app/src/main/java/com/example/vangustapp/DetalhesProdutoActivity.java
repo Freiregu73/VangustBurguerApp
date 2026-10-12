@@ -12,6 +12,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
+
 public class DetalhesProdutoActivity extends AppCompatActivity {
 
     private ImageView imgProduto;
@@ -41,18 +43,30 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         String titulo = getIntent().getStringExtra("titulo");
         String descricao = getIntent().getStringExtra("descricao");
         double preco = getIntent().getDoubleExtra("preco", 0.0);
-        int imagem = getIntent().getIntExtra("imagem", R.drawable.brutao);
+
+        // A imagem agora é recebida como String (URL da API)
+        String urlImagem = getIntent().getStringExtra("imagem");
 
         // Preencher os dados no ecrã
         txtTitulo.setText(titulo);
         txtDescricao.setText(descricao);
-        txtPreco.setText(String.format("%.2f", preco));
-        imgProduto.setImageResource(imagem);
+        txtPreco.setText(String.format("R$ %.2f", preco));
+
+        // Carregar a imagem com o Glide se houver URL, senão usa o fallback local
+        if (urlImagem != null && !urlImagem.isEmpty()) {
+            Glide.with(this)
+                    .load(urlImagem)
+                    .placeholder(R.drawable.brutao)
+                    .error(R.drawable.brutao)
+                    .into(imgProduto);
+        } else {
+            imgProduto.setImageResource(R.drawable.brutao);
+        }
 
         // Ação do botão "Pedir"
         btnPedir.setOnClickListener(v -> {
             // Cria o item com os dados atuais do produto e adiciona ao gestor global
-            ItemCarrinho itemCarrinho = new ItemCarrinho(titulo, preco, 1, imagem);
+            ItemCarrinho itemCarrinho = new ItemCarrinho(titulo, preco, 1, R.drawable.brutao);
             CarrinhoManager.adicionarItem(itemCarrinho);
 
             Toast.makeText(this, titulo + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
