@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -20,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText editEmail, editSenha;
     private Button btnEntrar, btnCadastrar;
-    private View linkcadastrar;
+    private TextView linkEsqueceuSenha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         editSenha = findViewById(R.id.txSenha);
         btnEntrar = findViewById(R.id.btnEntrar);
         btnCadastrar = findViewById(R.id.btnCadastrar);
-        linkcadastrar = findViewById(R.id.LinkCadastrar);
+        linkEsqueceuSenha = findViewById(R.id.linkEsqueceuSenha);
 
         btnEntrar.setOnClickListener(v -> {
             String emailDigitado = editEmail.getText().toString().trim();
@@ -65,8 +66,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                 int idCliente = usuarioObj.has("id") ? usuarioObj.getInt("id") : usuarioObj.optInt("id_usuario", -1);
                                 String nomeUsuario = usuarioObj.getString("nome");
-
-                                // Captura rigorosa da foto enviada pela API PHP
                                 String fotoBase64 = jsonObject.optString("foto", "");
 
                                 SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
@@ -75,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putInt("id_cliente", idCliente);
                                 editor.putString("nome_usuario", nomeUsuario);
                                 editor.putString("email_usuario", emailDigitado);
-                                editor.putString("foto_perfil", fotoBase64); // Salva a foto de perfil
+                                editor.putString("foto_perfil", fotoBase64);
                                 editor.apply();
 
                                 Toast.makeText(LoginActivity.this, "Login efetuado com sucesso!", Toast.LENGTH_SHORT).show();
@@ -107,9 +106,12 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        linkcadastrar.setOnClickListener(view -> {
-            Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
-            startActivity(intent);
-        });
+        // Configuração segura do clique para abrir a tela de Esqueceu a Senha
+        if (linkEsqueceuSenha != null) {
+            linkEsqueceuSenha.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, EsqueciSenhaActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 }
