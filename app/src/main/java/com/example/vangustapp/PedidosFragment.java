@@ -56,9 +56,15 @@ public class PedidosFragment extends Fragment {
 
     private void carregarPedidosDaApi() {
         SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
-        String emailUsuario = prefs.getString("email_usuario", "");
+        int idCliente = prefs.getInt("id_cliente", -1);
 
-        String url = "http://10.0.2.2/api_hamburgueria/listar_pedidos.php";
+        if (idCliente == -1) {
+            Toast.makeText(getContext(), "Sessão expirada. Faça login novamente.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Aponta para o novo endpoint exclusivo do cliente logado
+        String url = "http://10.0.2.2/api_hamburgueria/listar_pedidos_cliente.php?id_cliente=" + idCliente;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, url, null,
@@ -72,7 +78,8 @@ public class PedidosFragment extends Fragment {
                             for (int i = 0; i < jsonArrayPedidos.length(); i++) {
                                 JSONObject obj = jsonArrayPedidos.getJSONObject(i);
 
-                                int idPedido = obj.getInt("id_pedido");
+                                // Lê o número sequencial relativo ao cliente (Pedido #1, #2...)
+                                int idPedido = obj.getInt("numero_exibicao");
                                 String dataCriacao = obj.optString("criado_em", "");
                                 double valorTotal = obj.getDouble("valor_total_pedido");
                                 String status = obj.optString("status_pedido", "Pendente");
@@ -88,7 +95,6 @@ public class PedidosFragment extends Fragment {
                                         double precoUnitario = itemObj.getDouble("preco_unitario_cobrado");
                                         int quantidade = itemObj.getInt("quantidade");
 
-                                        // Compatível com o construtor atualizado de String (URL/vazio)
                                         itensPedido.add(new ItemCarrinho(nomeProduto, precoUnitario, quantidade, ""));
                                     }
                                 }
