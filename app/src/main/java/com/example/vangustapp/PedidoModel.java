@@ -1,5 +1,6 @@
 package com.example.vangustapp;
 
+import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class PedidoModel implements Serializable {
     private String statusPedido;
     private List<ItemCarrinho> itens;
 
-    // Construtor completo para os dados vindos da API / Banco de Dados
+    // Construtor completo
     public PedidoModel(int idPedido, String dataCriacao, String endereco, String pagamento, double total, String statusPedido, List<ItemCarrinho> itens) {
         this.idPedido = idPedido;
         this.dataCriacao = dataCriacao;

@@ -63,7 +63,6 @@ public class PedidosFragment extends Fragment {
             return;
         }
 
-        // Aponta para o novo endpoint exclusivo do cliente logado
         String url = "http://10.0.2.2/api_hamburgueria/listar_pedidos_cliente.php?id_cliente=" + idCliente;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -78,13 +77,15 @@ public class PedidosFragment extends Fragment {
                             for (int i = 0; i < jsonArrayPedidos.length(); i++) {
                                 JSONObject obj = jsonArrayPedidos.getJSONObject(i);
 
-                                // Lê o número sequencial relativo ao cliente (Pedido #1, #2...)
                                 int idPedido = obj.getInt("numero_exibicao");
                                 String dataCriacao = obj.optString("criado_em", "");
                                 double valorTotal = obj.getDouble("valor_total_pedido");
                                 String status = obj.optString("status_pedido", "Pendente");
                                 String pagamento = obj.optString("metodo_pagamento", "");
-                                String enderecoCompleto = obj.optString("endereco_completo", "Endereço não especificado");
+
+                                // Lê prioritariamente a chave enviada pelo LEFT JOIN do PHP
+                                String enderecoCompleto = obj.optString("endereco_completo",
+                                        obj.optString("endereco", "Endereço não especificado"));
 
                                 List<ItemCarrinho> itensPedido = new ArrayList<>();
                                 if (obj.has("itens")) {
