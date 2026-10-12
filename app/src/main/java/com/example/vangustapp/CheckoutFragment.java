@@ -236,8 +236,13 @@ public class CheckoutFragment extends Fragment {
 
     private void carregarEnderecoUsuario() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
-        String enderecoSalvo = sharedPreferences.getString("endereco_usuario", "Rua Exemplo, 123 - Centro (Edite no seu perfil)");
-        tvEnderecoCheckout.setText(enderecoSalvo);
+        String enderecoSalvo = sharedPreferences.getString("endereco_usuario", "");
+
+        if (enderecoSalvo.isEmpty()) {
+            tvEnderecoCheckout.setText("Nenhum endereço cadastrado. Toque aqui para adicionar.");
+        } else {
+            tvEnderecoCheckout.setText(enderecoSalvo);
+        }
     }
 
     private double calcularDescontoCupom(double subtotal) {

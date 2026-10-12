@@ -61,8 +61,15 @@ public class PerfilFragment extends Fragment {
             SharedPreferences preferences = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
 
+            // Limpa todos os dados de sessão e o endereço residual da conta anterior
             editor.putBoolean("is_logged", false);
+            editor.remove("id_cliente");
+            editor.remove("nome_usuario");
+            editor.remove("email_usuario");
             editor.remove("foto_perfil");
+            editor.remove("endereco_usuario"); // <--- Limpa o endereço ao sair
+            editor.remove("cupom_ativo");
+            editor.remove("desconto_ativo");
             editor.apply();
 
             CarrinhoManager.limparCarrinho();

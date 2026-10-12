@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
+                                editor.clear(); // <--- Limpa qualquer dado residual de contas anteriores
                                 editor.putBoolean("is_logged", true);
                                 editor.putInt("id_cliente", idCliente);
                                 editor.putString("nome_usuario", nomeUsuario);
