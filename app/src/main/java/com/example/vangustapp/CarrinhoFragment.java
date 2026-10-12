@@ -52,11 +52,26 @@ public class CarrinhoFragment extends Fragment {
         carrinhoAdapter.setOnCarrinhoChangedListener(() -> atualizarTotais());
         idRecCarrinho.setAdapter(carrinhoAdapter);
 
-        // Ação para abrir a tela de cupons diretamente do carrinho
+        // Ação para gerir o cupom (Abrir seleção ou remover se já houver um ativo)
         if (layoutAtalhoCupom != null) {
             layoutAtalhoCupom.setOnClickListener(v -> {
-                Intent intent = new Intent(getContext(), CupomActivity.class);
-                startActivity(intent);
+                SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+                String cupomAtivo = prefs.getString("cupom_ativo", "");
+
+                if (!cupomAtivo.isEmpty()) {
+                    // Se já tiver um cupom aplicado, um clique permite removê-lo
+                    prefs.edit()
+                            .remove("cupom_ativo")
+                            .remove("desconto_ativo")
+                            .apply();
+
+                    Toast.makeText(getContext(), "Cupom removido do carrinho!", Toast.LENGTH_SHORT).show();
+                    atualizarTotais();
+                } else {
+                    // Se não tiver cupom, abre a tela de escolha de cupons
+                    Intent intent = new Intent(getContext(), CupomActivity.class);
+                    startActivity(intent);
+                }
             });
         }
 
@@ -76,7 +91,6 @@ public class CarrinhoFragment extends Fragment {
         ImageView btnVoltarCarrinho = view.findViewById(R.id.btnVoltarCarrinho);
         if (btnVoltarCarrinho != null) {
             btnVoltarCarrinho.setOnClickListener(v -> {
-                // Volta para o fragmento anterior (ex: Cardápio ou Início)
                 requireActivity().getSupportFragmentManager().popBackStack();
             });
         }
@@ -89,12 +103,12 @@ public class CarrinhoFragment extends Fragment {
 
         if (totalGeral < 0) totalGeral = TAXA_ENTREGA;
 
-        // Atualizar o texto do cupom ativo na UI do carrinho
         SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         String cupomAtivo = prefs.getString("cupom_ativo", "");
+
         if (tvStatusCupomCarrinho != null) {
             if (!cupomAtivo.isEmpty()) {
-                tvStatusCupomCarrinho.setText("Cupom aplicado: " + cupomAtivo);
+                tvStatusCupomCarrinho.setText("Cupom aplicado: " + cupomAtivo + " (Toque para remover)");
             } else {
                 tvStatusCupomCarrinho.setText("Toque aqui para adicionar um cupom");
             }
@@ -117,11 +131,9 @@ public class CarrinhoFragment extends Fragment {
 
         if (cupomAtivo.isEmpty()) return 0.0;
 
-        // Se o valor do desconto for menor que 1 (ex: 0.10), tratamos como percentual (10%)
         if (valorDesconto > 0 && valorDesconto < 1.0) {
             return subtotal * valorDesconto;
         } else {
-            // Caso contrário, tratamos como valor fixo em dinheiro (ex: R$ 10,00 limitados ao subtotal)
             return Math.min(subtotal, valorDesconto);
         }
     }
@@ -131,7 +143,7 @@ public class CarrinhoFragment extends Fragment {
         super.onResume();
         if (carrinhoAdapter != null) {
             carrinhoAdapter.notifyDataSetChanged();
-            atualizarTotais(); // Atualiza caso tenha escolhido um cupom e voltado para o carrinho
+            atualizarTotais();
         }
     }
 }
