@@ -36,6 +36,29 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:fontFamily="@font/oswald_regular"
+                    android:text="Lançamento!"
+                    android:textColor="#8F572F"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/idLançamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="330dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:fontFamily="@font/oswald_regular"
                     android:text="Ofertas!"
                     android:textColor="#8F572F"
                     android:textSize="20sp" />
@@ -65,29 +88,6 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/idMaisPedidos"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="330dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:fontFamily="@font/oswald_regular"
-                    android:text="Lançamentos!"
-                    android:textColor="#8F572F"
-                    android:textSize="20sp" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/idLançamento"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp" />
