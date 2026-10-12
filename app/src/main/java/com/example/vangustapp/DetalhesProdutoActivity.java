@@ -98,8 +98,11 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         int idCliente = prefs.getInt("id_cliente", -1);
 
+        // Fallback: se por acaso o id_cliente estiver como -1, mas houver um e-mail salvo,
+        // podemos avisar ou tentar tratar para não bloquear o utilizador
         if (idCliente == -1) {
-            Toast.makeText(this, "Precisa estar logado para favoritar!", Toast.LENGTH_SHORT).show();
+            String emailSalvo = prefs.getString("email_usuario", "");
+            Toast.makeText(this, "Erro de sessão: ID do cliente não encontrado. Por favor, faça login novamente.", Toast.LENGTH_LONG).show();
             return;
         }
 

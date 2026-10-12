@@ -19,7 +19,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText editEmail, editSenha;
     private Button btnEntrar, btnCadastrar;
-
     private View linkcadastrar;
 
     @Override
@@ -55,19 +54,27 @@ public class LoginActivity extends AppCompatActivity {
             com.android.volley.toolbox.StringRequest stringRequest = new com.android.volley.toolbox.StringRequest(
                     com.android.volley.Request.Method.POST, url,
                     response -> {
+                        // DIAGNÓSTICO: Mostra exatamente o que o PHP respondeu
+                        Toast.makeText(LoginActivity.this, "Resp: " + response, Toast.LENGTH_LONG).show();
+
                         try {
                             org.json.JSONObject jsonObject = new org.json.JSONObject(response);
                             boolean sucesso = jsonObject.getBoolean("sucesso");
 
                             if (sucesso) {
-                                // Pega os dados do usuário retornado pela API
                                 org.json.JSONObject usuarioObj = jsonObject.getJSONObject("usuario");
+
+                                // Garante a leitura segura da chave "id" ou "id_usuario"
+                                int idCliente = usuarioObj.has("id") ? usuarioObj.getInt("id") : usuarioObj.optInt("id_usuario", -1);
                                 String nomeUsuario = usuarioObj.getString("nome");
 
-                                // Salva no SharedPreferences que o usuário está logado e guarda o nome
+                                Toast.makeText(LoginActivity.this, "ID Capturado: " + idCliente, Toast.LENGTH_SHORT).show();
+
+                                // Salva no SharedPreferences o estado, nome, email e o ID do cliente
                                 SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
                                 editor.putBoolean("is_logged", true);
+                                editor.putInt("id_cliente", idCliente); // <--- ID salvo com sucesso para os favoritos e pedidos
                                 editor.putString("nome_usuario", nomeUsuario);
                                 editor.putString("email_usuario", emailDigitado);
                                 editor.apply();
@@ -79,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (org.json.JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(LoginActivity.this, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Erro JSON: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     },
                     error -> {
@@ -108,7 +115,5 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
             startActivity(intent);
         });
-
-
     }
 }

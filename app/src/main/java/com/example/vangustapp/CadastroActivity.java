@@ -1,7 +1,6 @@
 package com.example.vangustapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -12,7 +11,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CadastroActivity extends AppCompatActivity {
 
@@ -44,44 +52,51 @@ public class CadastroActivity extends AppCompatActivity {
             if (nome.isEmpty() || email.isEmpty() || senha.isEmpty()) {
                 Toast.makeText(CadastroActivity.this, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show();
             } else if (senha.length() < 6) {
-                Toast.makeText(CadastroActivity.this, "A palavra-passe deve ter pelo menos 6 caracteres", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CadastroActivity.this, "A senha deve ter pelo menos 6 caracteres", Toast.LENGTH_SHORT).show();
             } else {
-                // VERIFICAR SE O E-MAIL JÁ EXISTE NO SharedPreferences
-                SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
-                String emailSalvo = preferences.getString("email_usuario", "");
-
-                if (!emailSalvo.isEmpty() && emailSalvo.equalsIgnoreCase(email)) {
-                    // Se o e-mail digitado for igual ao que já está guardado, avisa o utilizador
-                    Toast.makeText(CadastroActivity.this, "Este e-mail já está associado a uma conta!", Toast.LENGTH_LONG).show();
-                } else {
-                    // SE NÃO EXISTIR, LIMPA DADOS ANTIGOS E GUARDA OS DO NOVO UTILIZADOR
-                    SharedPreferences.Editor editor = preferences.edit();
-
-                    // Limpar dados transacionais anteriores (cupons, moradas, foto)
-                    editor.remove("endereco_usuario");
-                    editor.remove("cupom_ativo");
-                    editor.remove("desconto_ativo");
-                    editor.remove("usado_VANGUST10");
-                    editor.remove("usado_PRIMEIRA");
-                    editor.remove("foto_perfil");
-
-                    // Guardar novos dados
-                    editor.putString("nome_usuario", nome);
-                    editor.putString("email_usuario", email);
-                    editor.putString("senha_usuario", senha);
-                    editor.apply();
-
-                    // Limpar carrinho em memória
-                    CarrinhoManager.limparCarrinho();
-
-                    Toast.makeText(CadastroActivity.this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
-
-                    // Redireciona para o login
-                    Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+                salvarCadastroNaApi(nome, email, senha);
             }
         });
+    }
+
+    private void salvarCadastroNaApi(String nome, String email, String senha) {
+        String url = "http://10.0.2.2/api_hamburgueria/cadastrar.php";
+
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.POST, url,
+                response -> {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        boolean sucesso = jsonObject.getBoolean("sucesso");
+
+                        if (sucesso) {
+                            Toast.makeText(CadastroActivity.this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
+
+                            // Redireciona para o login para o utilizador entrar com as novas credenciais
+                            Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            String erro = jsonObject.optString("erro", "Erro ao cadastrar");
+                            Toast.makeText(CadastroActivity.this, erro, Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(CadastroActivity.this, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(CadastroActivity.this, "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("nome", nome);
+                params.put("email", email);
+                params.put("senha", senha);
+                return params;
+            }
+        };
+
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 }
