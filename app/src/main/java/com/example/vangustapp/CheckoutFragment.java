@@ -136,12 +136,16 @@ public class CheckoutFragment extends Fragment {
                 ) {
                     @Override
                     protected Map<String, String> getParams() {
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+                        String cupomAtivo = prefs.getString("cupom_ativo", "");
+
                         Map<String, String> params = new HashMap<>();
                         params.put("email", emailUsuario);
                         params.put("endereco", enderecoAtual);
                         params.put("pagamento", pagamentoEscolhido);
                         params.put("total", String.valueOf(totalFinalPedido));
                         params.put("itens", jsonArrayItens.toString());
+                        params.put("cupom", cupomAtivo); // <--- Envia o cupom ativo para o PHP registrar como usado
                         return params;
                     }
                 };
@@ -238,15 +242,20 @@ public class CheckoutFragment extends Fragment {
 
     private double calcularDescontoCupom(double subtotal) {
         if (subtotal <= 0) return 0.0;
+
         SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         String cupomAtivo = prefs.getString("cupom_ativo", "");
+        float valorDesconto = prefs.getFloat("desconto_ativo", 0.0f);
 
-        if (cupomAtivo.equals("VANGUST10")) {
-            return subtotal * 0.10;
-        } else if (cupomAtivo.equals("PRIMEIRA")) {
-            return Math.min(subtotal, 10.00);
+        if (cupomAtivo.isEmpty()) return 0.0;
+
+        // Se o valor do desconto for menor que 1 (ex: 0.10), tratamos como percentual (10%)
+        if (valorDesconto > 0 && valorDesconto < 1.0) {
+            return subtotal * valorDesconto;
+        } else {
+            // Caso contrário, tratamos como valor fixo em dinheiro (ex: R$ 10,00 limitados ao subtotal)
+            return Math.min(subtotal, valorDesconto);
         }
-        return 0.0;
     }
 
     private void limparCupomAtivo() {
