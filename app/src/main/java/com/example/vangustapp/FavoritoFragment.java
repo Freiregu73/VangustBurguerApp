@@ -11,44 +11,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FavoritoFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView idRecFavoritos;
+    private List<FavoritosCard> lstFavoritos;
+    private AdapterFavoritos adapterFavoritos;
 
     public FavoritoFragment() {
         // Required empty public constructor
     }
-
-    public static FavoritoFragment newInstance(String param1, String param2) {
-        FavoritoFragment fragment = new FavoritoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    RecyclerView idRecFavoritos;
-    List<FavoritosCard> lstFavoritos;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,22 +55,43 @@ public class FavoritoFragment extends Fragment {
         idRecFavoritos.setLayoutManager(new LinearLayoutManager(getContext()));
 
         lstFavoritos = new ArrayList<>();
-        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
-        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
-        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
-        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
-        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
-        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
-        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
-        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
-        lstFavoritos.add(new FavoritosCard("Brutão na Chapa", "Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime.", R.drawable.brutao, 34.99));
+        adapterFavoritos = new AdapterFavoritos(lstFavoritos, getContext());
+        idRecFavoritos.setAdapter(adapterFavoritos);
 
-        AdapterFavoritos adapter = new AdapterFavoritos(lstFavoritos, getContext());
-        idRecFavoritos.setAdapter(adapter);
-
+        carregarFavoritosDaApi();
         atualizarBolinha(view);
 
         return view;
+    }
+
+    private void carregarFavoritosDaApi() {
+        String url = "http://10.0.2.2/api_hamburgueria/produtos.php";
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        lstFavoritos.clear();
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject obj = response.getJSONObject(i);
+                            String nome = obj.optString("nome_produto", "Produto");
+                            String descricao = obj.optString("descricao", "");
+                            double preco = obj.optDouble("preco", 0.0);
+                            String urlImagem = obj.optString("imagem", null);
+
+                            // Por enquanto, carrega os produtos gerais ou filtra os favoritos
+                            lstFavoritos.add(new FavoritosCard(nome, descricao, urlImagem, preco));
+                        }
+                        adapterFavoritos.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Erro ao processar favoritos", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
+        );
+
+        Volley.newRequestQueue(requireContext()).add(jsonArrayRequest);
     }
 
     private void atualizarBolinha(View view) {

@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.ViewHolder> {
@@ -40,7 +42,17 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
         holder.modeloTituloFavoritos.setText(favorito.getTitulo());
         holder.modeloDescFavoritos.setText(favorito.getDescricao());
         holder.modeloPrecoFavoritos.setText(String.format("R$ %.2f", favorito.getPreco()));
-        holder.modeloImagemFavoritos.setImageResource(favorito.getImgfavoritos());
+
+        // Carregar a imagem via Glide se houver URL da API
+        if (favorito.getImageUrl() != null && !favorito.getImageUrl().isEmpty()) {
+            Glide.with(context)
+                    .load(favorito.getImageUrl())
+                    .placeholder(R.drawable.brutao)
+                    .error(R.drawable.brutao)
+                    .into(holder.modeloImagemFavoritos);
+        } else {
+            holder.modeloImagemFavoritos.setImageResource(favorito.getImgfavoritos());
+        }
 
         // --- AÇÃO DO BOTÃO "PEDIR" NO CARD DE FAVORITOS ---
         holder.modeloBtnFavoritos.setOnClickListener(v -> {
@@ -48,7 +60,7 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
                     favorito.getTitulo(),
                     favorito.getPreco(),
                     1,
-                    favorito.getImgfavoritos()
+                    favorito.getImageUrl() != null ? favorito.getImageUrl() : ""
             );
             CarrinhoManager.adicionarItem(itemCarrinho);
 
@@ -61,7 +73,7 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
             intent.putExtra("titulo", favorito.getTitulo());
             intent.putExtra("descricao", favorito.getDescricao());
             intent.putExtra("preco", favorito.getPreco());
-            intent.putExtra("imagem", favorito.getImgfavoritos());
+            intent.putExtra("imagem", favorito.getImageUrl() != null ? favorito.getImageUrl() : "");
             context.startActivity(intent);
         });
     }
@@ -75,7 +87,7 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
         CardView modeloCardFavoritos;
         ImageView modeloImagemFavoritos;
         TextView modeloTituloFavoritos, modeloDescFavoritos, modeloPrecoFavoritos;
-        Button modeloBtnFavoritos; // Referência correta para o botão do XML
+        Button modeloBtnFavoritos;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,7 +96,7 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
             modeloTituloFavoritos = itemView.findViewById(R.id.modeloTituloFavoritos);
             modeloDescFavoritos = itemView.findViewById(R.id.modeloDescFavoritos);
             modeloPrecoFavoritos = itemView.findViewById(R.id.modeloPrecoFavoritos);
-            modeloBtnFavoritos = itemView.findViewById(R.id.modeloBtnFavoritos); // ID exato do teu XML
+            modeloBtnFavoritos = itemView.findViewById(R.id.modeloBtnFavoritos);
         }
     }
 }

@@ -32,9 +32,7 @@ public class PedidosFragment extends Fragment {
     private List<PedidoModel> listaPedidos;
     private AdapterPedidos adapterPedidos;
 
-    public PedidosFragment() {
-        // Required empty public constructor
-    }
+    public PedidosFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,16 +51,13 @@ public class PedidosFragment extends Fragment {
         adapterPedidos = new AdapterPedidos(listaPedidos, getContext());
         idRecPedidos.setAdapter(adapterPedidos);
 
-        // Carregar os pedidos da API PHP
         carregarPedidosDaApi();
     }
 
     private void carregarPedidosDaApi() {
-        // Recuperar o e-mail do utilizador logado no SharedPreferences
         SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         String emailUsuario = prefs.getString("email_usuario", "");
 
-        // URL do seu script listar_pedidos.php no XAMPP
         String url = "http://10.0.2.2/api_hamburgueria/listar_pedidos.php";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -82,11 +77,8 @@ public class PedidosFragment extends Fragment {
                                 double valorTotal = obj.getDouble("valor_total_pedido");
                                 String status = obj.optString("status_pedido", "Pendente");
                                 String pagamento = obj.optString("metodo_pagamento", "");
-
-                                // Capturar o endereço real vindo da consulta SQL do PHP
                                 String enderecoCompleto = obj.optString("endereco_completo", "Endereço não especificado");
 
-                                // Ler os itens do pedido vindos do PHP
                                 List<ItemCarrinho> itensPedido = new ArrayList<>();
                                 if (obj.has("itens")) {
                                     JSONArray jsonArrayItens = obj.getJSONArray("itens");
@@ -96,12 +88,11 @@ public class PedidosFragment extends Fragment {
                                         double precoUnitario = itemObj.getDouble("preco_unitario_cobrado");
                                         int quantidade = itemObj.getInt("quantidade");
 
-                                        // Adiciona à lista de itens do carrinho do pedido
-                                        itensPedido.add(new ItemCarrinho(nomeProduto, precoUnitario, quantidade, 0));
+                                        // Compatível com o construtor atualizado de String (URL/vazio)
+                                        itensPedido.add(new ItemCarrinho(nomeProduto, precoUnitario, quantidade, ""));
                                     }
                                 }
 
-                                // Instanciando o modelo passando o endereço recuperado da base de dados
                                 PedidoModel pedido = new PedidoModel(idPedido, dataCriacao, enderecoCompleto, pagamento, valorTotal, status, itensPedido);
                                 listaPedidos.add(pedido);
                             }
@@ -114,9 +105,7 @@ public class PedidosFragment extends Fragment {
                         Toast.makeText(getContext(), "Erro ao processar dados dos pedidos", Toast.LENGTH_SHORT).show();
                     }
                 },
-                error -> {
-                    Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show();
-                }
+                error -> Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
         );
 
         Volley.newRequestQueue(requireContext()).add(jsonObjectRequest);

@@ -5,13 +5,16 @@ public class FavoritosCard {
     private String titulo;
     private String descricao;
     private int imgfavoritos;
+    private String imageUrl; // Suporte para URL da API
     private double preco;
 
-    public FavoritosCard(String titulo, String descricao, int imgfavoritos, double preco) {
+    // Construtor para dados vindos da API
+    public FavoritosCard(String titulo, String descricao, String imageUrl, double preco) {
         this.titulo = titulo;
         this.descricao = descricao;
-        this.imgfavoritos = imgfavoritos;
+        this.imageUrl = imageUrl;
         this.preco = preco;
+        this.imgfavoritos = R.drawable.brutao; // Fallback
     }
 
     public String getTitulo() {
@@ -34,8 +37,8 @@ public class FavoritosCard {
         return imgfavoritos;
     }
 
-    public void setImgfavoritos(int imgfavoritos) {
-        this.imgfavoritos = imgfavoritos;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public double getPreco() {

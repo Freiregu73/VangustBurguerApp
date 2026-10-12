@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHolder> {
@@ -43,7 +45,17 @@ public class CarrinhoAdapter extends RecyclerView.Adapter<CarrinhoAdapter.ViewHo
         holder.tvTitulo.setText(item.getTitulo());
         holder.tvPreco.setText(String.format("R$ %.2f", item.getPreco() * item.getQuantidade()));
         holder.tvQuantidade.setText(String.valueOf(item.getQuantidade()));
-        holder.imgItem.setImageResource(item.getImagem());
+
+        // Carregar a imagem com o Glide se houver URL da API
+        if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(item.getImageUrl())
+                    .placeholder(R.drawable.brutao)
+                    .error(R.drawable.brutao)
+                    .into(holder.imgItem);
+        } else {
+            holder.imgItem.setImageResource(item.getImagemLocal());
+        }
 
         // Botão para aumentar quantidade
         holder.btnAumentar.setOnClickListener(v -> {
