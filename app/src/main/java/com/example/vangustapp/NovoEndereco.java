@@ -82,7 +82,8 @@ public class NovoEndereco extends AppCompatActivity {
             return;
         }
 
-        String url = "http://10.0.2.2/api_hamburgueria/salvar_endereco.php";
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/salvar_endereco.php";
 
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST, url,

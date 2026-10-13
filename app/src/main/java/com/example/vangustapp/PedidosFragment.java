@@ -63,7 +63,8 @@ public class PedidosFragment extends Fragment {
             return;
         }
 
-        String url = "http://10.0.2.2/api_hamburgueria/listar_pedidos_cliente.php?id_cliente=" + idCliente;
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/listar_pedidos_cliente.php?id_cliente=" + idCliente;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, url, null,
@@ -77,7 +78,6 @@ public class PedidosFragment extends Fragment {
                             for (int i = 0; i < jsonArrayPedidos.length(); i++) {
                                 JSONObject obj = jsonArrayPedidos.getJSONObject(i);
 
-                                // CORRIGIDO: Lê diretamente o id_pedido real da base de dados
                                 int idPedido = obj.optInt("id_pedido", obj.optInt("numero_exibicao", 0));
                                 String dataCriacao = obj.optString("criado_em", "");
                                 double valorTotal = obj.getDouble("valor_total_pedido");

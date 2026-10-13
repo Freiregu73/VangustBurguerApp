@@ -109,7 +109,8 @@ public class CheckoutFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                String url = "http://10.0.2.2/api_hamburgueria/salvar_pedido.php";
+                // Atualizado para o domínio oficial da Locaweb
+                String url = "https://vangustburguer.com.br/api_hamburgueria/salvar_pedido.php";
 
                 StringRequest stringRequest = new StringRequest(
                         Request.Method.POST, url,
@@ -173,7 +174,8 @@ public class CheckoutFragment extends Fragment {
             return;
         }
 
-        String url = "http://10.0.2.2/api_hamburgueria/listar_enderecos.php?email=" + emailUsuario;
+        // Atualizado para o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/listar_enderecos.php?email=" + emailUsuario;
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, url, null,

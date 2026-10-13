@@ -42,7 +42,8 @@ public class EsqueciSenhaActivity extends AppCompatActivity {
     }
 
     private void solicitarNovaSenha(String email) {
-        String url = "http://10.0.2.2/api_hamburgueria/esqueci_senha.php";
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/esqueci_senha.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
@@ -52,7 +53,6 @@ public class EsqueciSenhaActivity extends AppCompatActivity {
                         String mensagem = jsonObject.optString("mensagem", "Processo concluído.");
 
                         if (sucesso) {
-                            // Para facilitar os testes locais, mostramos a senha temporária gerada num Toast
                             String senhaTemp = jsonObject.optString("senha_temporaria", "");
                             if (!senhaTemp.isEmpty()) {
                                 Toast.makeText(this, "Senha temporária: " + senhaTemp, Toast.LENGTH_LONG).show();

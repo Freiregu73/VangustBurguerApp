@@ -72,7 +72,8 @@ public class FavoritoFragment extends Fragment {
         SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         int idCliente = prefs.getInt("id_cliente", -1);
 
-        String url = "http://10.0.2.2/api_hamburgueria/listar_favoritos.php?id_cliente=" + idCliente;
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/listar_favoritos.php?id_cliente=" + idCliente;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, url, null,

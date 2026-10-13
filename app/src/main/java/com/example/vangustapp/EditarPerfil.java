@@ -100,7 +100,6 @@ public class EditarPerfil extends AppCompatActivity {
             btnVoltarEditarPerfil.setOnClickListener(v -> finish());
         }
 
-        // Dentro do onCreate de EditarPerfil.java:
         Button btnIrParaAlterarSenha = findViewById(R.id.btnIrParaAlterarSenha);
         if (btnIrParaAlterarSenha != null) {
             btnIrParaAlterarSenha.setOnClickListener(v -> {
@@ -119,7 +118,6 @@ public class EditarPerfil extends AppCompatActivity {
         if (txNomePerfil != null) txNomePerfil.setText(nomeSalvo);
         if (txEmailPerfil != null) txEmailPerfil.setText(emailSalvo);
 
-        // Carrega a foto em Base64 armazenada no SharedPreferences e converte para Bitmap
         String fotoBase64 = prefs.getString("foto_perfil", "");
         if (!fotoBase64.isEmpty()) {
             try {
@@ -142,9 +140,9 @@ public class EditarPerfil extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
         int idUsuario = prefs.getInt("id_cliente", 1);
 
-        String url = "http://10.0.2.2/api_hamburgueria/atualizar_perfil_cliente.php";
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/atualizar_perfil_cliente.php";
 
-        // Converte os bytes da foto nova para Base64 (se houver)
         String imagemBase64 = "";
         if (bytesFoto != null && bytesFoto.length > 0) {
             imagemBase64 = Base64.encodeToString(bytesFoto, Base64.DEFAULT);

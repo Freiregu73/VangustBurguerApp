@@ -82,8 +82,8 @@ public class CupomActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         int idCliente = prefs.getInt("id_cliente", 0);
 
-        // Passa o id_cliente como parâmetro GET para o PHP filtrar
-        String url = "http://10.0.2.2/api_hamburgueria/listar_cupons.php?id_cliente=" + idCliente;
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/listar_cupons.php?id_cliente=" + idCliente;
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, url, null,
@@ -117,7 +117,8 @@ public class CupomActivity extends AppCompatActivity {
     }
 
     private void validarCupomNaApi(String codigo) {
-        String url = "http://10.0.2.2/api_hamburgueria/validar_cupom.php";
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/validar_cupom.php";
 
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST, url,

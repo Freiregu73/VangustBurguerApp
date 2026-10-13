@@ -119,7 +119,8 @@ public class InicioFragment extends Fragment {
     }
 
     private void carregarProdutosDaApi() {
-        String url = "http://10.0.2.2/api_hamburgueria/produtos.php";
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/produtos.php";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET, url, null,

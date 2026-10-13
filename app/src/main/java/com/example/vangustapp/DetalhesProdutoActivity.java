@@ -97,7 +97,8 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
 
         if (idCliente == -1 || idProduto == -1) return;
 
-        String url = "http://10.0.2.2/api_hamburgueria/verificar_favorito.php?id_cliente=" + idCliente + "&id_produto=" + idProduto;
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/verificar_favorito.php?id_cliente=" + idCliente + "&id_produto=" + idProduto;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
@@ -121,7 +122,8 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
 
         if (idCliente == -1 || idProduto == -1) return;
 
-        String url = "http://10.0.2.2/api_hamburgueria/favoritar.php";
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/favoritar.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {

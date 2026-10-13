@@ -127,7 +127,8 @@ public class DetalhesPedidosActivity extends AppCompatActivity {
     }
 
     private void executarCancelamentoServidor(int idPedido) {
-        String url = "http://10.0.2.2/api_hamburgueria/cancelar_pedido.php";
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/cancelar_pedido.php";
 
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST, url,

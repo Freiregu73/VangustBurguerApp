@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -60,7 +61,8 @@ public class CadastroActivity extends AppCompatActivity {
     }
 
     private void salvarCadastroNaApi(String nome, String email, String senha) {
-        String url = "http://10.0.2.2/api_hamburgueria/cadastrar.php";
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/cadastrar.php";
 
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST, url,
@@ -72,7 +74,6 @@ public class CadastroActivity extends AppCompatActivity {
                         if (sucesso) {
                             Toast.makeText(CadastroActivity.this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
 
-                            // Redireciona para o login para o utilizador entrar com as novas credenciais
                             Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
@@ -94,6 +95,13 @@ public class CadastroActivity extends AppCompatActivity {
                 params.put("email", email);
                 params.put("senha", senha);
                 return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+                return headers;
             }
         };
 

@@ -72,7 +72,8 @@ public class EnderecoFragment extends Fragment {
             return;
         }
 
-        String url = "http://10.0.2.2/api_hamburgueria/listar_enderecos.php?email=" + emailUsuario;
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/listar_enderecos.php?email=" + emailUsuario;
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, url, null,

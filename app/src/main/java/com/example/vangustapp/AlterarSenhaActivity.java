@@ -73,7 +73,8 @@ public class AlterarSenhaActivity extends AppCompatActivity {
             return;
         }
 
-        String url = "http://10.0.2.2/api_hamburgueria/alterar_senha.php";
+        // Atualizado com o domínio oficial da Locaweb
+        String url = "https://vangustburguer.com.br/api_hamburgueria/alterar_senha.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
@@ -90,7 +91,6 @@ public class AlterarSenhaActivity extends AppCompatActivity {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        // Exibe no Logcat exatamente o que o PHP devolveu quando deu erro 500
                         Log.e("ERRO_PHP_BRUTO", "Resposta recebida: " + response);
                         Toast.makeText(this, "Erro interno. Veja o Logcat (ERRO_PHP_BRUTO)", Toast.LENGTH_LONG).show();
                     }

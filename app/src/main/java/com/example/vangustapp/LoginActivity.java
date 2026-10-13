@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +14,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -50,19 +59,20 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            String url = "http://10.0.2.2/api_hamburgueria/login.php";
+            // Atualizado com o domínio oficial da Locaweb
+            String url = "https://vangustburguer.com.br/api_hamburgueria/login.php";
 
-            com.android.volley.toolbox.StringRequest stringRequest = new com.android.volley.toolbox.StringRequest(
-                    com.android.volley.Request.Method.POST, url,
+            StringRequest stringRequest = new StringRequest(
+                    Request.Method.POST, url,
                     response -> {
-                        Log.d("LOGIN_RESPOSTA", response);
+                        Log.e("HTML_ERRO_SERVIDOR", response);
 
                         try {
-                            org.json.JSONObject jsonObject = new org.json.JSONObject(response);
+                            JSONObject jsonObject = new JSONObject(response);
                             boolean sucesso = jsonObject.getBoolean("sucesso");
 
                             if (sucesso) {
-                                org.json.JSONObject usuarioObj = jsonObject.getJSONObject("usuario");
+                                JSONObject usuarioObj = jsonObject.getJSONObject("usuario");
 
                                 int idCliente = usuarioObj.has("id") ? usuarioObj.getInt("id") : usuarioObj.optInt("id_usuario", -1);
                                 String nomeUsuario = usuarioObj.getString("nome");
@@ -70,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = preferences.edit();
-                                editor.clear(); // <--- Limpa qualquer dado residual de contas anteriores
+                                editor.clear(); // Limpa dados residuais de contas anteriores
                                 editor.putBoolean("is_logged", true);
                                 editor.putInt("id_cliente", idCliente);
                                 editor.putString("nome_usuario", nomeUsuario);
@@ -82,24 +92,33 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LoginActivity.this, MenuPrincipalActivity.class);
                                 startActivity(intent);
                                 finish();
+                            } else {
+                                Toast.makeText(LoginActivity.this, jsonObject.optString("erro", "E-mail ou senha incorretos"), Toast.LENGTH_LONG).show();
                             }
-                        } catch (org.json.JSONException e) {
+                        } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(LoginActivity.this, "Erro JSON: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     },
-                    error -> Toast.makeText(LoginActivity.this, "E-mail ou senha incorretos / Erro de conexão", Toast.LENGTH_SHORT).show()
+                    error -> Toast.makeText(LoginActivity.this, "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
             ) {
                 @Override
-                protected java.util.Map<String, String> getParams() {
-                    java.util.Map<String, String> params = new java.util.HashMap<>();
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
                     params.put("email", emailDigitado);
                     params.put("senha", senhaDigitada);
                     return params;
                 }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+                    return headers;
+                }
             };
 
-            com.android.volley.toolbox.Volley.newRequestQueue(this).add(stringRequest);
+            Volley.newRequestQueue(this).add(stringRequest);
         });
 
         btnCadastrar.setOnClickListener(v -> {
@@ -107,7 +126,6 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Configuração segura do clique para abrir a tela de Esqueceu a Senha
         if (linkEsqueceuSenha != null) {
             linkEsqueceuSenha.setOnClickListener(v -> {
                 Intent intent = new Intent(LoginActivity.this, EsqueciSenhaActivity.class);
