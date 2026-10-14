@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:background="#8F572F"
     android:layout_height="match_parent"
-    >
+    android:background="#8F572F">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,17 +35,18 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
-        android:background="#F7EDDA"
-        app:itemBackground="@drawable/fundo_laranja"
-        app:headerLayout="@layout/header_drawer"
-        app:itemTextColor="#F7EDDA"
-        app:itemIconTint="#F7EDDA"
-        android:padding="10dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="25dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
+        android:background="#F7EDDA"
+        android:paddingTop="50dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp"
+        app:headerLayout="@layout/header_drawer"
+        app:itemBackground="@drawable/fundo_laranja"
+        app:itemIconTint="#F7EDDA"
+        app:itemTextColor="#F7EDDA"
         app:menu="@menu/menu_lateral"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
