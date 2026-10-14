@@ -39,7 +39,7 @@
                 app:tint="#A61C1C" />
         </RelativeLayout>
 
-        <!-- Imagem do Produto (margem ajustada para dar espaço ao botão) -->
+        <!-- Imagem do Produto -->
         <androidx.cardview.widget.CardView
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
@@ -63,7 +63,6 @@
             android:orientation="vertical"
             android:padding="15dp">
 
-            <!-- Título e Descrição (usando weight="1" para empurrar o preço para baixo) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -93,7 +92,6 @@
                     android:textSize="20sp" />
             </LinearLayout>
 
-            <!-- Área de Preço e Botão fixada na parte inferior -->
             <LinearLayout
                 android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
@@ -129,8 +127,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#A61C1C"
-                    android:text="Pedir"
                     android:textColor="#F7EDDA"
+                    android:text="Pedir"
                     app:cornerRadius="8dp" />
             </LinearLayout>
 

@@ -86,15 +86,18 @@
             app:boxStrokeColor="#8F572F"
             app:cursorColor="#8F572F"
             app:endIconMode="clear_text"
+            app:endIconTint="#8F572F"
             app:hintTextColor="#8F572F"
-            app:startIconDrawable="@drawable/baseline_person_outline">
+            app:startIconDrawable="@drawable/baseline_person_outline"
+            app:startIconTint="#8F572F">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txEditarNome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:maxLength="50" />
+                android:maxLength="50"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Campo E-mail -->
@@ -104,18 +107,20 @@
             android:layout_marginBottom="15dp"
             android:hint="E-mail"
             app:startIconDrawable="@drawable/baseline_email"
+            app:startIconTint="#8F572F"
             app:boxStrokeColor="#8F572F"
             app:cursorColor="#8F572F"
             app:endIconMode="clear_text"
+            app:endIconTint="#8F572F"
             app:hintTextColor="#8F572F">
 
-            <!-- Geralmente usa-se um ícone de email, se tiver, adicione app:startIconDrawable="@drawable/baseline_email" -->
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txEditarEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:maxLength="50" />
+                android:maxLength="50"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Campo Telefone / WhatsApp -->
@@ -125,18 +130,20 @@
             android:layout_marginBottom="25dp"
             android:hint="Telefone / WhatsApp"
             app:startIconDrawable="@drawable/baseline_phone"
+            app:startIconTint="#8F572F"
             app:boxStrokeColor="#8F572F"
             app:cursorColor="#8F572F"
             app:endIconMode="clear_text"
+            app:endIconTint="#8F572F"
             app:hintTextColor="#8F572F">
 
-            <!-- Se tiver um ícone de telefone, adicione app:startIconDrawable="@drawable/baseline_phone" -->
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txEditarTelefone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
-                android:maxLength="15" />
+                android:maxLength="15"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Espaçador flexível -->
@@ -152,6 +159,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="16px"
             android:text="Alterar Senha"
+            android:textColor="#F7EDDA"
             android:backgroundTint="#8F572F"
             app:strokeColor="#332011"
             app:cornerRadius="8dp" />
@@ -163,6 +171,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="10dp"
             android:backgroundTint="#8F572F"
+            android:textColor="#F7EDDA"
             android:text="Salvar Alterações"
             app:cornerRadius="10dp" />
 

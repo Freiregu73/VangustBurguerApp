@@ -68,6 +68,7 @@
             android:layout_height="60dp"
             android:layout_marginBottom="15dp"
             android:backgroundTint="#8F572F"
+            android:textColor="#F7EDDA"
             android:text="Editar Perfil"
             app:cornerRadius="10dp" />
 
@@ -77,6 +78,7 @@
             android:layout_height="60dp"
             android:layout_marginBottom="15dp"
             android:backgroundTint="#8F572F"
+            android:textColor="#F7EDDA"
             android:text="Meus Pedidos"
             app:cornerRadius="10dp" />
 
@@ -86,6 +88,7 @@
             android:layout_height="60dp"
             android:layout_marginBottom="35dp"
             android:backgroundTint="#8F572F"
+            android:textColor="#F7EDDA"
             android:text="Meus Endereços"
             app:cornerRadius="10dp" />
 
@@ -95,6 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="#A61C1C"
+            android:textColor="#F7EDDA"
             android:text="Sair da Conta"
             app:cornerRadius="10dp" />
     </LinearLayout>

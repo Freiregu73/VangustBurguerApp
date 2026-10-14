@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- ADICIONADO O ID AQUI -->
             <ImageView
                 android:id="@+id/imgHeaderPerfil"
                 android:layout_width="match_parent"
@@ -45,7 +44,7 @@
         android:fontFamily="@font/oswald_regular"
         android:layout_marginLeft="5dp"
         android:text="USUARIO"
-        android:textColor="#FFA74F"
+        android:textColor="#8F572F"
         android:textSize="20sp"/>
 
 </LinearLayout>

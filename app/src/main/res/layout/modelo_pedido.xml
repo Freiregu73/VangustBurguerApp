@@ -82,8 +82,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#A61C1C"
-                android:text="Repetir"
                 android:textColor="#F7EDDA"
+                android:text="Repetir"
                 app:cornerRadius="8dp" />
         </LinearLayout>
     </LinearLayout>

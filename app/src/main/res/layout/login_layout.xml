@@ -10,7 +10,6 @@
     android:layout_height="match_parent"
     tools:context=".SplashActivity">
 
-
     <LinearLayout
         android:layout_marginTop="30dp"
         android:orientation="horizontal"
@@ -22,10 +21,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/logo_vangust_burguer"
-            />
-
-
+            android:src="@drawable/logo_vangust_burguer" />
     </LinearLayout>
 
     <LinearLayout
@@ -40,7 +36,9 @@
             android:layout_height="wrap_content"
             android:hint="E-mail"
             app:endIconMode="clear_text"
+            app:endIconTint="#8F572F"
             app:startIconDrawable="@drawable/baseline_person"
+            app:startIconTint="#8F572F"
             app:boxStrokeColor="#8F572F"
             app:hintTextColor="#8F572F"
             app:cursorColor="#8F572F">
@@ -50,11 +48,9 @@
                 android:inputType="textEmailAddress"
                 android:maxLength="50"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -68,7 +64,9 @@
             android:layout_height="wrap_content"
             android:hint="Senha"
             app:endIconMode="password_toggle"
+            app:endIconTint="#8F572F"
             app:startIconDrawable="@drawable/baseline_lock"
+            app:startIconTint="#8F572F"
             app:boxStrokeColor="#8F572F"
             app:hintTextColor="#8F572F"
             app:cursorColor="#8F572F">
@@ -78,11 +76,9 @@
                 android:inputType="textPassword"
                 android:maxLength="15"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -96,6 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Esqueceu a senha? "
+            android:textColor="#5C3A21"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_gravity="end"/>
@@ -109,9 +106,7 @@
             android:textStyle="bold"
             android:textColor="#8F572F"
             android:layout_gravity="end"/>
-
     </LinearLayout>
-
 
     <LinearLayout
         android:padding="15dp"
@@ -125,6 +120,7 @@
             android:layout_height="60dp"
             android:id="@+id/btnEntrar"
             android:text="Entrar"
+            android:textColor="#F7EDDA"
             android:backgroundTint="#8F572F"
             app:cornerRadius="10dp"/>
 
@@ -134,15 +130,8 @@
             android:layout_height="60dp"
             android:id="@+id/btnCadastrar"
             android:text="Cadastrar"
+            android:textColor="#F7EDDA"
             android:backgroundTint="#8F572F"
             app:cornerRadius="10dp"/>
-
-
     </LinearLayout>
-
-
-
-
-
-
 </LinearLayout>

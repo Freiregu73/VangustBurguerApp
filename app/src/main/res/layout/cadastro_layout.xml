@@ -39,7 +39,9 @@
             android:layout_height="wrap_content"
             android:hint="Nome Completo"
             app:endIconMode="clear_text"
+            app:endIconTint="#8F572F"
             app:startIconDrawable="@drawable/baseline_person"
+            app:startIconTint="#8F572F"
             app:boxStrokeColor="#8F572F"
             app:hintTextColor="#8F572F"
             app:cursorColor="#8F572F">
@@ -49,7 +51,8 @@
                 android:inputType="textPersonName"
                 android:maxLength="50"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -65,7 +68,9 @@
             android:layout_height="wrap_content"
             android:hint="E-mail"
             app:endIconMode="clear_text"
+            app:endIconTint="#8F572F"
             app:startIconDrawable="@drawable/baseline_person"
+            app:startIconTint="#8F572F"
             app:boxStrokeColor="#8F572F"
             app:hintTextColor="#8F572F"
             app:cursorColor="#8F572F">
@@ -75,7 +80,8 @@
                 android:inputType="textEmailAddress"
                 android:maxLength="50"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -91,7 +97,9 @@
             android:layout_height="wrap_content"
             android:hint="Senha"
             app:endIconMode="password_toggle"
+            app:endIconTint="#8F572F"
             app:startIconDrawable="@drawable/baseline_lock"
+            app:startIconTint="#8F572F"
             app:boxStrokeColor="#8F572F"
             app:hintTextColor="#8F572F"
             app:cursorColor="#8F572F">
@@ -102,7 +110,7 @@
                 android:maxLength="15"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -119,6 +127,7 @@
             android:layout_height="60dp"
             android:id="@+id/btnFinalizarCadastro"
             android:text="Finalizar Cadastro"
+            android:textColor="#F7EDDA"
             android:backgroundTint="#8F572F"
             app:cornerRadius="10dp"/>
     </LinearLayout>

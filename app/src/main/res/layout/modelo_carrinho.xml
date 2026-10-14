@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="#2c2c2c" /> <!-- Aqui entrará a imagem real do hambúrguer -->
+                android:src="#2c2c2c" />
         </androidx.cardview.widget.CardView>
 
         <!-- Detalhes do Produto -->
@@ -68,7 +68,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="5dp">
 
-            <!-- Ícone de Menos (pode importar um baseline_remove no Vector Asset se não tiver) -->
             <ImageView
                 android:id="@+id/btnDiminuirQtd"
                 android:layout_width="32dp"
@@ -89,7 +88,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <!-- Ícone de Mais (usando o mesmo do formulário de endereços) -->
             <ImageView
                 android:id="@+id/btnAumentarQtd"
                 android:layout_width="32dp"

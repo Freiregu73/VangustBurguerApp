@@ -23,7 +23,6 @@
                 android:layout_height="match_parent"
                 android:src="#2c2c2c"
                 android:scaleType="centerCrop"/>
-
         </androidx.cardview.widget.CardView>
 
         <LinearLayout
@@ -42,8 +41,6 @@
                 android:textSize="19sp"
                 android:textStyle="bold"
                 android:layout_marginTop="5dp"/>
-
-
         </LinearLayout>
 
     </LinearLayout>

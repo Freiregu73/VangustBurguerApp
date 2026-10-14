@@ -55,13 +55,15 @@
                 app:boxStrokeColor="#8F572F"
                 app:hintTextColor="#8F572F"
                 app:cursorColor="#8F572F"
-                app:endIconMode="clear_text">
+                app:endIconMode="clear_text"
+                app:endIconTint="#8F572F">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txNomeLocal"
                     android:inputType="textCapWords"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- CEP -->
@@ -79,7 +81,8 @@
                     android:inputType="number"
                     android:maxLength="8"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Rua/Avenida -->
@@ -96,7 +99,8 @@
                     android:id="@+id/txRua"
                     android:inputType="textPostalAddress"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Número e Complemento lado a lado -->
@@ -121,7 +125,8 @@
                         android:id="@+id/txNumero"
                         android:inputType="text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -137,7 +142,8 @@
                         android:id="@+id/txComplemento"
                         android:inputType="text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -155,10 +161,11 @@
                     android:id="@+id/txBairro"
                     android:inputType="textPostalAddress"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Espaçador flexível para empurrar o botão para o fundo se o ecrã for grande -->
+            <!-- Espaçador flexível -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -170,6 +177,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:backgroundTint="#8F572F"
+                android:textColor="#F7EDDA"
                 android:text="Salvar Endereço"
                 app:cornerRadius="10dp" />
 

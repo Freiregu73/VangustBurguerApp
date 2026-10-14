@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="80dp"> <!-- Espaço em baixo para o botão flutuante não tapar o conteúdo -->
+            android:paddingBottom="80dp">
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPagerCarrossel"
@@ -109,7 +109,7 @@
             android:layout_margin="24dp"
             android:src="@drawable/baseline_shopping_cart"
             android:backgroundTint="#8F572F"
-            app:tint="@android:color/white"
+            app:tint="#F7EDDA"
             android:contentDescription="Abrir Carrinho" />
 
         <!-- A bolinha vermelha com elevação forçada para ficar sempre à frente -->

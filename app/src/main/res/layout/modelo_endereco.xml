@@ -22,7 +22,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="15dp"
             android:src="@drawable/baseline_location"
-            app:tint="#8F572F" /> <!-- Altere o drawable para um ícone de casa/localização se tiver -->
+            app:tint="#8F572F" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -55,7 +55,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/baseline_delete"
-            app:tint="#A61C1C" /> <!-- Altere o drawable para um ícone de apagar/lixo se tiver -->
+            app:tint="#A61C1C" />
 
     </LinearLayout>
 

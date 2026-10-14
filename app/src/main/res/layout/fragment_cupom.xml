@@ -36,7 +36,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-
     <!-- Área de Inserção de Cupom -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,9 +55,10 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txInserirCupom"
-                android:inputType="textCapCharacters"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="textCapCharacters"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -67,6 +67,7 @@
             android:layout_height="60dp"
             android:layout_marginStart="10dp"
             android:text="Aplicar"
+            android:textColor="#F7EDDA"
             android:backgroundTint="#8F572F"
             app:cornerRadius="10dp" />
     </LinearLayout>
