@@ -3,91 +3,103 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/modeloCardFavoritos"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    app:cardCornerRadius="30dp"
-    android:layout_marginBottom="25dp">
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#FCD299"
-        android:orientation="horizontal">
+        android:padding="12dp">
 
+        <!-- Imagem do Hambúrguer (Lado Esquerdo) -->
         <androidx.cardview.widget.CardView
-            app:cardCornerRadius="30dp"
-            android:layout_width="190dp"
-            android:layout_height="match_parent">
+            android:id="@+id/cardImgFavoritos"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
             <ImageView
                 android:id="@+id/modeloImagemFavoritos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="#2c2c2c"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:src="#2c2c2c" />
         </androidx.cardview.widget.CardView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <!-- Título do Hambúrguer -->
+        <TextView
+            android:id="@+id/modeloTituloFavoritos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:fontFamily="@font/oswald_regular"
+            android:text="Titulo Burguer"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cardImgFavoritos"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/modeloTituloFavoritos"
-                android:text="Titulo Burguer"
-                android:fontFamily="@font/oswald_regular"
-                android:layout_gravity="center_horizontal"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:layout_marginTop="5dp"/>
+        <!-- Descrição do Hambúrguer -->
+        <TextView
+            android:id="@+id/modeloDescFavoritos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/roboto_condensed_light"
+            android:text="Hambúrguer parrudo de 180g, cheddar derretido e bacon crocante."
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:maxLines="3"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/modeloTituloFavoritos"
+            app:layout_constraintStart_toEndOf="@id/cardImgFavoritos"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:id="@+id/modeloDescFavoritos"
-                android:text="Hambúrguer parrudo de 180g, cheddar derretido, bacon crocante, cebola na manteiga e molho defumado da casa. No pão brioche pra selar o crime."
-                android:fontFamily="@font/roboto_condensed_light"
-                android:layout_gravity="center_horizontal"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:layout_marginTop="5dp"/>
+        <!-- Preço -->
+        <TextView
+            android:id="@+id/modeloPrecoFavoritos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_condensed_black"
+            android:text="R$ 34,99"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/modeloDescFavoritos"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cardImgFavoritos" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+        <!-- Botão Pedir -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/modeloBtnFavoritos"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Pedir"
+            android:textColor="#F7EDDA"
+            android:textSize="14sp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:backgroundTint="#A61C1C"
+            app:cornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/modeloDescFavoritos" />
 
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/modeloPrecoFavoritos"
-                    android:text="34,99"
-                    android:fontFamily="@font/roboto_condensed_black"
-                    android:textSize="22sp"
-                    android:textColor="@color/black"
-                    android:textStyle="normal"
-                    android:layout_marginLeft="10dp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/modeloBtnFavoritos"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pedir"
-                    android:textColor="#F7EDDA"
-                    android:layout_marginLeft="40dp"
-                    android:backgroundTint="#A61C1C"
-                    app:cornerRadius="8dp"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
