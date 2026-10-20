@@ -1,6 +1,8 @@
 package com.example.vangustapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -68,8 +70,10 @@ public class CardapioFragment extends Fragment {
     }
 
     private void carregarProdutosDaApi() {
-        // Atualizado com o domínio oficial da Locaweb
-        String url = "https://vangustburguer.com.br/api_hamburgueria/produtos.php";
+        SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+        int idCliente = prefs.getInt("id_cliente", -1);
+
+        String url = "https://vangustburguer.com.br/api_hamburgueria/produtos.php?id_cliente=" + idCliente;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET, url, null,
@@ -83,16 +87,15 @@ public class CardapioFragment extends Fragment {
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
 
-                            // Captura o ID do produto vindo do MySQL
                             int idProduto = obj.optInt("id_produto", 0);
                             String nome = obj.getString("nome_produto");
                             String descricao = obj.optString("descricao", "");
                             double preco = obj.getDouble("preco");
                             String categoria = obj.optString("categoria", "").toLowerCase();
                             String imagemUrl = obj.optString("imagem", null);
+                            boolean isFavorito = obj.optBoolean("is_favorito", false);
 
-                            // Passa o idProduto para o construtor
-                            ItensCard item = new ItensCard(idProduto, nome, descricao, imagemUrl, preco);
+                            ItensCard item = new ItensCard(idProduto, nome, descricao, imagemUrl, preco, isFavorito);
 
                             if (categoria.contains("frango")) {
                                 listaFrangos.add(item);
@@ -155,11 +158,12 @@ public class CardapioFragment extends Fragment {
 
     private void abrirDetalhes(ItensCard item) {
         Intent intent = new Intent(getContext(), DetalhesProdutoActivity.class);
-        intent.putExtra("id_produto", item.getIdProduto()); // Envia o ID para a tela de detalhes
+        intent.putExtra("id_produto", item.getIdProduto());
         intent.putExtra("titulo", item.getTitulo());
         intent.putExtra("descricao", item.getDescricao());
         intent.putExtra("preco", item.getPreco());
         intent.putExtra("imagem", item.getImageUrl() != null ? item.getImageUrl() : "");
+        intent.putExtra("is_favorito", item.isFavorito());
         startActivity(intent);
     }
 }

@@ -36,7 +36,7 @@ public class EditarPerfil extends AppCompatActivity {
     private ImageView imgEditarPerfil;
     private CardView cardFotoPerfil;
     private TextView tvAlterarFoto;
-    private TextInputEditText txNomePerfil, txEmailPerfil;
+    private TextInputEditText txNomePerfil, txEmailPerfil, txTelefonePerfil;
     private Button btnSalvarAlteracoes;
 
     private ActivityResultLauncher<String> selecionarImagemLauncher;
@@ -53,6 +53,7 @@ public class EditarPerfil extends AppCompatActivity {
 
         txNomePerfil = findViewById(R.id.txEditarNome);
         txEmailPerfil = findViewById(R.id.txEditarEmail);
+        txTelefonePerfil = findViewById(R.id.txEditarTelefone); // Ligado ao ID do XML
         btnSalvarAlteracoes = findViewById(R.id.btnSalvarPerfil);
 
         carregarDadosAtuais();
@@ -87,11 +88,12 @@ public class EditarPerfil extends AppCompatActivity {
         btnSalvarAlteracoes.setOnClickListener(v -> {
             String novoNome = txNomePerfil.getText().toString().trim();
             String novoEmail = txEmailPerfil.getText().toString().trim();
+            String novoTelefone = txTelefonePerfil != null ? txTelefonePerfil.getText().toString().trim() : "";
 
             if (novoNome.isEmpty() || novoEmail.isEmpty()) {
                 Toast.makeText(this, "Preencha o nome e o e-mail", Toast.LENGTH_SHORT).show();
             } else {
-                salvarPerfilNaApi(novoNome, novoEmail, imagemBytes);
+                salvarPerfilNaApi(novoNome, novoEmail, novoTelefone, imagemBytes);
             }
         });
 
@@ -114,9 +116,11 @@ public class EditarPerfil extends AppCompatActivity {
 
         String nomeSalvo = prefs.getString("nome_usuario", "");
         String emailSalvo = prefs.getString("email_usuario", "");
+        String telefoneSalvo = prefs.getString("telefone_usuario", "");
 
         if (txNomePerfil != null) txNomePerfil.setText(nomeSalvo);
         if (txEmailPerfil != null) txEmailPerfil.setText(emailSalvo);
+        if (txTelefonePerfil != null) txTelefonePerfil.setText(telefoneSalvo);
 
         String fotoBase64 = prefs.getString("foto_perfil", "");
         if (!fotoBase64.isEmpty()) {
@@ -136,11 +140,10 @@ public class EditarPerfil extends AppCompatActivity {
         return stream.toByteArray();
     }
 
-    private void salvarPerfilNaApi(String nome, String email, byte[] bytesFoto) {
+    private void salvarPerfilNaApi(String nome, String email, String telefone, byte[] bytesFoto) {
         SharedPreferences prefs = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
         int idUsuario = prefs.getInt("id_cliente", 1);
 
-        // Atualizado com o domínio oficial da Locaweb
         String url = "https://vangustburguer.com.br/api_hamburgueria/atualizar_perfil_cliente.php";
 
         String imagemBase64 = "";
@@ -159,8 +162,9 @@ public class EditarPerfil extends AppCompatActivity {
 
                             JSONObject userObj = jsonObject.getJSONObject("usuario");
                             prefs.edit()
-                                    .putString("nome_usuario", userObj.getString("nome"))
-                                    .putString("email_usuario", userObj.getString("email"))
+                                    .putString("nome_usuario", userObj.optString("nome", nome))
+                                    .putString("email_usuario", userObj.optString("email", email))
+                                    .putString("telefone_usuario", userObj.optString("telefone", telefone))
                                     .putString("foto_perfil", userObj.optString("foto", ""))
                                     .apply();
 
@@ -181,6 +185,7 @@ public class EditarPerfil extends AppCompatActivity {
                 params.put("id_usuario", String.valueOf(idUsuario));
                 params.put("nome", nome);
                 params.put("email", email);
+                params.put("telefone", telefone); // Envia o telefone para o PHP
                 if (!finalImagemBase64.isEmpty()) {
                     params.put("foto_base64", finalImagemBase64);
                 }

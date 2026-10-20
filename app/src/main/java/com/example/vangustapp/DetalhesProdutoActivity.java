@@ -58,6 +58,10 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
         double preco = getIntent().getDoubleExtra("preco", 0.0);
         String urlImagem = getIntent().getStringExtra("imagem");
 
+        // Recebe o estado inicial direto da Intent para evitar delay visual
+        isFavorito = getIntent().getBooleanExtra("is_favorito", false);
+        atualizarVisualFavorito();
+
         txtTitulo.setText(titulo);
         txtDescricao.setText(descricao);
         txtPreco.setText(String.format("R$ %.2f", preco));
@@ -71,6 +75,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
             imgProduto.setImageDrawable(null);
         }
 
+        // Faz a verificação no servidor em segundo plano para garantir precisão
         verificarStatusFavorito();
 
         if (btnFavoritar != null) {
@@ -97,7 +102,6 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
 
         if (idCliente == -1 || idProduto == -1) return;
 
-        // Atualizado com o domínio oficial da Locaweb
         String url = "https://vangustburguer.com.br/api_hamburgueria/verificar_favorito.php?id_cliente=" + idCliente + "&id_produto=" + idProduto;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -105,7 +109,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         isFavorito = jsonObject.optBoolean("favorito", false);
-                        atualizarVisualFavorito();
+                        atualizarVisualFavorito(); // Atualiza com o dado fresco do servidor
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -122,7 +126,6 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
 
         if (idCliente == -1 || idProduto == -1) return;
 
-        // Atualizado com o domínio oficial da Locaweb
         String url = "https://vangustburguer.com.br/api_hamburgueria/favoritar.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,

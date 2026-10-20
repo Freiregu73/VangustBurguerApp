@@ -1,6 +1,8 @@
 package com.example.vangustapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -119,8 +121,10 @@ public class InicioFragment extends Fragment {
     }
 
     private void carregarProdutosDaApi() {
-        // Atualizado com o domínio oficial da Locaweb
-        String url = "https://vangustburguer.com.br/api_hamburgueria/produtos.php";
+        SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
+        int idCliente = prefs.getInt("id_cliente", -1);
+
+        String url = "https://vangustburguer.com.br/api_hamburgueria/produtos.php?id_cliente=" + idCliente;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET, url, null,
@@ -139,8 +143,9 @@ public class InicioFragment extends Fragment {
                             double preco = obj.optDouble("preco", 0.0);
                             String urlImagem = obj.optString("imagem", null);
                             String categoria = obj.optString("categoria", "").trim().toLowerCase();
+                            boolean isFavorito = obj.optBoolean("is_favorito", false);
 
-                            ItensCard item = new ItensCard(idProduto, nome, descricao, urlImagem, preco);
+                            ItensCard item = new ItensCard(idProduto, nome, descricao, urlImagem, preco, isFavorito);
 
                             if (categoria.contains("oferta") || categoria.contains("ofertas")) {
                                 listaOfertas.add(item);
@@ -186,11 +191,12 @@ public class InicioFragment extends Fragment {
 
     private void abrirDetalhes(ItensCard item) {
         Intent intent = new Intent(getContext(), DetalhesProdutoActivity.class);
-        intent.putExtra("id_produto", item.getIdProduto()); // Envia o ID para a tela de detalhes
+        intent.putExtra("id_produto", item.getIdProduto());
         intent.putExtra("titulo", item.getTitulo());
         intent.putExtra("descricao", item.getDescricao());
         intent.putExtra("preco", item.getPreco());
         intent.putExtra("imagem", item.getImageUrl() != null ? item.getImageUrl() : "");
+        intent.putExtra("is_favorito", item.isFavorito());
         startActivity(intent);
     }
 

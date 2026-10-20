@@ -70,9 +70,11 @@ public class AdapterFavoritos extends RecyclerView.Adapter<AdapterFavoritos.View
             intent.putExtra("descricao", favorito.getDescricao());
             intent.putExtra("preco", favorito.getPreco());
             intent.putExtra("imagem", favorito.getImageUrl() != null ? favorito.getImageUrl() : "");
+            intent.putExtra("is_favorito", true); // Como está na tela de favoritos, é sempre verdadeiro
             context.startActivity(intent);
         });
     }
+
 
     @Override
     public int getItemCount() {
