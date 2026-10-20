@@ -97,33 +97,43 @@ public class CardapioFragment extends Fragment {
 
                             ItensCard item = new ItensCard(idProduto, nome, descricao, imagemUrl, preco, isFavorito);
 
+                            boolean colocadoEmAlgumaLista = false;
+
+                            // Condições independentes (permite múltiplas categorias separadas por vírgula no painel web)
                             if (categoria.contains("frango")) {
                                 listaFrangos.add(item);
-                            } else if (categoria.contains("vegano") || categoria.contains("vegetariano")) {
+                                colocadoEmAlgumaLista = true;
+                            }
+                            if (categoria.contains("vegano") || categoria.contains("vegetariano")) {
                                 listaVeganos.add(item);
-                            } else if (categoria.contains("combo")) {
+                                colocadoEmAlgumaLista = true;
+                            }
+                            if (categoria.contains("combo")) {
                                 listaCombos.add(item);
-                            } else {
+                                colocadoEmAlgumaLista = true;
+                            }
+                            if (categoria.contains("carne") || categoria.contains("carnes") || !colocadoEmAlgumaLista) {
+                                // Se contiver carne ou não tiver nenhuma das categorias acima, vai para a aba de Carnes por padrão
                                 listaCarnes.add(item);
                             }
                         }
 
-                        if (recCarnes != null && !listaCarnes.isEmpty()) {
+                        if (recCarnes != null) {
                             ItensCardAdapter adapter = new ItensCardAdapter(listaCarnes);
                             adapter.setOnItemClickListener(this::abrirDetalhes);
                             recCarnes.setAdapter(adapter);
                         }
-                        if (recFrangos != null && !listaFrangos.isEmpty()) {
+                        if (recFrangos != null) {
                             ItensCardAdapter adapter = new ItensCardAdapter(listaFrangos);
                             adapter.setOnItemClickListener(this::abrirDetalhes);
                             recFrangos.setAdapter(adapter);
                         }
-                        if (recVeganos != null && !listaVeganos.isEmpty()) {
+                        if (recVeganos != null) {
                             ItensCardAdapter adapter = new ItensCardAdapter(listaVeganos);
                             adapter.setOnItemClickListener(this::abrirDetalhes);
                             recVeganos.setAdapter(adapter);
                         }
-                        if (recCombos != null && !listaCombos.isEmpty()) {
+                        if (recCombos != null) {
                             ItensCardAdapter adapter = new ItensCardAdapter(listaCombos);
                             adapter.setOnItemClickListener(this::abrirDetalhes);
                             recCombos.setAdapter(adapter);
@@ -151,6 +161,7 @@ public class CardapioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        carregarProdutosDaApi(); // Efeito "F5 automático" ao voltar para o cardápio
         if (getView() != null) {
             atualizarBolinha(getView());
         }

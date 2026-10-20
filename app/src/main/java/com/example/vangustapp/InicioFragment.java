@@ -144,16 +144,34 @@ public class InicioFragment extends Fragment {
                             String urlImagem = obj.optString("imagem", null);
                             String categoria = obj.optString("categoria", "").trim().toLowerCase();
                             boolean isFavorito = obj.optBoolean("is_favorito", false);
+                            int totalVendido = obj.optInt("total_vendido", 0);
 
                             ItensCard item = new ItensCard(idProduto, nome, descricao, urlImagem, preco, isFavorito);
 
+                            boolean colocadoEmAlgumaLista = false;
+
+                            // Validações independentes (permite múltiplas categorias por lanche)
                             if (categoria.contains("oferta") || categoria.contains("ofertas")) {
                                 listaOfertas.add(item);
-                            } else if (categoria.contains("pedido") || categoria.contains("mais pedidos")) {
-                                listaMaisPedidos.add(item);
-                            } else if (categoria.contains("lancamento") || categoria.contains("lançamento")) {
+                                colocadoEmAlgumaLista = true;
+                            }
+
+                            if (categoria.contains("lancamento") || categoria.contains("lançamento")) {
                                 listaLancamento.add(item);
-                            } else {
+                                colocadoEmAlgumaLista = true;
+                            }
+
+                            if (categoria.contains("pedido") || categoria.contains("mais pedidos")) {
+                                listaMaisPedidos.add(item);
+                                colocadoEmAlgumaLista = true;
+                            } else if (totalVendido > 0) {
+                                // Entra nos mais vendidos por volume de compras reais
+                                listaMaisPedidos.add(item);
+                                colocadoEmAlgumaLista = true;
+                            }
+
+                            // Se não caiu em nenhuma categoria específica, joga nos mais pedidos por padrão
+                            if (!colocadoEmAlgumaLista) {
                                 listaMaisPedidos.add(item);
                             }
                         }
@@ -184,6 +202,7 @@ public class InicioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        carregarProdutosDaApi();
         if (getView() != null) {
             atualizarBolinhaCarrinho(getView());
         }
