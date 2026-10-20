@@ -1,9 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.VangustApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+    <!-- Tema Principal do Aplicativo -->
+    <style name="Theme.VangustApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Cor primária usada em botões, destaques e seletores -->
+        <item name="colorPrimary">#8F572F</item>
+        <item name="colorPrimaryVariant">#5C3A21</item>
+        <item name="colorOnPrimary">#F7EDDA</item>
 
-    <style name="Theme.VangustApp" parent="Base.Theme.VangustApp" />
+        <!-- Cor secundária / acentuação -->
+        <item name="colorSecondary">#FCD299</item>
+        <item name="colorSecondaryVariant">#8F572F</item>
+        <item name="colorOnSecondary">#0D0D0D</item>
+
+        <!-- Força a barra de status (topo com hora/bateria) a usar o marrom do app -->
+        <item name="android:statusBarColor">#8F572F</item>
+
+        <!-- Força a barra de navegação (fundo dos botões de voltar/home do celular) a usar o bege de fundo -->
+        <item name="android:navigationBarColor">#F7EDDA</item>
+
+        <!-- Deixa os ícones da barra de status claros para contrastar com o fundo marrom -->
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
 </resources>
