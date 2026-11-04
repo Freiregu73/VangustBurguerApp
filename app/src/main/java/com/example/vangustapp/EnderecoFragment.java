@@ -72,7 +72,6 @@ public class EnderecoFragment extends Fragment {
             return;
         }
 
-        // Atualizado com o domínio oficial da Locaweb
         String url = "https://vangustburguer.com.br/api_hamburgueria/listar_enderecos.php?email=" + emailUsuario;
 
         JsonObjectRequest request = new JsonObjectRequest(
@@ -86,11 +85,33 @@ public class EnderecoFragment extends Fragment {
 
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject endObj = jsonArray.getJSONObject(i);
-                                String ruaNum = endObj.getString("rua") + ", " + endObj.getString("numero");
-                                String bairroCep = "Bairro: " + endObj.getString("bairro") + " | CEP: " + endObj.getString("cep");
 
-                                listaEnderecos.add(new EnderecoModel(ruaNum, bairroCep));
+                                // Captura o ID real do endereço vindo do banco de dados
+                                int idEndereco = endObj.optInt("id_endereco", 0);
+                                String rua = endObj.getString("rua");
+                                String numero = endObj.getString("numero");
+                                String bairro = endObj.getString("bairro");
+                                String cep = endObj.getString("cep");
+
+                                String ruaNum = rua + ", " + numero;
+                                String bairroCep = "Bairro: " + bairro + " | CEP: " + cep;
+
+                                // Passa o idEndereco para o construtor do EnderecoModel
+                                listaEnderecos.add(new EnderecoModel(idEndereco, ruaNum, bairroCep));
+
+                                // Se o utilizador já tem endereços na base de dados,
+                                // guardamos o primeiro automaticamente no SharedPreferences para liberar a compra
+                                if (i == 0) {
+                                    String enderecoCompleto = ruaNum + " - " + bairro;
+                                    prefs.edit().putString("endereco_usuario", enderecoCompleto).apply();
+                                }
                             }
+
+                            // Se por acaso a lista estiver vazia no servidor, removemos o endereço local
+                            if (jsonArray.length() == 0) {
+                                prefs.edit().remove("endereco_usuario").apply();
+                            }
+
                             adapterEndereco.notifyDataSetChanged();
                         } else {
                             Toast.makeText(getContext(), "Erro ao carregar endereços", Toast.LENGTH_SHORT).show();
@@ -109,7 +130,6 @@ public class EnderecoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Atualiza a lista sempre que voltar para este fragmento (ex: após cadastrar um novo)
         carregarEnderecosDaApi();
     }
 }

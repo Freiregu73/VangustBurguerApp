@@ -1,6 +1,7 @@
 package com.example.vangustapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -60,8 +61,19 @@ public class CheckoutFragment extends Fragment {
 
         carregarEnderecoUsuario();
 
+        // Configuração do clique no endereço com verificação se está vazio/por cadastrar
         if (tvEnderecoCheckout != null) {
-            tvEnderecoCheckout.setOnClickListener(v -> mostrarDialogoSelecaoEnderecos());
+            tvEnderecoCheckout.setOnClickListener(v -> {
+                String textoAtual = tvEnderecoCheckout.getText().toString();
+                if (textoAtual.contains("Nenhum endereço cadastrado")) {
+                    // Direciona diretamente para a tela de cadastrar novo endereço
+                    Intent intent = new Intent(getContext(), NovoEndereco.class);
+                    startActivity(intent);
+                } else {
+                    // Abre o diálogo para alternar entre os endereços já existentes
+                    mostrarDialogoSelecaoEnderecos();
+                }
+            });
         }
 
         double subtotal = CarrinhoManager.calcularTotal();
@@ -109,7 +121,6 @@ public class CheckoutFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                // Atualizado para o domínio oficial da Locaweb
                 String url = "https://vangustburguer.com.br/api_hamburgueria/salvar_pedido.php";
 
                 StringRequest stringRequest = new StringRequest(
@@ -174,7 +185,6 @@ public class CheckoutFragment extends Fragment {
             return;
         }
 
-        // Atualizado para o domínio oficial da Locaweb
         String url = "https://vangustburguer.com.br/api_hamburgueria/listar_enderecos.php?email=" + emailUsuario;
 
         JsonObjectRequest request = new JsonObjectRequest(
@@ -204,10 +214,13 @@ public class CheckoutFragment extends Fragment {
                             List<EnderecoModel> listaEnderecos = new ArrayList<>();
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject endObj = jsonArray.getJSONObject(i);
+
+                                // Captura o id_endereco para passar corretamente ao EnderecoModel
+                                int idEndereco = endObj.optInt("id_endereco", 0);
                                 String ruaNum = endObj.getString("rua") + ", " + endObj.getString("numero");
                                 String bairroCep = "Bairro: " + endObj.getString("bairro") + " | CEP: " + endObj.getString("cep");
 
-                                listaEnderecos.add(new EnderecoModel(ruaNum, bairroCep));
+                                listaEnderecos.add(new EnderecoModel(idEndereco, ruaNum, bairroCep));
                             }
 
                             AdapterEnderecoDialog adapterDialog = new AdapterEnderecoDialog(listaEnderecos, requireContext(), (enderecoEscolhido) -> {
@@ -268,5 +281,11 @@ public class CheckoutFragment extends Fragment {
     private void limparCupomAtivo() {
         SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         prefs.edit().remove("cupom_ativo").remove("desconto_ativo").apply();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        carregarEnderecoUsuario();
     }
 }
