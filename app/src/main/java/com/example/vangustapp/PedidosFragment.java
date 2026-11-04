@@ -63,7 +63,6 @@ public class PedidosFragment extends Fragment {
             return;
         }
 
-        // Atualizado com o domínio oficial da Locaweb
         String url = "https://vangustburguer.com.br/api_hamburgueria/listar_pedidos_cliente.php?id_cliente=" + idCliente;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -78,11 +77,17 @@ public class PedidosFragment extends Fragment {
                             for (int i = 0; i < jsonArrayPedidos.length(); i++) {
                                 JSONObject obj = jsonArrayPedidos.getJSONObject(i);
 
-                                int idPedido = obj.optInt("id_pedido", obj.optInt("numero_exibicao", 0));
+                                // ATUALIZADO: Dá prioridade ao numero_exibicao (1, 2, 3...) gerado pelo PHP,
+                                // usando o id_pedido real apenas como plano B se o campo não vier
+                                int idPedido = obj.optInt("numero_exibicao", obj.optInt("id_pedido", 0));
+
                                 String dataCriacao = obj.optString("criado_em", "");
                                 double valorTotal = obj.getDouble("valor_total_pedido");
                                 String status = obj.optString("status_pedido", "Pendente");
                                 String pagamento = obj.optString("metodo_pagamento", "");
+
+                                // Captura o nome do entregador enviado pela API (com fallback se vier vazio)
+                                String nomeEntregador = obj.optString("entregador", obj.optString("nome_entregador", "A aguardar atribuição"));
 
                                 String enderecoCompleto = obj.optString("endereco_completo",
                                         obj.optString("endereco", "Endereço não especificado"));
@@ -100,7 +105,8 @@ public class PedidosFragment extends Fragment {
                                     }
                                 }
 
-                                PedidoModel pedido = new PedidoModel(idPedido, dataCriacao, enderecoCompleto, pagamento, valorTotal, status, itensPedido);
+                                // Instancia o PedidoModel passando os 8 argumentos corretos
+                                PedidoModel pedido = new PedidoModel(idPedido, dataCriacao, enderecoCompleto, pagamento, valorTotal, status, nomeEntregador, itensPedido);
                                 listaPedidos.add(pedido);
                             }
                             adapterPedidos.notifyDataSetChanged();

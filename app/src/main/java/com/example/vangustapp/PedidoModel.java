@@ -11,16 +11,18 @@ public class PedidoModel implements Serializable {
     private String pagamento;
     private double total;
     private String statusPedido;
+    private String entregador; // Novo campo para o nome do entregador
     private List<ItemCarrinho> itens;
 
-    // Construtor completo
-    public PedidoModel(int idPedido, String dataCriacao, String endereco, String pagamento, double total, String statusPedido, List<ItemCarrinho> itens) {
+    // Construtor completo atualizado
+    public PedidoModel(int idPedido, String dataCriacao, String endereco, String pagamento, double total, String statusPedido, String entregador, List<ItemCarrinho> itens) {
         this.idPedido = idPedido;
         this.dataCriacao = dataCriacao;
         this.endereco = endereco;
         this.pagamento = pagamento;
         this.total = total;
         this.statusPedido = statusPedido;
+        this.entregador = entregador;
         this.itens = itens;
     }
 
@@ -31,5 +33,6 @@ public class PedidoModel implements Serializable {
     public String getPagamento() { return pagamento; }
     public double getTotal() { return total; }
     public String getStatusPedido() { return statusPedido; }
+    public String getEntregador() { return entregador; } // Getter para o nome do entregador
     public List<ItemCarrinho> getItens() { return itens; }
 }

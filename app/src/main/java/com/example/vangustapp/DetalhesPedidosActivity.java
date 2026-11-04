@@ -2,6 +2,7 @@ package com.example.vangustapp;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +22,7 @@ import java.util.Map;
 
 public class DetalhesPedidosActivity extends AppCompatActivity {
 
-    private TextView tvTituloPedidoDetalhes, tvStatusDetalhes, tvEnderecoDetalhes, tvItensDetalhes, tvTaxaEntregaDetalhes, tvTotalDetalhes;
+    private TextView tvTituloPedidoDetalhes, tvStatusDetalhes, tvEntregadorDetalhes, tvEnderecoDetalhes, tvItensDetalhes, tvTaxaEntregaDetalhes, tvTotalDetalhes;
     private MaterialButton btnPedirNovamente, btnCancelarPedidoDetalhes;
     private ImageView btnVoltarDetalhes;
     private PedidoModel pedido;
@@ -33,6 +34,7 @@ public class DetalhesPedidosActivity extends AppCompatActivity {
 
         tvTituloPedidoDetalhes = findViewById(R.id.tvTituloPedidoDetalhes);
         tvStatusDetalhes = findViewById(R.id.tvStatusDetalhes);
+        tvEntregadorDetalhes = findViewById(R.id.tvEntregadorDetalhes); // Referência ao campo do entregador
         tvEnderecoDetalhes = findViewById(R.id.tvEnderecoDetalhes);
         tvItensDetalhes = findViewById(R.id.tvItensDetalhes);
         tvTaxaEntregaDetalhes = findViewById(R.id.tvTaxaEntregaDetalhes);
@@ -52,11 +54,23 @@ public class DetalhesPedidosActivity extends AppCompatActivity {
             String statusAtual = pedido.getStatusPedido() != null ? pedido.getStatusPedido() : "Pendente";
             tvStatusDetalhes.setText(statusAtual);
 
+            // --- NOVO: Configurar o nome do entregador ---
+            // Nota: Certifique-se de que o seu PedidoModel possui o método getEntregador() ou getNomeEntregador()
+            String nomeEntregador = pedido.getEntregador() != null ? pedido.getEntregador() : "";
+            if (tvEntregadorDetalhes != null) {
+                if (!nomeEntregador.isEmpty()) {
+                    tvEntregadorDetalhes.setText(nomeEntregador);
+                    tvEntregadorDetalhes.setVisibility(View.VISIBLE);
+                } else {
+                    tvEntregadorDetalhes.setText("A aguardar atribuição");
+                }
+            }
+
             if (btnCancelarPedidoDetalhes != null) {
                 if (statusAtual.equalsIgnoreCase("Entregue") || statusAtual.equalsIgnoreCase("Cancelado")) {
-                    btnCancelarPedidoDetalhes.setVisibility(android.view.View.GONE);
+                    btnCancelarPedidoDetalhes.setVisibility(View.GONE);
                 } else {
-                    btnCancelarPedidoDetalhes.setVisibility(android.view.View.VISIBLE);
+                    btnCancelarPedidoDetalhes.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -127,7 +141,6 @@ public class DetalhesPedidosActivity extends AppCompatActivity {
     }
 
     private void executarCancelamentoServidor(int idPedido) {
-        // Atualizado com o domínio oficial da Locaweb
         String url = "https://vangustburguer.com.br/api_hamburgueria/cancelar_pedido.php";
 
         StringRequest stringRequest = new StringRequest(
