@@ -1,14 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.example.vangustapp"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.vangustapp"
@@ -22,9 +19,11 @@ android {
 
     buildTypes {
         release {
-            optimization {
-                enable = false
-            }
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -34,6 +33,12 @@ android {
 }
 
 dependencies {
+    // Importar o Firebase BoM (Bill of Materials) para gerir as versões do Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
+
+    // Dependência do Firebase Cloud Messaging para notificações push
+    implementation("com.google.firebase:firebase-messaging")
+
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.android.volley:volley:1.2.1")

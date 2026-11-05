@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "75793882885",
+    "project_id": "vangust-8d39a",
+    "storage_bucket": "vangust-8d39a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75793882885:android:6d70d8530990b3e271216c",
+        "android_client_info": {
+          "package_name": "com.example.vangustapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKRDhvcDD1ki1oAJbgO0VFrWPI3RbRmCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

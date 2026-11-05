@@ -2,6 +2,7 @@ package com.example.vangustapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,13 @@ public class PedidosFragment extends Fragment {
         adapterPedidos = new AdapterPedidos(listaPedidos, getContext());
         idRecPedidos.setAdapter(adapterPedidos);
 
+        // Solicitar permissão de notificação no Android 13+ se ainda não tiver
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (requireActivity().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requireActivity().requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
+
         carregarPedidosDaApi();
     }
 
@@ -77,20 +85,32 @@ public class PedidosFragment extends Fragment {
                             for (int i = 0; i < jsonArrayPedidos.length(); i++) {
                                 JSONObject obj = jsonArrayPedidos.getJSONObject(i);
 
-                                // ATUALIZADO: Dá prioridade ao numero_exibicao (1, 2, 3...) gerado pelo PHP,
-                                // usando o id_pedido real apenas como plano B se o campo não vier
                                 int idPedido = obj.optInt("numero_exibicao", obj.optInt("id_pedido", 0));
-
                                 String dataCriacao = obj.optString("criado_em", "");
                                 double valorTotal = obj.getDouble("valor_total_pedido");
                                 String status = obj.optString("status_pedido", "Pendente");
                                 String pagamento = obj.optString("metodo_pagamento", "");
-
-                                // Captura o nome do entregador enviado pela API (com fallback se vier vazio)
                                 String nomeEntregador = obj.optString("entregador", obj.optString("nome_entregador", "A aguardar atribuição"));
 
                                 String enderecoCompleto = obj.optString("endereco_completo",
                                         obj.optString("endereco", "Endereço não especificado"));
+
+                                // --- SISTEMA DE NOTIFICAÇÕES INTELIGENTE ---
+                                // Compara o status atual com o último status guardado no SharedPreferences para este pedido
+                                String chaveStatusPref = "status_pedido_" + idPedido;
+                                String ultimoStatusSalvo = prefs.getString(chaveStatusPref, "");
+
+                                if (!ultimoStatusSalvo.isEmpty() && !ultimoStatusSalvo.equals(status)) {
+                                    // O status mudou! Dispara a notificação local para o utilizador
+                                    NotificationHelper.mostrarNotificacao(
+                                            requireContext(),
+                                            "Atualização no Pedido #" + idPedido,
+                                            "O seu pedido mudou para: " + status
+                                    );
+                                }
+                                // Atualiza o status guardado nas preferências
+                                prefs.edit().putString(chaveStatusPref, status).apply();
+                                // --------------------------------------------
 
                                 List<ItemCarrinho> itensPedido = new ArrayList<>();
                                 if (obj.has("itens")) {
@@ -105,7 +125,6 @@ public class PedidosFragment extends Fragment {
                                     }
                                 }
 
-                                // Instancia o PedidoModel passando os 8 argumentos corretos
                                 PedidoModel pedido = new PedidoModel(idPedido, dataCriacao, enderecoCompleto, pagamento, valorTotal, status, nomeEntregador, itensPedido);
                                 listaPedidos.add(pedido);
                             }
