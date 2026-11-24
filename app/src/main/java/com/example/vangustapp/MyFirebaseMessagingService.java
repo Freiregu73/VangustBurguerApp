@@ -31,5 +31,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
+        // O Firebase gerou um token novo: envia ao servidor para as notificações continuarem chegando
+        String email = getSharedPreferences("VangustPrefs", MODE_PRIVATE).getString("email_usuario", "");
+        FcmTokenSender.enviar(getApplicationContext(), email, token);
     }
 }

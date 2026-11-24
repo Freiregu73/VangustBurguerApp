@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONObject;
@@ -33,7 +32,7 @@ public class EsqueciSenhaActivity extends AppCompatActivity {
             String email = txEmailEsqueci.getText().toString().trim();
 
             if (email.isEmpty()) {
-                Toast.makeText(this, "Por favor, digite o seu e-mail", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Por favor, digite seu e-mail", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -53,12 +52,8 @@ public class EsqueciSenhaActivity extends AppCompatActivity {
                         String mensagem = jsonObject.optString("mensagem", "Processo concluído.");
 
                         if (sucesso) {
-                            String senhaTemp = jsonObject.optString("senha_temporaria", "");
-                            if (!senhaTemp.isEmpty()) {
-                                Toast.makeText(this, "Senha temporária: " + senhaTemp, Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(this, mensagem, Toast.LENGTH_LONG).show();
-                            }
+                            // A senha temporária agora é enviada por e-mail pelo servidor
+                            Toast.makeText(this, mensagem, Toast.LENGTH_LONG).show();
                             finish(); // Retorna à tela de login
                         } else {
                             String erro = jsonObject.optString("erro", "Erro ao recuperar senha");
@@ -79,6 +74,6 @@ public class EsqueciSenhaActivity extends AppCompatActivity {
             }
         };
 
-        Volley.newRequestQueue(this).add(stringRequest);
+        VolleySingleton.getInstance(this).add(stringRequest);
     }
 }

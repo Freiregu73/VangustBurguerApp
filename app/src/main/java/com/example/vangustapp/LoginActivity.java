@@ -17,7 +17,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONException;
@@ -97,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(LoginActivity.this, "Erro ao processar resposta do servidor" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "Erro ao processar resposta do servidor", Toast.LENGTH_LONG).show();
                         }
                     },
                     error -> Toast.makeText(LoginActivity.this, "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
@@ -118,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             };
 
-            Volley.newRequestQueue(this).add(stringRequest);
+            VolleySingleton.getInstance(this).add(stringRequest);
         });
 
         btnCadastrar.setOnClickListener(v -> {

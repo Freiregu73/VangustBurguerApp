@@ -18,7 +18,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONException;
@@ -124,7 +123,7 @@ public class NovoEndereco extends AppCompatActivity {
                 error -> Toast.makeText(this, "Erro ao buscar o CEP", Toast.LENGTH_SHORT).show()
         );
 
-        Volley.newRequestQueue(this).add(request);
+        VolleySingleton.getInstance(this).add(request);
     }
 
     private void salvarEnderecoNaApi(String nomeLocal, String cep, String rua, String numero, String complemento, String bairro) {
@@ -180,6 +179,6 @@ public class NovoEndereco extends AppCompatActivity {
             }
         };
 
-        Volley.newRequestQueue(this).add(stringRequest);
+        VolleySingleton.getInstance(this).add(stringRequest);
     }
 }

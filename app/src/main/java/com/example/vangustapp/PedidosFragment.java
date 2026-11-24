@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,22 +94,10 @@ public class PedidosFragment extends Fragment {
                                 String enderecoCompleto = obj.optString("endereco_completo",
                                         obj.optString("endereco", "Endereço não especificado"));
 
-                                // --- SISTEMA DE NOTIFICAÇÕES INTELIGENTE ---
-                                // Compara o status atual com o último status guardado no SharedPreferences para este pedido
+                                // As notificações de mudança de status agora são enviadas pelo servidor (push),
+                                // então não é mais preciso compará-las aqui.
                                 String chaveStatusPref = "status_pedido_" + idPedido;
-                                String ultimoStatusSalvo = prefs.getString(chaveStatusPref, "");
-
-                                if (!ultimoStatusSalvo.isEmpty() && !ultimoStatusSalvo.equals(status)) {
-                                    // O status mudou! Dispara a notificação local para o utilizador
-                                    NotificationHelper.mostrarNotificacao(
-                                            requireContext(),
-                                            "Atualização no Pedido #" + idPedido,
-                                            "O seu pedido mudou para: " + status
-                                    );
-                                }
-                                // Atualiza o status guardado nas preferências
                                 prefs.edit().putString(chaveStatusPref, status).apply();
-                                // --------------------------------------------
 
                                 List<ItemCarrinho> itensPedido = new ArrayList<>();
                                 if (obj.has("itens")) {
@@ -140,6 +127,6 @@ public class PedidosFragment extends Fragment {
                 error -> Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
         );
 
-        Volley.newRequestQueue(requireContext()).add(jsonObjectRequest);
+        VolleySingleton.getInstance(requireContext()).add(jsonObjectRequest);
     }
 }

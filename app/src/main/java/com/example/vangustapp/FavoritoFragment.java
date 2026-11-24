@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -109,7 +108,7 @@ public class FavoritoFragment extends Fragment {
                 error -> Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
         );
 
-        Volley.newRequestQueue(requireContext()).add(jsonObjectRequest);
+        VolleySingleton.getInstance(requireContext()).add(jsonObjectRequest);
     }
 
     private void atualizarBolinha(View view) {

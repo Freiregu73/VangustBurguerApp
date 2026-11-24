@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,7 +97,7 @@ public class AdapterEndereco extends RecyclerView.Adapter<AdapterEndereco.ViewHo
             }
         };
 
-        Volley.newRequestQueue(context).add(stringRequest);
+        VolleySingleton.getInstance(context).add(stringRequest);
     }
 
     @Override

@@ -17,6 +17,13 @@ public class NotificationHelper {
     public static void mostrarNotificacao(Context context, String titulo, String mensagem) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        // Sem a permissão (Android 13+) o sistema descarta a notificação
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
         // Criar o canal de notificação para Android 8.0 ou superior
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
@@ -29,7 +36,7 @@ public class NotificationHelper {
         // Intent para abrir o app ao tocar na notificação (ex: abrir a MainActivity ou ir direto para os Pedidos)
         Intent intent = new Intent(context, MenuPrincipalActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Construir a notificação
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
@@ -38,6 +45,7 @@ public class NotificationHelper {
                 .setContentText(mensagem)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         // Disparar a notificação

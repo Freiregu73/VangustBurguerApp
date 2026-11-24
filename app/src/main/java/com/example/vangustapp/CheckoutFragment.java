@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -140,7 +139,7 @@ public class CheckoutFragment extends Fragment {
                                             .replace(R.id.fragment_container, new PedidosFragment())
                                             .commit();
                                 } else {
-                                    Toast.makeText(getContext(), "Erro: " + jsonObject.getString("mensagem"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "" + jsonObject.getString("mensagem"), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -166,7 +165,7 @@ public class CheckoutFragment extends Fragment {
                     }
                 };
 
-                Volley.newRequestQueue(requireContext()).add(stringRequest);
+                VolleySingleton.getInstance(requireContext()).add(stringRequest);
             }
         });
 
@@ -248,7 +247,7 @@ public class CheckoutFragment extends Fragment {
                 error -> Toast.makeText(getContext(), "Erro de conexão", Toast.LENGTH_SHORT).show()
         );
 
-        Volley.newRequestQueue(requireContext()).add(request);
+        VolleySingleton.getInstance(requireContext()).add(request);
     }
 
     private void carregarEnderecoUsuario() {

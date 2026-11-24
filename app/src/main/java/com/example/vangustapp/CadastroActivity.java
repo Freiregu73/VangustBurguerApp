@@ -14,7 +14,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONException;
@@ -105,6 +104,6 @@ public class CadastroActivity extends AppCompatActivity {
             }
         };
 
-        Volley.newRequestQueue(this).add(stringRequest);
+        VolleySingleton.getInstance(this).add(stringRequest);
     }
 }

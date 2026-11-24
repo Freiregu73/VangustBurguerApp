@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -113,7 +112,7 @@ public class CupomActivity extends AppCompatActivity {
                 error -> Toast.makeText(this, "Erro ao carregar cupons", Toast.LENGTH_SHORT).show()
         );
 
-        Volley.newRequestQueue(this).add(request);
+        VolleySingleton.getInstance(this).add(request);
     }
 
     private void validarCupomNaApi(String codigo) {
@@ -165,7 +164,7 @@ public class CupomActivity extends AppCompatActivity {
             }
         };
 
-        Volley.newRequestQueue(this).add(stringRequest);
+        VolleySingleton.getInstance(this).add(stringRequest);
     }
 
     @Override

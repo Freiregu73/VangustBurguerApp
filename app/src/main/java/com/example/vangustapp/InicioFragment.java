@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
@@ -188,7 +187,7 @@ public class InicioFragment extends Fragment {
                 error -> Toast.makeText(getContext(), "Erro de conexão ao carregar produtos", Toast.LENGTH_SHORT).show()
         );
 
-        Volley.newRequestQueue(requireContext()).add(jsonArrayRequest);
+        VolleySingleton.getInstance(requireContext()).add(jsonArrayRequest);
     }
 
     private void atualizarBolinhaCarrinho(View view) {

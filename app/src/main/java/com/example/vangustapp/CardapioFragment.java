@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,7 +146,7 @@ public class CardapioFragment extends Fragment {
                 error -> Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
         );
 
-        Volley.newRequestQueue(requireContext()).add(jsonArrayRequest);
+        VolleySingleton.getInstance(requireContext()).add(jsonArrayRequest);
     }
 
     private void atualizarBolinha(View view) {

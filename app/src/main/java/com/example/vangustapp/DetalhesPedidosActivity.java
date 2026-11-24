@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONException;
@@ -170,6 +169,6 @@ public class DetalhesPedidosActivity extends AppCompatActivity {
             }
         };
 
-        Volley.newRequestQueue(this).add(stringRequest);
+        VolleySingleton.getInstance(this).add(stringRequest);
     }
 }

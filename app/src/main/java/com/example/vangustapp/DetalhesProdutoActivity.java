@@ -16,7 +16,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
@@ -117,7 +116,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
                 error -> {}
         );
 
-        Volley.newRequestQueue(this).add(stringRequest);
+        VolleySingleton.getInstance(this).add(stringRequest);
     }
 
     private void alternarFavorito() {
@@ -155,7 +154,7 @@ public class DetalhesProdutoActivity extends AppCompatActivity {
             }
         };
 
-        Volley.newRequestQueue(this).add(stringRequest);
+        VolleySingleton.getInstance(this).add(stringRequest);
     }
 
     private void atualizarVisualFavorito() {

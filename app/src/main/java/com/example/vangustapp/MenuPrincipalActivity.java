@@ -1,6 +1,9 @@
 package com.example.vangustapp;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,7 +24,6 @@ import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -57,6 +59,7 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavegation);
 
         atualizarPerfilHeader();
+        solicitarPermissaoNotificacao();
         verificarEEnviarTokenFCM();
 
         if (savedInstanceState == null) {
@@ -139,37 +142,20 @@ public class MenuPrincipalActivity extends AppCompatActivity {
     }
 
     private void enviarTokenParaServidor(String email, String token) {
-        String url = "https://vangustburguer.com.br/api_hamburgueria/salvar_token.php";
+        FcmTokenSender.enviar(this, email, token);
+    }
 
-        StringRequest stringRequest = new StringRequest(
-                Request.Method.POST, url,
-                response -> {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        // Token guardado com sucesso no servidor
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                },
-                error -> {
-                    // Erro de ligação ignorado para não afetar a experiência do utilizador
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("email", email);
-                params.put("fcm_token", token);
-                return params;
-            }
-        };
-
-        Volley.newRequestQueue(this).add(stringRequest);
+    // Android 13+ exige permissão para mostrar notificações; pedimos logo ao abrir o app
+    private void solicitarPermissaoNotificacao() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+        }
     }
 
     private void atualizarPerfilHeader() {
         SharedPreferences preferences = getSharedPreferences("VangustPrefs", MODE_PRIVATE);
-        String nomeCompleto = preferences.getString("nome_usuario", "Utilizador");
+        String nomeCompleto = preferences.getString("nome_usuario", "Cliente");
         String primeiroNome = nomeCompleto.split(" ")[0];
         String fotoBase64 = preferences.getString("foto_perfil", "");
 
