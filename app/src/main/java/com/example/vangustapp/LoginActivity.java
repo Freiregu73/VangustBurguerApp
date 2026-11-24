@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putInt("id_cliente", idCliente);
                                 editor.putString("nome_usuario", nomeUsuario);
                                 editor.putString("email_usuario", emailDigitado);
+                                editor.putString("telefone_usuario", usuarioObj.isNull("telefone") ? "" : usuarioObj.optString("telefone", ""));
                                 editor.putString("foto_perfil", fotoBase64);
                                 editor.apply();
 

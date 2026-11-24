@@ -91,6 +91,9 @@ public class EditarPerfil extends AppCompatActivity {
 
             if (novoNome.isEmpty() || novoEmail.isEmpty()) {
                 Toast.makeText(this, "Preencha o nome e o e-mail", Toast.LENGTH_SHORT).show();
+            } else if (!novoTelefone.isEmpty() && novoTelefone.replaceAll("\\D", "").length() < 10) {
+                if (txTelefonePerfil != null) txTelefonePerfil.setError("Informe o telefone com DDD");
+                Toast.makeText(this, "Informe o telefone com DDD, por exemplo (11) 91234-5678", Toast.LENGTH_SHORT).show();
             } else {
                 salvarPerfilNaApi(novoNome, novoEmail, novoTelefone, imagemBytes);
             }

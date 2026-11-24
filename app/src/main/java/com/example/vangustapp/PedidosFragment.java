@@ -2,8 +2,9 @@ package com.example.vangustapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,9 +29,24 @@ import java.util.List;
 
 public class PedidosFragment extends Fragment {
 
+    // De quanto em quanto tempo a lista se atualiza sozinha enquanto esta tela está aberta
+    private static final long INTERVALO_ATUALIZACAO_MS = 10000;
+
     private RecyclerView idRecPedidos;
     private List<PedidoModel> listaPedidos;
     private AdapterPedidos adapterPedidos;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private boolean primeiraCarga = true;
+    private String ultimaAssinatura = null;
+
+    private final Runnable atualizador = new Runnable() {
+        @Override
+        public void run() {
+            carregarPedidosDaApi();
+            handler.postDelayed(this, INTERVALO_ATUALIZACAO_MS);
+        }
+    };
 
     public PedidosFragment() {}
 
@@ -50,23 +66,46 @@ public class PedidosFragment extends Fragment {
         listaPedidos = new ArrayList<>();
         adapterPedidos = new AdapterPedidos(listaPedidos, getContext());
         idRecPedidos.setAdapter(adapterPedidos);
+        // A primeira carga é feita no onResume, que também liga a atualização automática
+    }
 
-        // Solicitar permissão de notificação no Android 13+ se ainda não tiver
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (requireActivity().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                requireActivity().requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 101);
-            }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Carrega agora e repete a cada 10 segundos enquanto a tela estiver visível
+        handler.removeCallbacks(atualizador);
+        handler.post(atualizador);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(atualizador);
+    }
+
+    @Override
+    public void onDestroyView() {
+        handler.removeCallbacks(atualizador);
+        super.onDestroyView();
+    }
+
+    private void avisar(String mensagem) {
+        if (isAdded() && getContext() != null) {
+            Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
         }
-
-        carregarPedidosDaApi();
     }
 
     private void carregarPedidosDaApi() {
+        if (!isAdded()) return;
+
         SharedPreferences prefs = requireActivity().getSharedPreferences("VangustPrefs", Context.MODE_PRIVATE);
         int idCliente = prefs.getInt("id_cliente", -1);
 
         if (idCliente == -1) {
-            Toast.makeText(getContext(), "Sessão expirada. Faça login novamente.", Toast.LENGTH_SHORT).show();
+            if (primeiraCarga) {
+                avisar("Sessão expirada. Faça login novamente.");
+                primeiraCarga = false;
+            }
             return;
         }
 
@@ -75,56 +114,90 @@ public class PedidosFragment extends Fragment {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, url, null,
                 response -> {
+                    // A tela pode ter sido fechada enquanto a resposta chegava
+                    if (!isAdded() || adapterPedidos == null) return;
+
+                    boolean eraPrimeiraCarga = primeiraCarga;
+                    primeiraCarga = false;
+
                     try {
                         boolean sucesso = response.getBoolean("sucesso");
-                        if (sucesso) {
-                            JSONArray jsonArrayPedidos = response.getJSONArray("pedidos");
-                            listaPedidos.clear();
-
-                            for (int i = 0; i < jsonArrayPedidos.length(); i++) {
-                                JSONObject obj = jsonArrayPedidos.getJSONObject(i);
-
-                                int idPedido = obj.optInt("numero_exibicao", obj.optInt("id_pedido", 0));
-                                String dataCriacao = obj.optString("criado_em", "");
-                                double valorTotal = obj.getDouble("valor_total_pedido");
-                                String status = obj.optString("status_pedido", "Pendente");
-                                String pagamento = obj.optString("metodo_pagamento", "");
-                                String nomeEntregador = obj.optString("entregador", obj.optString("nome_entregador", "A aguardar atribuição"));
-
-                                String enderecoCompleto = obj.optString("endereco_completo",
-                                        obj.optString("endereco", "Endereço não especificado"));
-
-                                // As notificações de mudança de status agora são enviadas pelo servidor (push),
-                                // então não é mais preciso compará-las aqui.
-                                String chaveStatusPref = "status_pedido_" + idPedido;
-                                prefs.edit().putString(chaveStatusPref, status).apply();
-
-                                List<ItemCarrinho> itensPedido = new ArrayList<>();
-                                if (obj.has("itens")) {
-                                    JSONArray jsonArrayItens = obj.getJSONArray("itens");
-                                    for (int j = 0; j < jsonArrayItens.length(); j++) {
-                                        JSONObject itemObj = jsonArrayItens.getJSONObject(j);
-                                        String nomeProduto = itemObj.getString("nome_produto");
-                                        double precoUnitario = itemObj.getDouble("preco_unitario_cobrado");
-                                        int quantidade = itemObj.getInt("quantidade");
-
-                                        itensPedido.add(new ItemCarrinho(nomeProduto, precoUnitario, quantidade, ""));
-                                    }
-                                }
-
-                                PedidoModel pedido = new PedidoModel(idPedido, dataCriacao, enderecoCompleto, pagamento, valorTotal, status, nomeEntregador, itensPedido);
-                                listaPedidos.add(pedido);
-                            }
-                            adapterPedidos.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getContext(), "Erro ao carregar histórico", Toast.LENGTH_SHORT).show();
+                        if (!sucesso) {
+                            if (eraPrimeiraCarga) avisar("Erro ao carregar histórico");
+                            return;
                         }
+
+                        JSONArray jsonArrayPedidos = response.getJSONArray("pedidos");
+                        List<PedidoModel> novaLista = new ArrayList<>();
+                        StringBuilder assinatura = new StringBuilder();
+
+                        for (int i = 0; i < jsonArrayPedidos.length(); i++) {
+                            JSONObject obj = jsonArrayPedidos.getJSONObject(i);
+
+                            int idPedido = obj.optInt("numero_exibicao", obj.optInt("id_pedido", 0));
+                            String dataCriacao = obj.optString("criado_em", "");
+                            double valorTotal = obj.getDouble("valor_total_pedido");
+                            String status = obj.optString("status_pedido", "Pendente");
+                            String pagamento = obj.optString("metodo_pagamento", "");
+
+                            // O servidor manda o nome em "nome_entregador" (vazio quando ainda não há entregador)
+                            String nomeEntregador = "";
+                            if (!obj.isNull("nome_entregador")) {
+                                nomeEntregador = obj.optString("nome_entregador", "").trim();
+                            }
+                            if (nomeEntregador.isEmpty() && !obj.isNull("entregador")) {
+                                nomeEntregador = obj.optString("entregador", "").trim();
+                            }
+                            if (nomeEntregador.isEmpty()) {
+                                nomeEntregador = "Aguardando atribuição";
+                            }
+
+                            String enderecoCompleto = obj.optString("endereco_completo",
+                                    obj.optString("endereco", "Endereço não especificado"));
+
+                            List<ItemCarrinho> itensPedido = new ArrayList<>();
+                            if (obj.has("itens")) {
+                                JSONArray jsonArrayItens = obj.getJSONArray("itens");
+                                for (int j = 0; j < jsonArrayItens.length(); j++) {
+                                    JSONObject itemObj = jsonArrayItens.getJSONObject(j);
+                                    String nomeProduto = itemObj.getString("nome_produto");
+                                    double precoUnitario = itemObj.getDouble("preco_unitario_cobrado");
+                                    int quantidade = itemObj.getInt("quantidade");
+
+                                    itensPedido.add(new ItemCarrinho(nomeProduto, precoUnitario, quantidade, ""));
+                                }
+                            }
+
+                            novaLista.add(new PedidoModel(idPedido, dataCriacao, enderecoCompleto, pagamento, valorTotal, status, nomeEntregador, itensPedido));
+
+                            // Resumo do que o cliente enxerga: se nada mudou, a tela nem é redesenhada
+                            assinatura.append(idPedido).append('|').append(status).append('|')
+                                    .append(nomeEntregador).append('|').append(valorTotal).append('|')
+                                    .append(itensPedido.size()).append(';');
+                        }
+
+                        String assinaturaAtual = assinatura.toString();
+                        if (assinaturaAtual.equals(ultimaAssinatura)) {
+                            return; // nada mudou desde a última atualização
+                        }
+                        ultimaAssinatura = assinaturaAtual;
+
+                        listaPedidos.clear();
+                        listaPedidos.addAll(novaLista);
+                        adapterPedidos.notifyDataSetChanged();
+
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), "Erro ao processar dados dos pedidos", Toast.LENGTH_SHORT).show();
+                        if (eraPrimeiraCarga) avisar("Erro ao processar dados dos pedidos");
                     }
                 },
-                error -> Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()
+                error -> {
+                    // Nas atualizações automáticas, falhas de conexão passam em silêncio
+                    if (primeiraCarga) {
+                        primeiraCarga = false;
+                        avisar("Erro de conexão com o servidor");
+                    }
+                }
         );
 
         VolleySingleton.getInstance(requireContext()).add(jsonObjectRequest);

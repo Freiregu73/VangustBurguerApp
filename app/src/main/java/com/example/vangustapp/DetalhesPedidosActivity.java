@@ -61,7 +61,7 @@ public class DetalhesPedidosActivity extends AppCompatActivity {
                     tvEntregadorDetalhes.setText(nomeEntregador);
                     tvEntregadorDetalhes.setVisibility(View.VISIBLE);
                 } else {
-                    tvEntregadorDetalhes.setText("A aguardar atribuição");
+                    tvEntregadorDetalhes.setText("Aguardando atribuição");
                 }
             }
 

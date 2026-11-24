@@ -139,7 +139,13 @@ public class CheckoutFragment extends Fragment {
                                             .replace(R.id.fragment_container, new PedidosFragment())
                                             .commit();
                                 } else {
-                                    Toast.makeText(getContext(), "" + jsonObject.getString("mensagem"), Toast.LENGTH_SHORT).show();
+                                    String codigo = jsonObject.optString("codigo", "");
+                                    String mensagem = jsonObject.optString("mensagem", "Não foi possível finalizar o pedido.");
+                                    if ("telefone_obrigatorio".equals(codigo)) {
+                                        mostrarAvisoTelefone(mensagem);
+                                    } else {
+                                        Toast.makeText(getContext(), mensagem, Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -173,6 +179,18 @@ public class CheckoutFragment extends Fragment {
         if (btnVoltarCheckout != null) {
             btnVoltarCheckout.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         }
+    }
+
+    // Sem telefone no perfil o pedido não é aceito: leva o cliente direto para cadastrá-lo
+    private void mostrarAvisoTelefone(String mensagem) {
+        if (!isAdded()) return;
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Telefone de contato")
+                .setMessage(mensagem)
+                .setPositiveButton("Ir para o perfil", (dialog, which) ->
+                        startActivity(new Intent(requireContext(), EditarPerfil.class)))
+                .setNegativeButton("Agora não", null)
+                .show();
     }
 
     private void mostrarDialogoSelecaoEnderecos() {
