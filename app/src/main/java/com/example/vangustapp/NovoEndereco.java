@@ -132,7 +132,7 @@ public class NovoEndereco extends AppCompatActivity {
         String emailUsuario = prefs.getString("email_usuario", "");
 
         if (emailUsuario.isEmpty()) {
-            Toast.makeText(this, "Erro: Utilizador não identificado.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Usuário não identificado. Faça login novamente.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -146,7 +146,7 @@ public class NovoEndereco extends AppCompatActivity {
                         boolean sucesso = jsonObject.getBoolean("sucesso");
 
                         if (sucesso) {
-                            Toast.makeText(this, "Endereço guardado na base de dados!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Endereço salvo com sucesso!", Toast.LENGTH_SHORT).show();
 
                             String enderecoCompleto = nomeLocal + " - " + rua + ", " + numero;
                             if (!complemento.isEmpty()) {

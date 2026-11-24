@@ -68,7 +68,7 @@ public class EnderecoFragment extends Fragment {
         String emailUsuario = prefs.getString("email_usuario", "");
 
         if (emailUsuario.isEmpty()) {
-            Toast.makeText(getContext(), "Utilizador não identificado.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Usuário não identificado. Faça login novamente.", Toast.LENGTH_SHORT).show();
             return;
         }
 

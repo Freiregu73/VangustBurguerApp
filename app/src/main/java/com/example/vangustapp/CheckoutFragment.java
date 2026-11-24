@@ -90,7 +90,7 @@ public class CheckoutFragment extends Fragment {
             if (selectedId == -1) {
                 Toast.makeText(getContext(), "Por favor, selecione um método de pagamento!", Toast.LENGTH_SHORT).show();
             } else if (CarrinhoManager.getListaCarrinho().isEmpty()) {
-                Toast.makeText(getContext(), "O seu carrinho está vazio!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Seu carrinho está vazio!", Toast.LENGTH_SHORT).show();
             } else {
                 final String pagamentoEscolhido;
                 if (selectedId == R.id.rbCartao) {
@@ -131,7 +131,7 @@ public class CheckoutFragment extends Fragment {
                                 boolean sucesso = jsonObject.getBoolean("sucesso");
 
                                 if (sucesso) {
-                                    Toast.makeText(getContext(), "Pedido realizado e enviado para o painel!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), "Pedido realizado com sucesso!", Toast.LENGTH_LONG).show();
 
                                     CarrinhoManager.limparCarrinho();
                                     limparCupomAtivo();
@@ -181,7 +181,7 @@ public class CheckoutFragment extends Fragment {
         String emailUsuario = prefs.getString("email_usuario", "");
 
         if (emailUsuario.isEmpty()) {
-            Toast.makeText(getContext(), "Utilizador não identificado.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Usuário não identificado. Faça login novamente.", Toast.LENGTH_SHORT).show();
             return;
         }
 

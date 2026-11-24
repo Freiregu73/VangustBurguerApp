@@ -135,7 +135,7 @@ public class CupomActivity extends AppCompatActivity {
                             boolean jaFoiUsado = prefs.getBoolean("usado_" + codigoValido, false);
 
                             if (jaFoiUsado) {
-                                Toast.makeText(this, "Este cupom já foi utilizado por si!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(this, "Você já utilizou este cupom.", Toast.LENGTH_LONG).show();
                                 return;
                             }
 

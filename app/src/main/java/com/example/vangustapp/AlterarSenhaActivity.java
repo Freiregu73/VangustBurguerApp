@@ -92,12 +92,12 @@ public class AlterarSenhaActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Log.e("ERRO_PHP_BRUTO", "Resposta recebida: " + response);
-                        Toast.makeText(this, "Erro interno. Veja o Logcat (ERRO_PHP_BRUTO)", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Não foi possível alterar a senha. Tente novamente.", Toast.LENGTH_LONG).show();
                     }
                 },
                 error -> {
                     Log.e("VOLLEY_ERRO", "Detalhe do erro de rede/servidor: ", error);
-                    Toast.makeText(this, "Erro de conexão ou Erro 500 no servidor", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Erro de conexão com o servidor. Tente novamente.", Toast.LENGTH_SHORT).show();
                 }
         ) {
             @Override

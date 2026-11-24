@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(LoginActivity.this, "Erro JSON: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "Erro ao processar resposta do servidor" + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     },
                     error -> Toast.makeText(LoginActivity.this, "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show()

@@ -80,7 +80,7 @@ public class CarrinhoFragment extends Fragment {
         // Leva diretamente para o Checkout (onde escolhe o pagamento e o endereço)
         btnFinalizarCompra.setOnClickListener(v -> {
             if (CarrinhoManager.getListaCarrinho().isEmpty()) {
-                Toast.makeText(getContext(), "O seu carrinho está vazio!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Seu carrinho está vazio!", Toast.LENGTH_SHORT).show();
             } else {
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new CheckoutFragment())
